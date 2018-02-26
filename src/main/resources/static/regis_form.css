@@ -1,0 +1,26 @@
+.form-top-left {
+	float: left;
+	width: 75%;
+	padding-top: 25px;
+}
+
+.form-top-right {
+	float: left;
+	width: 25%;
+	padding-top: 25px;
+	font-size: 66px;
+	color: #ddd;
+	line-height: 100px;
+	text-align: right;
+}
+
+.date-col {
+	width: 33.3%;
+	float: left;
+}
+
+.profile-pic {
+	width: 50%;
+	margin: auto;
+	height: auto;
+}
