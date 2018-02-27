@@ -9,146 +9,176 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<style type="text/css">
+	.form-control {
+	    color: #fff !important;
+	}
+</style>
+<script type="text/javascript">
+	//VALIDATE EMAIL
+	function validateForm() {
+	    var x = document.forms["registration-form"]["email"].value;
+	    var atpos = x.indexOf("@");
+	    var dotpos = x.lastIndexOf(".");
+	    if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
+	       document.getElementById("message").innerHTML ="Not a valid e-mail address" ;
+	       return false;
+	    }else{
+	    	document.getElementById("message").innerHTML ="" ;
+	    }
+	    
+	}
+	//CONFIRM PASSWORD
+	var check = function() {
+		if (document.getElementById('password').value ==
+			document.getElementById('password_confirmation').value) {
+			document.getElementById('msgConfirm').innerHTML = "";
+		} else {
+			document.getElementById('msgConfirm').innerHTML = "Password doesn't match!";
+		}
+	}
+	//VALIDATE PHONE NUMBER
+	function phonenumber(inputtxt) {
+		var phoneno = /^\d{12}$/;
+		if(inputtxt.value.match(phoneno)) {
+			return true;
+		}
+		else {
+			document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
+		    return false;
+		}
+	}
+	
+</script>
 <title>Student Registration</title>
 </head>
-<body>
-	<div class="form-box">
-		<div class="form-top">
-			<div class="form-top-left">
-				<h3>Student Registration Form</h3>
-				<p>Fill in the form below to insert student details</p>
-			</div>
-			<div class="form-top-right">
-				<i class="fa fa-pencil"></i>
-			</div>
-		</div>
-		<div class="form-bottom">
-			<form role="form" name="registration-form" action="" method="post"
-				class="registration-form">
-				<div class="form-group">
-					<label class="sr-only" for="form-first-name">First name</label> <input
-						type="text" name="first-name" required
-						placeholder="First name..." class="form-first-name form-control"
-						id="form-first-name">
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="form-last-name">Last name</label> <input
-						type="text" name="last-name" required
-						placeholder="Last name..." class="form-last-name form-control"
-						id="form-last-name">
-
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="form-email">Email</label> <input
-						type="text" name="email" id="email"
-						onkeypress="validateForm()" required placeholder="Email..."
-						class="form-email form-control" id="form-email">
-					<h6 style="color: red" id="message"></h6>
-					<script type="text/javascript">
-					    function validateForm() {
-					        var x = document.forms["registration-form"]["email"].value;
-					        var atpos = x.indexOf("@");
-					        var dotpos = x.lastIndexOf(".");
-					        if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
-					            //alert("Not a valid e-mail address");
-					           document.getElementById("message").innerHTML ="Not a valid e-mail address" ;
-					           return false;
-					        }else{
-					        	document.getElementById("message").innerHTML ="" ;
-					        }
-					        
-					    }</script>
-				</div>
-				<div class="form-group">
-					<div>
-						<label>Date of birth</label>
+<body class="main">
+<div class="login-screen">
+		<div class="container">
+    		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-5">
+    			<form role="form"  name="registration-form" action="" method="post" class="registration-form">
+					<h3><b>Student Registration Form</b></h3>
+					<p>Fill in the form below to insert student details</p>
+    				<hr>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+		                        <input type="text" name="first_name" id="first_name" class="form-control blur" placeholder="First Name" tabindex="1" required maxlength="20">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input type="text" name="last_name" id="last_name" class="form-control blur" placeholder="Last Name" tabindex="2" required maxlength="20">
+							</div>
+						</div>
 					</div>
-					<div class="date-col">
-						<select class="form-control" required name="day">
-							<option value="" selected="" disabled="disabled" hidden>Select a
-								day</option>
-							<c:forEach items="${days}" var="day">
-								<option value="${day}">${day}</option>
-							</c:forEach>
-						</select>
+					<div class="form-group">
+                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="3" required maxlength="10">
 					</div>
-					<div class="date-col">
-						<select name="month" required class="form-control">
-							<option value="" selected="" disabled="disabled" hidden>Select a
-								month</option>
-							<c:forEach items="${months}" var="month">
-								<option value="${month}">${month}</option>
-							</c:forEach>
-						</select>
+					<div class="form-group">
+						<label class="sr-only" for="form-email">Email</label> 
+						<input type="text" name="email" id="email" onkeypress="validateForm()" required placeholder="Email Address" tabindex="4" required class="form-email form-control blur" id="form-email">
+						<h6 style="color: red" id="message"></h6>
 					</div>
-					<div class="date-col">
-						<select name="year" value="" required class="form-control">
-							<option selected="" disabled="disabled" hidden>Select a
-								year</option>
-							<c:forEach items="${years}" var="year">
-								<option value="${year}">${year}</option>
-							</c:forEach>
-						</select>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="5" required  maxlength="20">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input type="password" name="password_confirmation" id="password_confirmation" onkeyup='check();' class="form-control blur" required placeholder="Confirm Password" tabindex="6"  maxlength="20">
+							</div>
+						</div>
+						<h6 style="color: red; margin-left: 5%;" id="msgConfirm"></h6>
+						
 					</div>
-				</div>
-				<div class="form-group">
-					<label>Gender</label> <select name="gender" required=""
-						class="form-control">
-						<option value="" selected="" disabled="disabled" hidden>Select a
-							gender</option>
-						<option value="1">Male</option>
-						<option value="2">Female</option>
-						<option value="3">Unknown</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label>Profile picture (Optional)</label> <input type="file"
-						class="form-control" accept="image/*" name="profilepic"
-						onchange="showMyImage(this)">
-					<div class="profile-pic">
-						<img id="thumbnail" height="100%" width="100%" />
-					</div>
-					<script>
-						function showMyImage(fileInput) {
-							var files = fileInput.files;
-							for (var i = 0; i < files.length; i++) {
-								var file = files[i];
-								var imageType = /image.*/;
-								if (!file.type.match(imageType)) {
-									continue;
+					<div class="form-group">
+						<div>
+							<label class="labeltxt">Date of birth</label>
+						</div>
+						<div class="date-col">
+							<select class="form-control blur" required name="day">
+								<option value="" selected="" disabled="disabled" hidden>Select a day</option>
+								<c:forEach items="${days}" var="day">
+									<option value="${day}">${day}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="date-col">
+							<select name="month" required class="form-control datebox blur">
+								<option value="" selected="" disabled="disabled" hidden>Select a month</option>
+								<c:forEach items="${months}" var="month">
+									<option value="${month}">${month}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="date-col">
+							<select name="year" value="" required class="form-control datebox blur">
+								<option selected="" disabled="disabled" hidden>Select a year</option>
+								<c:forEach items="${years}" var="year">
+									<option value="${year}">${year}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
+							<div style="margin-top: 8%;">
+								<label class="labeltxt">Gender</label><br/>
+							<div>
+	                            <input type="radio" name="gender" class="gender" id="male" tabindex="2" placeholder="Gender" value="1" title="Male"> Male
+	                            <input type="radio" name="gender" class="gender" id="female" tabindex="2" placeholder="Gender" value="2" title="Female"> Female
+	                            <input type="radio" name="gender" class="gender" id="unknown" tabindex="2" placeholder="Gender" value="3" title="Unknown"> Unknown
+	                        </div>
+						</div>
+						<div class="form-group">
+							<div style="margin-top: 2%;">
+								<label class="labeltxt">Profile picture (Optional)</label> 
+							</div>
+							<input type="file" class="form-control blur" accept="image/*" name="profilepic" onchange="showMyImage(this)">
+							<div class="profile-pic">
+								<img id="thumbnail" height="100%" width="100%" />
+							</div>
+							<script>
+								function showMyImage(fileInput) {
+									var files = fileInput.files;
+									for (var i = 0; i < files.length; i++) {
+										var file = files[i];
+										var imageType = /image.*/;
+										if (!file.type.match(imageType)) {
+											continue;
+										}
+										var img = document.getElementById("thumbnail");
+										img.file = file;
+										var reader = new FileReader();
+										reader.onload = (function(aImg) {
+											return function(e) {
+												aImg.src = e.target.result;
+											};
+										})(img);
+										reader.readAsDataURL(file);
+									}
 								}
-								var img = document.getElementById("thumbnail");
-								img.file = file;
-								var reader = new FileReader();
-								reader.onload = (function(aImg) {
-									return function(e) {
-										aImg.src = e.target.result;
-									};
-								})(img);
-								reader.readAsDataURL(file);
-							}
-						}
-					</script>
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="form-phone">Phone number</label> <input
-						type="text" name="phone" required placeholder="Phone number..."
-						class="form-control" id="form-phone">
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="form-address">Address</label> <input
-						type="text" name="address" required placeholder="Address..."
-						class="form-control" id="form-address">
-				</div>
-				<div class="form-group">
-					<label class="sr-only">About</label>
-					<textarea name="about" placeholder="About him/herself..."
-						class="form-about-yourself form-control" id="form-about-yourself"
-						style="z-index: auto; position: relative; line-height: 30px; font-size: 16px; transition: none; background: transparent !important;"></textarea>
-				</div>
-				<button type="submit" class="btn" style="width: 100%">Save!</button>
-			</form>
-		</div>
-	</div>
+							</script>
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="form-phone">Phone number</label> 
+							<input type="text" name="phone" required placeholder="Phone number..."
+								class="form-control blur" id="form-phone"  maxlength="12" onkeypress="phonenumber(this)">
+							<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="form-address">Address</label> <input
+								type="text" name="address" required placeholder="Address..."
+								class="form-control blur" id="form-address"  maxlength="200">
+						</div>
+						
+						<button type="submit" class="btn btn-reg">Sign up</button>
+						
+                        <h5 style="margin-top: 5%;">You have already account. <a href="/student/login" id="unflip-btn" class="login-link">Log in now!</a></h5>
+    			</form>
+    		</div>
+   		</div>
+</div>
 </body>
 </html>
