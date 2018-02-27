@@ -1,3 +1,7 @@
+.main {
+	position: relative;
+}
+
 .form-top-left {
 	float: left;
 	width: 75%;
@@ -14,13 +18,93 @@
 	text-align: right;
 }
 
+.login-link {
+	color: teal;
+}
+
 .date-col {
 	width: 33.3%;
 	float: left;
+}
+
+.labeltxt {
+	margin-left: 2%;
+}
+
+.datebox {
+	width: 95%;
+	margin-left: 5%;
 }
 
 .profile-pic {
 	width: 50%;
 	margin: auto;
 	height: auto;
+}
+
+.gender {
+	width: 5%;
+}
+
+.login-screen {
+    background-image: url(https://www.squiz.net/__public/Systems/Perspective/FileCache/1-32000/465/prop/header-bg-image.jpg?t=1472431690);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    color: white;
+}
+
+.login-screen:before {
+    content: "";
+    background: rgba(0,0,0, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.container {
+	float: right;
+}
+
+.blur {
+	z-index: auto; 
+	position: relative; 
+	line-height: 30px; 
+	font-size: 16px; 
+	transition: none; 
+	background: transparent !important;
+}
+.btn-reg {
+	width: 100%;
+	background: teal;
+    border-color: teal;
+    color: #fff;
+    opacity: 0.6;
+}
+
+.registration-form .form-group .form-control::-moz-placeholder {
+    color: #fff;
+    opacity: 0.3;
+}
+
+.login-form {
+	margin-top: 30%;
+}
+
+.g-signin2 {
+	margin-top: 5%;
+}
+
+.abcRioButtonLightBlue {
+	width: 100% !important;
 }
