@@ -92,11 +92,6 @@
     opacity: 0.6;
 }
 
-.registration-form .form-group .form-control::-moz-placeholder {
-    color: #fff;
-    opacity: 0.3;
-}
-
 .login-form {
 	margin-top: 30%;
 }

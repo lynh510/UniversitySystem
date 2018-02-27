@@ -9,6 +9,47 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<style type="text/css">
+	.form-control {
+	    color: #fff !important;
+	}
+</style>
+<script type="text/javascript">
+	//VALIDATE EMAIL
+	function validateForm() {
+	    var x = document.forms["registration-form"]["email"].value;
+	    var atpos = x.indexOf("@");
+	    var dotpos = x.lastIndexOf(".");
+	    if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
+	       document.getElementById("message").innerHTML ="Not a valid e-mail address" ;
+	       return false;
+	    }else{
+	    	document.getElementById("message").innerHTML ="" ;
+	    }
+	    
+	}
+	//CONFIRM PASSWORD
+	var check = function() {
+		if (document.getElementById('password').value ==
+			document.getElementById('password_confirmation').value) {
+			document.getElementById('msgConfirm').innerHTML = "";
+		} else {
+			document.getElementById('msgConfirm').innerHTML = "Password doesn't match!";
+		}
+	}
+	//VALIDATE PHONE NUMBER
+	function phonenumber(inputtxt) {
+		var phoneno = /^\d{12}$/;
+		if(inputtxt.value.match(phoneno)) {
+			return true;
+		}
+		else {
+			document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
+		    return false;
+		}
+	}
+	
+</script>
 <title>Student Registration</title>
 </head>
 <body class="main">
@@ -22,59 +63,36 @@
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-		                        <input type="text" name="first_name" id="first_name" class="form-control blur" placeholder="First Name" tabindex="1" required>
+		                        <input type="text" name="first_name" id="first_name" class="form-control blur" placeholder="First Name" tabindex="1" required maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<input type="text" name="last_name" id="last_name" class="form-control blur" placeholder="Last Name" tabindex="2" required>
+								<input type="text" name="last_name" id="last_name" class="form-control blur" placeholder="Last Name" tabindex="2" required maxlength="20">
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
-                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="3" required>
+                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="3" required maxlength="10">
 					</div>
 					<div class="form-group">
 						<label class="sr-only" for="form-email">Email</label> 
 						<input type="text" name="email" id="email" onkeypress="validateForm()" required placeholder="Email Address" tabindex="4" required class="form-email form-control blur" id="form-email">
 						<h6 style="color: red" id="message"></h6>
-						<script type="text/javascript">
-						    function validateForm() {
-						        var x = document.forms["registration-form"]["email"].value;
-						        var atpos = x.indexOf("@");
-						        var dotpos = x.lastIndexOf(".");
-						        if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= x.length) {
-						            //alert("Not a valid e-mail address");
-						           document.getElementById("message").innerHTML ="Not a valid e-mail address" ;
-						           return false;
-						        }else{
-						        	document.getElementById("message").innerHTML ="" ;
-						        }
-						        
-						    }</script>
 					</div>
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="5" required>
+								<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="5" required  maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<input type="password" name="password_confirmation" id="password_confirmation" onkeypress="comparePass()" class="form-control blur" required placeholder="Confirm Password" tabindex="6">
+								<input type="password" name="password_confirmation" id="password_confirmation" onkeyup='check();' class="form-control blur" required placeholder="Confirm Password" tabindex="6"  maxlength="20">
 							</div>
 						</div>
-						<h6 style="color: red" id="msgConfirm"></h6>
-						<script type="text/javascript">
-							function comparePass() {
-								var password = document.getElementById("password");
-								var confirm_password = document.getElementById("password_confirmation");
-		
-								if(password.value !== confirm_password.value) {
-									document.getElementById("msgConfirm").innerHTML ="Password confirmation is not match!" ;
-								}
-							}
-						</script>
+						<h6 style="color: red; margin-left: 5%;" id="msgConfirm"></h6>
+						
 					</div>
 					<div class="form-group">
 						<div>
@@ -146,12 +164,13 @@
 						<div class="form-group">
 							<label class="sr-only" for="form-phone">Phone number</label> 
 							<input type="text" name="phone" required placeholder="Phone number..."
-								class="form-control blur" id="form-phone">
+								class="form-control blur" id="form-phone"  maxlength="12" onkeypress="phonenumber(this)">
+							<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 						</div>
 						<div class="form-group">
 							<label class="sr-only" for="form-address">Address</label> <input
 								type="text" name="address" required placeholder="Address..."
-								class="form-control blur" id="form-address">
+								class="form-control blur" id="form-address"  maxlength="200">
 						</div>
 						
 						<button type="submit" class="btn btn-reg">Sign up</button>
