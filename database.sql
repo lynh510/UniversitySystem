@@ -10,12 +10,12 @@ person_name varchar(50),
 person_role tinyint, --0 for student, 1 for staff , 2 for anonymouse user, etc
 birthdate date,
 gender tinyint, --0 for male, 1 for female
-status tinyint, --0 for active, 1 for disable
+_status tinyint, --0 for active, 1 for disable
 phone_number varchar(14),
 enroll_date datetime,
-address varchar(500),
+_address varchar(500),
 email varchar(50),
-description varchar(500)
+_description varchar(500)
 );
 
 create table Department(
@@ -54,7 +54,7 @@ person_id int foreign key references Person(person_id),
 post_date datetime,
 close_date datetime,
 idea_views int,
-status tinyint -- 0 for pending, 1 for opening, 2 for closed
+_status tinyint -- 0 for pending, 1 for opening, 2 for closed
 );
 
 create table Idea_tags(
@@ -102,7 +102,7 @@ emo_id int foreign key references Emoji(emo_id),
 
 create table NotificationS(
 id int primary key identity,
-status int, -- seen, not seen
+_status int, -- seen, not seen
 idea_id int foreign key references Idea(idea_id),
 created_time datetime,
 )
