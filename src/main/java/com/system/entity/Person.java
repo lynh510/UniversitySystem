@@ -1,6 +1,6 @@
 package com.system.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Person {
 	private int id;
@@ -12,17 +12,18 @@ public class Person {
 	private int status;
 	private String phone;
 	private Date enroll_date;
-	private String city;
-	private String country;
+	private String address;
+	private String email;
 	private String description;
 
 	public Person() {
 		super();
 	}
 
-	public Person(String person_picture, String person_name, int person_role, Date birthdate, int gender, int status,
-			String phone, Date enroll_date, String city, String country, String description) {
+	public Person(int id, String person_picture, String person_name, int person_role, Date birthdate, int gender,
+			int status, String phone, Date enroll_date, String address, String email, String description) {
 		super();
+		this.id = id;
 		this.person_picture = person_picture;
 		this.person_name = person_name;
 		this.person_role = person_role;
@@ -31,9 +32,25 @@ public class Person {
 		this.status = status;
 		this.phone = phone;
 		this.enroll_date = enroll_date;
-		this.city = city;
-		this.country = country;
+		this.address = address;
+		this.email = email;
 		this.description = description;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public int getId() {
@@ -106,22 +123,6 @@ public class Person {
 
 	public void setEnroll_date(Date enroll_date) {
 		this.enroll_date = enroll_date;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
 	}
 
 	public String getDescription() {
