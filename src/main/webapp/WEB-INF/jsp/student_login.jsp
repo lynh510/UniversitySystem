@@ -22,10 +22,10 @@
     			<form role="form"  name="login-form" action="" method="post" class="login-form">
 					<h3><b>Student Login Form</b></h3>
 					<div class="form-group">
-                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="1" required>
+                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="1" required maxlength="10">
 					</div>
 					<div class="form-group">
-						<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="2" required>
+						<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="2" required maxlength="20">
 					</div>
 					<button type="submit" class="btn btn-reg">Login</button>
 					<p style="margin-top: 5%;"><a href="#" class="forgot login-link">Forgotten your username or password?</a></p>
