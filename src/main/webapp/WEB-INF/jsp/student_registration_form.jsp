@@ -39,14 +39,24 @@
 	}
 	//VALIDATE PHONE NUMBER
 	function phonenumber(inputtxt) {
-		var phoneno = /^\d{12}$/;
-		if(inputtxt.value.match(phoneno)) {
-			return true;
+		var phoneno = /^[0-9]+/;
+		if(!inputtxt.value.match(phoneno)) {
+			document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
+			return false;
+		}
+		if(inputtxt.value == "") {
+			document.getElementById('msgPhone').innerHTML = "";
+			return false;
+		}
+		if(inputtxt.value.length < 10) {
+			document.getElementById('msgPhone').innerHTML = "Phone number must be at least 10 character!";
+			return false;
 		}
 		else {
-			document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
-		    return false;
+			document.getElementById('msgPhone').innerHTML = "";
+		    return true;
 		}
+		
 	}
 	
 </script>

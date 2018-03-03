@@ -60,6 +60,8 @@
     right: 0;
     left: 0;
     color: white;
+   	overflow-y: auto;
+	min-height:100px;
 }
 
 .login-screen:before {
@@ -102,4 +104,8 @@
 
 .abcRioButtonLightBlue {
 	width: 100% !important;
+}
+
+select option {
+	color: #000;
 }
