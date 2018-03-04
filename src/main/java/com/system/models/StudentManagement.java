@@ -26,7 +26,7 @@ public class StudentManagement {
 		}
 	}
 
-	private int insert_person(Person p) {
+	public int insert_person(Person p) {
 		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?);" + " SELECT SCOPE_IDENTITY()";
 		int pid = 0;
 		try {
@@ -35,7 +35,7 @@ public class StudentManagement {
 			statement.setString(1, p.getPerson_picture());
 			statement.setString(2, p.getPerson_name());
 			statement.setInt(3, p.getPerson_role());
-			statement.setDate(4, new java.sql.Date(p.getBirthdate().getTime()));
+			statement.setDate(4, p.getBirthdate());
 			statement.setInt(5, p.getGender());
 			statement.setInt(6, p.getStatus());
 			statement.setString(7, p.getPhone());
@@ -53,11 +53,11 @@ public class StudentManagement {
 		return pid;
 	}
 
-	private boolean isUserNameExisted(String username) {
+	public boolean isUserNameExisted(String username) {
 		return checkExisten(username, "Student", "username");
 	}
 
-	private boolean isEmailExist(String email) {
+	public boolean isEmailExist(String email) {
 		return checkExisten(email, "Person", "email");
 	}
 

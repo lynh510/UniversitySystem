@@ -1,6 +1,6 @@
 package com.system.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Person {
 	private int id;
@@ -20,10 +20,9 @@ public class Person {
 		super();
 	}
 
-	public Person(int id, String person_picture, String person_name, int person_role, Date birthdate, int gender,
-			int status, String phone, Date enroll_date, String address, String email, String description) {
+	public Person(String person_picture, String person_name, int person_role, Date birthdate, int gender,
+			int status, String phone, String address, String email, String description) {
 		super();
-		this.id = id;
 		this.person_picture = person_picture;
 		this.person_name = person_name;
 		this.person_role = person_role;
@@ -31,7 +30,6 @@ public class Person {
 		this.gender = gender;
 		this.status = status;
 		this.phone = phone;
-		this.enroll_date = enroll_date;
 		this.address = address;
 		this.email = email;
 		this.description = description;

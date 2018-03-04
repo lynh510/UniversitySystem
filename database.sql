@@ -4,7 +4,7 @@ use UniversitySystem
 go
 
 create table Person(
-person_id int primary key,
+person_id int identity(1,1) primary key,
 person_picture varchar(500),
 person_name varchar(50),
 person_role tinyint, --0 for student, 1 for staff , 2 for anonymouse user, etc
@@ -115,3 +115,5 @@ notification_description varchar(100) --John just commented into your post .. ag
 url varchar(500),
 time_sent datetime
 )
+
+SELECT * FROM PERSON

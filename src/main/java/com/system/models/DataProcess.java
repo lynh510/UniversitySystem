@@ -18,7 +18,7 @@ public class DataProcess {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String user = "sa";
             String pass = "1234";
-            String url = "jdbc:sqlserver://127.0.0.1:8484;databaseName=IdeasManagementSystem";
+            String url = "jdbc:sqlserver://127.0.0.1:8484;databaseName=UniversitySystem";
             try {
                 con = DriverManager.getConnection(url, user, pass);
             } catch (SQLException ex) {
@@ -29,17 +29,4 @@ public class DataProcess {
         }
 		return con;
 	}
-	
-	public static boolean studentRegistation(Person person, Student student) {
-        int result = 0;
-        try {
-            String sql = "INSERT INTO Person VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement stm = getConnection().prepareStatement(sql);           
-            stm.setString(1, person.getPerson_name());
-            result = stm.executeUpdate();
-        } catch (SQLException ex) {
-            return false;
-        }
-        return result > 0;
-    }
 }

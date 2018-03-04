@@ -73,7 +73,7 @@
 <div class="login-screen">
 		<div class="container">
     		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-5">
-    			<form role="form"  name="registration-form" action="" method="post" class="registration-form">
+    			<form role="form"  name="registration-form" action="" method="post" enctype="multipart/form-data" class="registration-form">
 					<h3><b>Student Registration Form</b></h3>
 					<p>Fill in the form below to insert student details</p>
     				<hr>
@@ -189,9 +189,8 @@
 								type="text" name="address" required placeholder="Address..."
 								class="form-control blur" id="form-address"  maxlength="200">
 						</div>
-						
+						<h6 style="color: red" id="errors">${errors}</h6>
 						<button type="submit" class="btn btn-reg">Sign up</button>
-						
                         <h5 style="margin-top: 5%;">You have already account. <a href="/student/login" id="unflip-btn" class="login-link">Log in now!</a></h5>
     			</form>
     		</div>
