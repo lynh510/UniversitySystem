@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-<link rel="stylesheet" href="/regis_form.css">
+<link rel="stylesheet" href="/css/regis_form.css">
 <title>Student Login</title>
 <style type="text/css">
 	.form-control {
