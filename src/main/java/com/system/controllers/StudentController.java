@@ -51,4 +51,10 @@ public class StudentController {
 		mode.addObject("message", name);
 		return mode;
 	}
+	
+	//http://localhost:8080/student/submit_idea
+	@GetMapping("/submit_idea")
+	public ModelAndView submit_idea() {
+		return new ModelAndView("student_submit_idea");
+	}
 }
