@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.system.entity.Person;
+import com.system.entity.Student;
 import com.system.models.StudentManagement;
 
 @Controller
@@ -83,15 +84,17 @@ public class StudentController {
 				SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = simple_date.parse(format_date);
 				java.sql.Date birthday = new java.sql.Date(date.getTime());			
-				Person p = new Person(profilepic.getOriginalFilename(), full_name, 0, birthday, gender, 0, phone, address, email, "");
-				if (sm.insert_person(p) != 0) {
+				Person p = new Person(profilepic.getOriginalFilename(), full_name, 0, birthday, gender, 0, phone, address, email, "");	
+				Student s = new Student(p,user_name, password);
+				if (sm.studentRegistration(s) != 1) {
+					String auto_path_project = System.getProperty("user.dir");
 					InputStream inputStream = null;
 					OutputStream outputStream = null;
 					String fileName = profilepic.getOriginalFilename();
 					try {
 						inputStream = profilepic.getInputStream();
 						// edit path when use
-						File newFile = new File("C:\\Users\\Mr Simple\\Documents\\UniversitySystem\\src\\main\\resources\\uploads\\" + fileName);
+						File newFile = new File(auto_path_project + "\\src\\main\\resources\\uploads\\" + fileName);
 						if (!newFile.exists()) {
 							newFile.createNewFile();
 						}
@@ -106,7 +109,7 @@ public class StudentController {
 						e.printStackTrace();
 					}				
 				} else {
-					errors = "Some errors from system!";
+					errors = "Some error from system!";
 					mode.addObject("errors", errors);
 				}
 			} catch (ParseException e) {

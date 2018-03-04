@@ -115,5 +115,5 @@ notification_description varchar(100) --John just commented into your post .. ag
 url varchar(500),
 time_sent datetime
 )
-
-SELECT * FROM PERSON
+ 
+SELECT * FROM Student
