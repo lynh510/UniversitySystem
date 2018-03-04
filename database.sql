@@ -64,10 +64,10 @@ tag_id int foreign key references Tag(tag_id),
 );
 
 create table Idea_attachfiles(
-idea_id int foreign key references Idea(idea_id),
 attachfile_id int primary key identity,
-link varchar(500),
-
+idea_id int foreign key references Idea(idea_id),
+file_type varchar(20),
+link varchar(500)
 )
 
 create table Emoji(
@@ -100,9 +100,18 @@ id int primary key identity,
 emo_id int foreign key references Emoji(emo_id),
 )
 
-create table NotificationS(
+create table Activity(
+activity_id int primary key identity,
+activity_name varchar(100) --comment on an idea, idea is accepted
+)
+
+create table Notification(
 id int primary key identity,
-_status int, -- seen, not seen
-idea_id int foreign key references Idea(idea_id),
-created_time datetime,
+is_read boolean, -- seen, not seen
+sender_id int foreign key references Person(person_id), --who commented
+recipient_id int foreign key references Person(person_id), -- is the one who receives
+activity_type int foreign key references Activity(activity_id),
+notification_description varchar(100) --John just commented into your post .. ago
+url varchar(500),
+time_sent datetime
 )
