@@ -3,6 +3,7 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,4 +74,46 @@ public class IdeaManagement {
 		return id;
 	}
 
+	public int insert_Idea_tags(Idea_Tag it) {
+		String sqlQuery = "Insert into Idea_tags values(?,?)";
+		int result = 0;	
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, it.getIdea().getId());
+			statement.setInt(2, it.getTag().getId());
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	public int insert_Idea_attachfiles(Idea_attachfiles ia) {
+		String sqlQuery = "Insert into Idea_attachfiles values(?,?,?)";
+		int result = 0;	
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, ia.getIdea().getId());
+			statement.setString(2, ia.getFile_type());
+			statement.setString(3, ia.getLink());
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = 0;
+		}
+		return result;
+	}
+	
+	
 }
