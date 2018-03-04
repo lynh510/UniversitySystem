@@ -12,6 +12,10 @@ public class Student {
 		this.student_password = student_password;
 	}
 
+	public Student() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Person getStudent_id() {
 		return student_id;
 	}

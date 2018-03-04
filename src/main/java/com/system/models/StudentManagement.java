@@ -3,7 +3,7 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.sql.SQLException;
 
 import com.system.entity.*;
 
@@ -78,4 +78,22 @@ public class StudentManagement {
 		return flag;
 	}
 
+	public int check_login(Student s) {
+		String sqlQuery = "Select * from Student where username = ? and student_password = ?";
+		int result = 0;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, s.getUsername());
+			statement.setString(2, s.getStudent_password());
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

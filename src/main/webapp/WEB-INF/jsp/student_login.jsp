@@ -27,6 +27,7 @@
 					<div class="form-group">
 						<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="2" required maxlength="20">
 					</div>
+					<h6 style="color: red" id="errors">${errors}</h6>
 					<button type="submit" class="btn btn-reg">Login</button>
 					<p style="margin-top: 5%;"><a href="#" class="forgot login-link">Forgotten your username or password?</a></p>
                     

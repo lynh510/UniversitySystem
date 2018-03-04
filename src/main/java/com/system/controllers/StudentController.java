@@ -78,14 +78,15 @@ public class StudentController {
 		} else {
 			String full_name = first_name + " " + last_name;
 			// get birthday
-			
+
 			try {
 				String format_date = year + "-" + month + "-" + day;
 				SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = simple_date.parse(format_date);
-				java.sql.Date birthday = new java.sql.Date(date.getTime());			
-				Person p = new Person(profilepic.getOriginalFilename(), full_name, 0, birthday, gender, 0, phone, address, email, "");	
-				Student s = new Student(p,user_name, password);
+				java.sql.Date birthday = new java.sql.Date(date.getTime());
+				Person p = new Person(profilepic.getOriginalFilename(), full_name, 0, birthday, gender, 0, phone,
+						address, email, "");
+				Student s = new Student(p, user_name, password);
 				if (sm.studentRegistration(s) != 1) {
 					String auto_path_project = System.getProperty("user.dir");
 					InputStream inputStream = null;
@@ -104,10 +105,11 @@ public class StudentController {
 						while ((read = inputStream.read(bytes)) != -1) {
 							outputStream.write(bytes, 0, read);
 						}
+						mode = new ModelAndView("student_login");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}				
+					}
 				} else {
 					errors = "Some error from system!";
 					mode.addObject("errors", errors);
@@ -119,10 +121,32 @@ public class StudentController {
 		}
 		return mode;
 	}
-	
-	//http://localhost:8080/student/submit_idea
+
+	// http://localhost:8080/student/submit_idea
 	@GetMapping("/submit_idea")
 	public ModelAndView submit_idea() {
 		return new ModelAndView("student_submit_idea");
+	}
+
+	@PostMapping("/login")
+	public ModelAndView check_login(@RequestParam("user_name") String user_name,
+			@RequestParam("password") String password) {
+		ModelAndView model = new ModelAndView("student_login"); 
+		StudentManagement sm = new StudentManagement();
+		String errors = "";
+		Student s = new Student();
+		s.setUsername(user_name);
+		s.setStudent_password(password);
+		if (user_name.isEmpty() && password.isEmpty()) {
+			errors = "You have to input data";
+			model.addObject("errors", errors);
+		} else if (sm.check_login(s) != 0) { 		
+			model = new ModelAndView("student_submit_idea");
+			model.addObject("welcom", user_name);
+		} else {
+			errors = "Your account not exist!";
+			model.addObject("errors", errors);
+		}
+		return model;
 	}
 }
