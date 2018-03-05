@@ -20,13 +20,11 @@
 		<div class="container">
     		<div class="col-xs-12 col-sm-8 col-md-5 col-sm-offset-2 col-md-offset-6">
     			<form role="form"  name="login-form" action="" method="post" class="login-form">
-					<h2><b>Student Login Form</b></h2>
+					<h3><b>Student Login Form</b></h3>
 					<div class="form-group">
-						<label class="required" for="form-username">Username</label> 
                         <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="1" required maxlength="10">
 					</div>
 					<div class="form-group">
-						<label class="required" for="form-pasword">Password</label> 
 						<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="2" required maxlength="20">
 					</div>
 					<h6 style="color: red" id="errors">${errors}</h6>
