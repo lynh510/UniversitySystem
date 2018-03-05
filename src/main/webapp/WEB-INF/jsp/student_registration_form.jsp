@@ -80,31 +80,36 @@
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
+								<label class="required" for="form-firstname">First Name</label>
 		                        <input type="text" name="first_name" id="first_name" class="form-control blur" placeholder="First Name" tabindex="1" required maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
+								<label class="required" for="form-lastname">Last Name</label>
 								<input type="text" name="last_name" id="last_name" class="form-control blur" placeholder="Last Name" tabindex="2" required maxlength="20">
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="required" for="form-username">Username</label> 
                         <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="3" required maxlength="10">
 					</div>
 					<div class="form-group">
-						<label class="sr-only" for="form-email">Email</label> 
+						<label class="required" for="form-email">Email</label> 
 						<input type="text" name="email" id="email" onkeypress="validateForm()" required placeholder="Email Address" tabindex="4" required class="form-email form-control blur" id="form-email">
 						<h6 style="color: red" id="message"></h6>
 					</div>
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
+								<label class="required" for="form-password">Password</label> 
 								<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="5" required  maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
+								<label class="required" for="form-cfpass">Confirm Password</label> 
 								<input type="password" name="password_confirmation" id="password_confirmation" onkeyup='check();' class="form-control blur" required placeholder="Confirm Password" tabindex="6"  maxlength="20">
 							</div>
 						</div>
@@ -113,7 +118,7 @@
 					</div>
 					<div class="form-group">
 						<div>
-							<label class="labeltxt">Date of birth</label>
+							<label class="labeltxt required">Date of birth</label>
 						</div>
 						<div class="date-col">
 							<select class="form-control blur" required name="day">
@@ -141,7 +146,7 @@
 						</div>
 						<div class="form-group">
 							<div style="margin-top: 8%;">
-								<label class="labeltxt">Gender</label><br/>
+								<label class="labeltxt required">Gender</label><br/>
 								<div>
 		                            <input type="radio" name="gender" class="gender" id="male" tabindex="2" placeholder="Gender" value="1" title="Male"> Male
 		                            <input type="radio" name="gender" class="gender" id="female" tabindex="2" placeholder="Gender" value="2" title="Female"> Female
@@ -180,13 +185,13 @@
 							</script>
 						</div>
 						<div class="form-group">
-							<label class="sr-only" for="form-phone">Phone number</label> 
+							<label class="required" for="form-phone">Phone number</label> 
 							<input type="text" name="phone" required placeholder="Phone number..."
 								class="form-control blur" id="form-phone"  maxlength="12" onkeypress="phonenumber(this)">
 							<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 						</div>
 						<div class="form-group">
-							<label class="sr-only" for="form-address">Address</label> <input
+							<label class="required" for="form-address">Address</label> <input
 								type="text" name="address" required placeholder="Address..."
 								class="form-control blur" id="form-address"  maxlength="200">
 						</div>
