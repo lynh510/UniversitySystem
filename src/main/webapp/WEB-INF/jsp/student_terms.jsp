@@ -1,10 +1,40 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!-- Put this in your head tag in your template  -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <title>Terms and Conditions for Student</title>
+<script type="text/javascript">
+	$(function(){
+		 
+	    $(document).on( 'scroll', function(){
+	 
+	    	if ($(window).scrollTop() > 100) {
+				$('.scroll-top-wrapper').addClass('show');
+			} else {
+				$('.scroll-top-wrapper').removeClass('show');
+			}
+		});
+	 
+		$('.scroll-top-wrapper').on('click', scrollToTop);
+	});
+	 
+	function scrollToTop() {
+		verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
+		element = $('body');
+		offset = element.offset();
+		offsetTop = offset.top;
+		$('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
+	}
+</script>
 <style type="text/css">
 	.container {
 		width: 80%;
@@ -49,9 +79,144 @@
 	li {
 		line-height: 1.3em;
 	}
+	.scroll-top-wrapper {
+	    position: fixed;
+	    opacity: 0;
+	    visibility: hidden;
+		overflow: hidden;
+		text-align: center;
+		z-index: 99999999;
+	    background-color: #777777;
+		color: #eeeeee;
+		width: 50px;
+		height: 48px;
+		line-height: 48px;
+		right: 30px;
+		bottom: 30px;
+		padding-top: 2px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		-webkit-transition: all 0.5s ease-in-out;
+		-moz-transition: all 0.5s ease-in-out;
+		-ms-transition: all 0.5s ease-in-out;
+		-o-transition: all 0.5s ease-in-out;
+		transition: all 0.5s ease-in-out;
+	}
+	.scroll-top-wrapper:hover {
+		background-color: #888888;
+	}
+	.scroll-top-wrapper.show {
+	    visibility:visible;
+	    cursor:pointer;
+		opacity: 1.0;
+	}
+	.scroll-top-wrapper i.fa {
+		line-height: inherit;
+	}
+	
+	.mt-100 {
+	    margin-top: 100px; 
+	}
+	.mb-100 {
+	    margin-bottom: 100px;
+	}
+	
+	.icon {
+	    width: 32px;
+	    height: 32px;
+	    text-align: center;
+	    padding: 7px 8px;
+	    border: 2px solid;
+	    border-radius: 50%;
+	}
+	
+	.header {
+	    padding-top: 50px;
+	    background-color: #eee;
+	    overflow: hidden;
+	}
+	.footer {
+	    color: #887;
+	    background-color: #eee;
+	    padding-top: 30px;
+	    padding-bottom: 30px;
+	}
+	
+	.content {
+	    position: relative;
+	    display: table;
+	    width: 100%;
+	    min-height: 100vh;
+	}
+	.pull-middle {
+	    display: table-cell;
+	    vertical-align: middle;
+	}
+	
+	.btn {
+	    padding-left: 25px;
+	    padding-right: 25px;
+	}
+	.btn-circle {
+	    border-radius: 20px;
+	}
+	
+	.input-group input {
+	    border: 0;
+	    box-shadow: none;
+	    padding-right: 30px;
+	}
+	.input-group input:focus,
+	.input-group input:active {
+	    outline: 0;
+	    box-shadow: none;
+	}
+	.input-group-btn:last-child>.btn {
+	    z-index: 2;
+	    margin-left: -18px;   
+	    border-radius: 20px;
+	}
+	
+	.phone {
+	    position: relative;
+	    max-width: 263px;
+	    margin: 0 auto;
+	    padding: 65px 15px 55px;
+	    border: 2px solid #ddd;
+	    border-radius: 20px;
+	    background-color: #222;
+	    box-shadow: 20px 20px 40px #887;
+	}
 </style>
 </head>
 <body>
+<div class="wrapper">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand " href="#">UniversitySystem.com</a>
+        </div>
+    
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="navigation">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Features</a></li>
+                <li><button type="button" class="btn btn-success navbar-btn btn-circle"  onclick="window.location.href='/student/login'" on="">Sign in</button></li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+    </div>
 <div class="container">
 	<div class="div-title">
 		<p class="title">Terms & Conditions</p>
@@ -100,6 +265,11 @@
 			</div>
 		</div>
 	</div>
+</div>
+<div class="scroll-top-wrapper ">
+  <span class="scroll-top-inner">
+    <i class="fa fa-2x fa-arrow-circle-up"></i>
+  </span>
 </div>
 </body>
 </html>
