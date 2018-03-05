@@ -131,6 +131,12 @@ public class StudentController {
 		mnv.addObject("welcom", "default");
 		return mnv;
 	}
+		
+	//http://localhost:8080/student/terms
+	@GetMapping("/terms")
+	public ModelAndView terms() {
+		return new ModelAndView("student_terms");
+	}
 
 	@PostMapping("/login")
 	public ModelAndView check_login(@RequestParam("user_name") String user_name,

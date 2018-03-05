@@ -142,11 +142,12 @@
 						<div class="form-group">
 							<div style="margin-top: 8%;">
 								<label class="labeltxt">Gender</label><br/>
-							<div>
-	                            <input type="radio" name="gender" class="gender" id="male" tabindex="2" placeholder="Gender" value="1" title="Male"> Male
-	                            <input type="radio" name="gender" class="gender" id="female" tabindex="2" placeholder="Gender" value="2" title="Female"> Female
-	                            <input type="radio" name="gender" class="gender" id="unknown" tabindex="2" placeholder="Gender" value="3" title="Unknown"> Unknown
-	                        </div>
+								<div>
+		                            <input type="radio" name="gender" class="gender" id="male" tabindex="2" placeholder="Gender" value="1" title="Male"> Male
+		                            <input type="radio" name="gender" class="gender" id="female" tabindex="2" placeholder="Gender" value="2" title="Female"> Female
+		                            <input type="radio" name="gender" class="gender" id="unknown" tabindex="2" placeholder="Gender" value="3" title="Unknown"> Unknown
+		                        </div>
+							</div>
 						</div>
 						<div class="form-group">
 							<div style="margin-top: 2%;">
@@ -189,7 +190,13 @@
 								type="text" name="address" required placeholder="Address..."
 								class="form-control blur" id="form-address"  maxlength="200">
 						</div>
+						<div class="form-group">
+			                <label>
+			                    By clicking <span class="label label-primary" style="font-size: 15px; background-color: teal; ">Sign up</span>, you agree to the <a href="/student/terms">Terms and Conditions</a> set out by this site
+			                </label>
+					    </div>
 						<h6 style="color: red" id="errors">${errors}</h6>
+						
 						<button type="submit" class="btn btn-reg">Sign up</button>
                         <h5 style="margin-top: 5%;">You have already account. <a href="/student/login" id="unflip-btn" class="login-link">Log in now!</a></h5>
     			</form>
