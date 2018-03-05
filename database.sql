@@ -49,11 +49,13 @@ tag_des varchar(500) --services, courses
 
 create table Idea(
 idea_id int primary key identity,
-idea_des varchar(1000),
+idea_tile varchar(500),
+idea_content varchar(2000),
 person_id int foreign key references Person(person_id),
 post_date datetime,
 close_date datetime,
 idea_views int,
+mode tinyint, --0 for publish, 1 for anonymous, 2 private
 _status tinyint -- 0 for pending, 1 for opening, 2 for closed
 );
 

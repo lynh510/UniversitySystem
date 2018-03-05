@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.system.entity.Person;
 import com.system.entity.Student;
-import com.system.models.StudentManagement;
+import com.system.models.*;
 
 @Controller
 @RequestMapping("/student")
@@ -125,13 +125,17 @@ public class StudentController {
 	// http://localhost:8080/student/submit_idea
 	@GetMapping("/submit_idea")
 	public ModelAndView submit_idea() {
-		return new ModelAndView("student_submit_idea");
+		ModelAndView mnv = new ModelAndView("student_submit_idea");
+		TagManagement tm = new TagManagement();
+		mnv.addObject("tags", tm.getTags());
+		mnv.addObject("welcom", "default");
+		return mnv;
 	}
 
 	@PostMapping("/login")
 	public ModelAndView check_login(@RequestParam("user_name") String user_name,
 			@RequestParam("password") String password) {
-		ModelAndView model = new ModelAndView("student_login"); 
+		ModelAndView model = new ModelAndView("student_login");
 		StudentManagement sm = new StudentManagement();
 		String errors = "";
 		Student s = new Student();
@@ -140,8 +144,8 @@ public class StudentController {
 		if (user_name.isEmpty() && password.isEmpty()) {
 			errors = "You have to input data";
 			model.addObject("errors", errors);
-		} else if (sm.check_login(s) != 0) { 		
-			model = new ModelAndView("student_submit_idea");
+		} else if (sm.check_login(s) != 0) {
+			model = new ModelAndView("redirect:/student/submit_idea");
 			model.addObject("welcom", user_name);
 		} else {
 			errors = "Your account not exist!";

@@ -9,7 +9,7 @@
 </head>
 <body>
 	<c:forEach items="${ideas}" var="idea">
-		<h1>${idea.description}</h1>
+		<h1>${idea.title}</h1>
 	</c:forEach>
 	<%--For displaying Previous link except for the 1st page --%>
 	<c:if test="${currentPage != 1}">

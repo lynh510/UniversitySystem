@@ -22,7 +22,8 @@ public class IdeaManagement {
 			while (rs.next()) {
 				Idea idea = new Idea();
 				idea.setId(rs.getInt("idea_id"));
-				idea.setDescription(rs.getString("idea_des"));
+				idea.setTitle(rs.getString("idea_tile"));
+				idea.setContent(rs.getString("idea_content"));
 				idea.setPerson(null);
 				idea.setPost_date(rs.getDate("post_date"));
 				idea.setClose_date(rs.getDate("close_date"));
@@ -53,16 +54,19 @@ public class IdeaManagement {
 	}
 
 	public int insert_idea(Idea idea) {
-		String sqlQuery = "Insert into Idea values(?,?,getdate(),?,?,?)";
+		String sqlQuery = "Insert into Idea values(?,?,?,getdate(),?,?,?,?); SELECT SCOPE_IDENTITY()";
 		int id = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
-			statement.setString(1, idea.getDescription());
-			statement.setInt(2, idea.getPerson().getId());
-			statement.setDate(3, new java.sql.Date(idea.getClose_date().getTime()));
-			statement.setInt(4, idea.getViews());
-			statement.setInt(5, idea.getStatus());
+			statement.setString(1, idea.getTitle());
+			statement.setString(2, idea.getContent());
+			statement.setInt(3, idea.getPerson().getId());
+			statement.setDate(4, new java.sql.Date(idea.getClose_date().getTime()));
+			statement.setInt(5, idea.getViews());
+			statement.setInt(6, idea.getMode());
+			statement.setInt(7, idea.getStatus());
+			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {
 				id = rs.getInt(1);
@@ -74,46 +78,31 @@ public class IdeaManagement {
 		return id;
 	}
 
-	public int insert_Idea_tags(Idea_Tag it) {
+	public void insert_Idea_tags(Idea_Tag it) {
 		String sqlQuery = "Insert into Idea_tags values(?,?)";
-		int result = 0;	
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, it.getIdea().getId());
 			statement.setInt(2, it.getTag().getId());
-			ResultSet rs = statement.getGeneratedKeys();
-			if (rs.next()) {
-				result = rs.getInt(1);
-			}
+			statement.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			result = 0;
 		}
-		return result;
 	}
-	
-	public int insert_Idea_attachfiles(Idea_attachfiles ia) {
+
+	public void insert_Idea_attachfiles(Idea_attachfiles ia) {
 		String sqlQuery = "Insert into Idea_attachfiles values(?,?,?)";
-		int result = 0;	
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, ia.getIdea().getId());
 			statement.setString(2, ia.getFile_type());
 			statement.setString(3, ia.getLink());
-			ResultSet rs = statement.getGeneratedKeys();
-			if (rs.next()) {
-				result = rs.getInt(1);
-			}
+			statement.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			result = 0;
 		}
-		return result;
 	}
-	
-	
+
 }

@@ -4,10 +4,12 @@ import java.util.Date;
 
 public class Idea {
 	private int id;
-	private String description;
+	private String title;
+	private String content;
 	private Person person;
 	private Date post_date;
 	private Date close_date;
+	private int mode;
 	private int views;
 	private int status;
 
@@ -15,15 +17,42 @@ public class Idea {
 		super();
 	}
 
-	public Idea(int id, String description, Person person, Date post_date, Date close_date, int views, int status) {
+	public Idea(int id, String title, String content, Person person, Date post_date, Date close_date, int mode,
+			int views, int status) {
 		super();
 		this.id = id;
-		this.description = description;
+		this.title = title;
+		this.content = content;
 		this.person = person;
 		this.post_date = post_date;
 		this.close_date = close_date;
+		this.mode = mode;
 		this.views = views;
 		this.status = status;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	public int getId() {
@@ -32,14 +61,6 @@ public class Idea {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public Person getPerson() {

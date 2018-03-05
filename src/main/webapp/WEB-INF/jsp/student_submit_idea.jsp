@@ -17,7 +17,7 @@
 	crossorigin="anonymous">
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- Then include bootstrap js -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
@@ -142,7 +142,8 @@
 								</h4>
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
-								<form role="form" enctype="multipart/form-data">
+								<form role="form" action="/idea/submit" method="post"
+									enctype="multipart/form-data">
 									<div class="panel-body">
 										<div class="row">
 											<div class="col-md-12">
@@ -162,10 +163,12 @@
 											<div class="col-md-6">
 												<div class="form-group">
 													<label for="tags" class="required">Tags</label> <select
-														class="form-control blur" id="tag" name="tag" required>
-														<option>Articles</option>
-														<option>Tutorials</option>
-														<option>Freebies</option>
+														multiple="multiple" class="form-control blur" id="tag"
+														name="tag" required>
+														<c:forEach items="${tags}" var="tag">
+															<option value="${tag.id}">${tag.description}</option>
+														</c:forEach>
+
 													</select>
 												</div>
 											</div>
@@ -185,7 +188,7 @@
 														<div class="btn btn-default image-preview-input">
 															<span class="glyphicon glyphicon-folder-open"></span> <span
 																class="image-preview-input-title">Browse</span> <input
-																type="file"
+																type="file" multiple="multiple"
 																accept="image/png, image/jpeg, image/gif, .doc, .pdf, .xls"
 																name="input-file-preview" />
 															<!-- rename it -->
@@ -200,8 +203,8 @@
 												<div class="form-group">
 													<label for="modes" class="required">Modes</label> <select
 														class="form-control blur" name="mode" required>
-														<option>Anonymous</option>
-														<option>Published</option>
+														<option value="0">Anonymous</option>
+														<option value="1">Published</option>
 													</select>
 												</div>
 												<div class="form-group">
