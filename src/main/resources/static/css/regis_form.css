@@ -19,7 +19,7 @@
 }
 
 .login-link {
-	color: teal;
+	color: #004646;
 }
 
 .date-col {
@@ -47,7 +47,7 @@
 }
 
 .login-screen {
-    background-image: url(/images/header-bg-image.jpg);
+    background-image: url(/images/typing.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -65,7 +65,7 @@
 
 .login-screen:before {
     content: "";
-    background: rgba(0,0,0, 0.5);
+    background: rgba(0,0,0, 0.2);
     position: fixed;
     width: 100%;
     height: 100%;
@@ -107,4 +107,21 @@
 
 select option {
 	color: #000;
+}
+
+.form-control::placeholder {
+	color: #fff;
+}
+
+.form-control {
+	border: 1px solid #fff;
+}
+
+label {
+	font-size: 16px;
+}
+
+.required:after { 
+   content:"*" !important;
+   color:#d90000;
 }
