@@ -139,6 +139,7 @@
 									<a data-toggle="collapse" data-parent="#accordion"
 										href="#collapseOne"><span class="glyphicon glyphicon-file">
 									</span>POST NEW IDEA</a>
+									<h2 style="color: red;">${message}</h2>
 								</h4>
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
@@ -148,12 +149,13 @@
 										<div class="row">
 											<div class="col-md-12">
 												<div class="form-group">
-													<input type="text" class="form-control blur"
-														placeholder="Title" name="title" id="title" required
-														onkeyup='check();' />
+													<label for="title" class="required">Title</label> <input
+														type="text" class="form-control blur" placeholder="Title"
+														name="title" id="title" required onkeyup='check();' />
 													<h6 style="color: red; margin-left: 5%;" id="msgCheck"></h6>
 												</div>
 												<div class="form-group">
+													<label for="content" class="required">Content</label>
 													<textarea class="form-control blur" placeholder="Content"
 														rows="5" name="content" id="content" required></textarea>
 												</div>
@@ -211,6 +213,11 @@
 													<button type="submit" class="btn">
 														<span class="glyphicon glyphicon-floppy-disk"></span>Submit
 													</button>
+													<div>
+														<input type="radio"><a href="/student/terms">Before
+															submitting please carefully read these terms and
+															conditions</a>
+													</div>
 												</div>
 											</div>
 										</div>

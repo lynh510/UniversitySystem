@@ -8,6 +8,11 @@ import java.sql.SQLException;
 import com.system.entity.*;
 
 public class StudentManagement {
+	private ExternalLoginManagement elm;
+
+	public StudentManagement() {
+		elm = new ExternalLoginManagement();
+	}
 
 	// returns 0 is for registration successful, 1 is fail due to error ,
 	public int studentRegistration(Student s) {
@@ -15,10 +20,13 @@ public class StudentManagement {
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(insertSQuery);
-			statement.setInt(1, insert_person(s.getStudent_id()));
+			int person_id = insert_person(s.getStudent_id());
+			statement.setInt(1, person_id);
 			statement.setString(2, s.getUsername());
 			statement.setString(3, s.getStudent_password());
 			statement.executeUpdate();
+			ExternalUser eu = new ExternalUser(person_id, s.getStudent_id().getEmail());
+			elm.insert_external_user(eu);
 			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();

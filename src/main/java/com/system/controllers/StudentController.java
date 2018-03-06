@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.system.entity.Person;
 import com.system.entity.Student;
 import com.system.models.*;
@@ -105,7 +107,9 @@ public class StudentController {
 						while ((read = inputStream.read(bytes)) != -1) {
 							outputStream.write(bytes, 0, read);
 						}
-						mode = new ModelAndView("student_login");
+						inputStream.close();
+						outputStream.close();
+						mode = new ModelAndView("redirect:/student/login");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -131,8 +135,8 @@ public class StudentController {
 		mnv.addObject("welcom", "default");
 		return mnv;
 	}
-		
-	//http://localhost:8080/student/terms
+
+	// http://localhost:8080/student/terms
 	@GetMapping("/terms")
 	public ModelAndView terms() {
 		return new ModelAndView("student_terms");
@@ -156,6 +160,19 @@ public class StudentController {
 		} else {
 			errors = "Your account not exist!";
 			model.addObject("errors", errors);
+		}
+		return model;
+	}
+
+	@PostMapping("/external_login")
+	public ModelAndView external_login(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+		ExternalLoginManagement elm = new ExternalLoginManagement();
+		ModelAndView model = null;
+		if (elm.isExist(email)) {
+			model = new ModelAndView("redirect:/student/submit_idea");
+		} else {
+			model = new ModelAndView("redirect:/student/login");
+			redirectAttributes.addFlashAttribute("errors", "Account doesn't exist in the system");
 		}
 		return model;
 	}

@@ -96,6 +96,11 @@ term_id int primary key identity,
 term_des varchar(1000)
 )
 
+create table UserExternalLogin(
+user_id int foreign key references Person(person_id),
+email varchar(50),
+);
+
 ----- extra to do if have enough time 
 create table CommentLike(
 id int primary key identity,
@@ -113,7 +118,7 @@ is_read boolean, -- seen, not seen
 sender_id int foreign key references Person(person_id), --who commented
 recipient_id int foreign key references Person(person_id), -- is the one who receives
 activity_type int foreign key references Activity(activity_id),
-notification_description varchar(100) --John just commented into your post .. ago
+notification_description varchar(100), --John just commented into your post .. ago
 url varchar(500),
 time_sent datetime
 )
