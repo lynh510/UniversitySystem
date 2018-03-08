@@ -25,11 +25,6 @@
 	crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/css/stu_submit_idea.css">
 <script type="text/javascript" src="/javascript/stu_sub_idea.js"></script>
-<script>
-            if (${welcom == null}) {
-                window.location.href = "login";
-            }
-        </script>
 </head>
 <body class="main">
 	<div class="screen">
@@ -99,8 +94,9 @@
 						</ul></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" src="/images/login-user-icon.png" width="30">
-							<span class="hidden-xs">${welcom}</span>
+							class="img-circle" src="${welcom.person_picture}" width="30">
+							<span class="hidden-xs">${welcom.person_name}
+						</span>
 					</a>
 						<ul class="dropdown-menu">
 							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit

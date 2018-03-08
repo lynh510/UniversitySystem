@@ -14,9 +14,12 @@ public class StudentManagement {
 		elm = new ExternalLoginManagement();
 	}
 
-	// returns 0 is for registration successful, 1 is fail due to error ,
-	public int studentRegistration(Student s) {
-		String insertSQuery = "insert into Student values (?,?,?)";
+	// returns string message from database,
+	public String studentRegistration(Student s) {
+		String insertSQuery = "DECLARE @responseMessage NVARCHAR(250);\r\n"
+				+ "Exec add_student ?,?,?, @responseMessage output;\r\n"
+				+ "select @responseMessage as N'@responseMessage'";
+		String message = "";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(insertSQuery);
@@ -24,13 +27,17 @@ public class StudentManagement {
 			statement.setInt(1, person_id);
 			statement.setString(2, s.getUsername());
 			statement.setString(3, s.getStudent_password());
-			statement.executeUpdate();
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				message = resultSet.getString(1);
+				System.out.println(message);
+			}
 			ExternalUser eu = new ExternalUser(person_id, s.getStudent_id().getEmail());
 			elm.insert_external_user(eu);
-			return 0;
+			return message;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 1;
+			return message;
 		}
 	}
 
@@ -86,9 +93,9 @@ public class StudentManagement {
 		return flag;
 	}
 
-	public int check_login(Student s) {
-		String sqlQuery = "Select * from Student where username = ? and student_password = ?";
-		int result = 0;
+	public Person check_login(Student s) {
+		String sqlQuery = "Exec student_login ?,?";
+		Person p = new Person();
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -96,12 +103,14 @@ public class StudentManagement {
 			statement.setString(2, s.getStudent_password());
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				result = rs.getInt(1);
+				p.setId(rs.getInt(1));
+				p.setPerson_picture(rs.getString(2));
+				p.setPerson_name(rs.getString(3));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return result;
+		return p;
 	}
 }

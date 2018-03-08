@@ -30,16 +30,18 @@ dept_id int foreign key references Department(dept_id)
 );
 
 create table Student(
-student_id int foreign key references Person(person_id),
+student_id int foreign key references Person(person_id) UNIQUE,
 username varchar(50),
-student_password varchar(20),
+password_hash binary(64) not null,
+salt UNIQUEIDENTIFIER 
 );
 
 create table Staff(
-staff_id int foreign key references Person(person_id),
+staff_id int foreign key references Person(person_id) UNIQUE,
 role_id int foreign key references StaffRole(role_id),
 username varchar(50),
-staff_password varchar(20)
+password_hash binary(64) not null,
+salt UNIQUEIDENTIFIER 
 );
 
 create table Tag(
@@ -124,3 +126,55 @@ time_sent datetime
 )
  
 SELECT * FROM Student
+
+CREATE PROCEDURE add_student
+    @stuID int,
+	@stuUserName VARCHAR(50),
+    @stuPassword VARCHAR(50),
+    @responseMessage NVARCHAR(250) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    DECLARE @salt UNIQUEIDENTIFIER=NEWID()
+    BEGIN TRY
+
+        INSERT INTO Student(student_id, username,password_hash, salt)
+        VALUES(@stuID,@stuUserName, HASHBYTES('SHA2_512', @stuPassword+CAST(@salt AS NVARCHAR(36))), @salt)
+
+       SET @responseMessage='Success'
+
+    END TRY
+    BEGIN CATCH
+        SET @responseMessage=ERROR_MESSAGE() 
+    END CATCH
+
+END
+--------
+DECLARE @responseMessage NVARCHAR(250);
+Exec add_student 1,'username','password', @responseMessage output;
+select @responseMessage as N'@responseMessage'
+
+CREATE PROCEDURE student_login
+    @stuUsername NVARCHAR(254),
+    @stuPassword NVARCHAR(50)
+AS
+BEGIN
+
+    SET NOCOUNT ON
+
+    DECLARE @userID INT
+
+    IF EXISTS (SELECT TOP 1 student_id FROM Student WHERE username=@stuUsername)
+    BEGIN
+        SET @userID=(SELECT student_id FROM Student WHERE username=@stuUsername AND password_hash=HASHBYTES('SHA2_512', @stuPassword+CAST(salt AS NVARCHAR(36))))
+
+       IF(@userID IS NULL)
+           select * from Person where person_id = 0
+       ELSE 
+           select * from Person where person_id = @userID
+    END
+    ELSE
+       select * from Person where person_id = 0
+
+END

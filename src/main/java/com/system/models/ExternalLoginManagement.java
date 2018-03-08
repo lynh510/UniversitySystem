@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.system.entity.ExternalUser;
+import com.system.entity.Person;
 
 public class ExternalLoginManagement {
 	public void insert_external_user(ExternalUser eu) {
@@ -30,10 +31,15 @@ public class ExternalLoginManagement {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				isExist = true;
+				getPerson(rs.getInt(1));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return isExist;
+	}
+	public Person getPerson(int id) {
+		Person p = new Person();
+		return p;
 	}
 }

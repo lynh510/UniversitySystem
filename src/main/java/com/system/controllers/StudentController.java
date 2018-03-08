@@ -5,17 +5,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -80,40 +88,21 @@ public class StudentController {
 		} else {
 			String full_name = first_name + " " + last_name;
 			// get birthday
-
 			try {
 				String format_date = year + "-" + month + "-" + day;
+				Calendar c = Calendar.getInstance();
+				c.setTime(new Date());
 				SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = simple_date.parse(format_date);
 				java.sql.Date birthday = new java.sql.Date(date.getTime());
-				Person p = new Person(profilepic.getOriginalFilename(), full_name, 0, birthday, gender, 0, phone,
-						address, email, "");
+				Person p = new Person(c.getTimeInMillis() + ".png", full_name, 0, birthday, gender, 0, phone, address,
+						email, "");
 				Student s = new Student(p, user_name, password);
-				if (sm.studentRegistration(s) != 1) {
+				if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
 					String auto_path_project = System.getProperty("user.dir");
-					InputStream inputStream = null;
-					OutputStream outputStream = null;
-					String fileName = profilepic.getOriginalFilename();
-					try {
-						inputStream = profilepic.getInputStream();
-						// edit path when use
-						File newFile = new File(auto_path_project + "\\src\\main\\resources\\uploads\\" + fileName);
-						if (!newFile.exists()) {
-							newFile.createNewFile();
-						}
-						outputStream = new FileOutputStream(newFile);
-						int read = 0;
-						byte[] bytes = new byte[1024];
-						while ((read = inputStream.read(bytes)) != -1) {
-							outputStream.write(bytes, 0, read);
-						}
-						inputStream.close();
-						outputStream.close();
-						mode = new ModelAndView("redirect:/student/login");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+					save_image(auto_path_project, profilepic, c.getTimeInMillis() + "");
+					mode = new ModelAndView("redirect:/student/login");
 				} else {
 					errors = "Some error from system!";
 					mode.addObject("errors", errors);
@@ -126,13 +115,40 @@ public class StudentController {
 		return mode;
 	}
 
+	private void save_image(String path, MultipartFile profilepic, String filename) {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		try {
+			inputStream = profilepic.getInputStream();
+			File newFile = new File(path + "\\src\\main\\resources\\static\\uploads\\" + filename + ".png");
+			if (!newFile.exists()) {
+				newFile.createNewFile();
+			}
+			outputStream = new FileOutputStream(newFile);
+			int read = 0;
+			byte[] bytes = new byte[1024];
+			while ((read = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+			inputStream.close();
+			outputStream.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// http://localhost:8080/student/submit_idea
 	@GetMapping("/submit_idea")
 	public ModelAndView submit_idea() {
 		ModelAndView mnv = new ModelAndView("student_submit_idea");
 		TagManagement tm = new TagManagement();
 		mnv.addObject("tags", tm.getTags());
-		mnv.addObject("welcom", "default");
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		Person p = (Person) session.getAttribute("user");
+		mnv.addObject("welcom", p);
 		return mnv;
 	}
 
@@ -151,12 +167,18 @@ public class StudentController {
 		Student s = new Student();
 		s.setUsername(user_name);
 		s.setStudent_password(password);
+		Person p = sm.check_login(s);
 		if (user_name.isEmpty() && password.isEmpty()) {
 			errors = "You have to input data";
 			model.addObject("errors", errors);
-		} else if (sm.check_login(s) != 0) {
+		} else if (p.getId() != 0) {
 			model = new ModelAndView("redirect:/student/submit_idea");
-			model.addObject("welcom", user_name);
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(true);
+			String auto_path_project = System.getProperty("user.dir");
+			p.setPerson_picture("/uploads/" + p.getPerson_picture());
+			session.setAttribute("user", p);
 		} else {
 			errors = "Your account not exist!";
 			model.addObject("errors", errors);
@@ -169,6 +191,9 @@ public class StudentController {
 		ExternalLoginManagement elm = new ExternalLoginManagement();
 		ModelAndView model = null;
 		if (elm.isExist(email)) {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(true);
 			model = new ModelAndView("redirect:/student/submit_idea");
 		} else {
 			model = new ModelAndView("redirect:/student/login");
@@ -176,4 +201,5 @@ public class StudentController {
 		}
 		return model;
 	}
+
 }
