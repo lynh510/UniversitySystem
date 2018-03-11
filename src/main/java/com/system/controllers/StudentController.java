@@ -120,7 +120,7 @@ public class StudentController {
 		OutputStream outputStream = null;
 		try {
 			inputStream = profilepic.getInputStream();
-			File newFile = new File(path + "\\src\\main\\resources\\static\\uploads\\" + filename + ".png");
+			File newFile = new File(path + "\\src\\main\\resources\\uploads\\" + filename + ".png");
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
@@ -140,15 +140,19 @@ public class StudentController {
 
 	// http://localhost:8080/student/submit_idea
 	@GetMapping("/submit_idea")
-	public ModelAndView submit_idea() {
+	public ModelAndView submit_idea(RedirectAttributes redirectAttributes) {
 		ModelAndView mnv = new ModelAndView("student_submit_idea");
 		TagManagement tm = new TagManagement();
 		mnv.addObject("tags", tm.getTags());
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		HttpSession session = request.getSession(false);
-		Person p = (Person) session.getAttribute("user");
-		mnv.addObject("welcom", p);
+		if (session.getAttribute("user") != null) {
+			Person p = (Person) session.getAttribute("user");
+			mnv.addObject("welcom", p);
+		} else {
+			mnv = new ModelAndView("redirect:/student/login");
+		}
 		return mnv;
 	}
 
@@ -190,15 +194,26 @@ public class StudentController {
 	public ModelAndView external_login(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
 		ExternalLoginManagement elm = new ExternalLoginManagement();
 		ModelAndView model = null;
-		if (elm.isExist(email)) {
+		Person p = elm.isExist(email);
+		if (p.getId() != 0) {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
+			session.setAttribute("user", p);
 			model = new ModelAndView("redirect:/student/submit_idea");
 		} else {
 			model = new ModelAndView("redirect:/student/login");
 			redirectAttributes.addFlashAttribute("errors", "Account doesn't exist in the system");
 		}
+		return model;
+	}
+	@GetMapping("/logout")
+	public ModelAndView logout(RedirectAttributes redirectAttributes) {
+		ModelAndView model = new ModelAndView("redirect:/student/login");
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		session.removeAttribute("user");
 		return model;
 	}
 

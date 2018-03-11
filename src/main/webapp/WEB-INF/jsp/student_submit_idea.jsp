@@ -104,7 +104,7 @@
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
 									Password</a></li>
 							<li class="divider"></li>
-							<li><a href="#"><i class="fa fa-fw fa-power-off"></i>
+							<li><a href="/student/logout"><i class="fa fa-fw fa-power-off"></i>
 									Logout</a></li>
 						</ul></li>
 				</ul>
