@@ -10,6 +10,12 @@ import java.util.List;
 import com.system.entity.*;
 
 public class IdeaManagement {
+	private PersonManagement pm;
+
+	public IdeaManagement() {
+		pm = new PersonManagement();
+	}
+
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
@@ -24,7 +30,7 @@ public class IdeaManagement {
 				idea.setId(rs.getInt("idea_id"));
 				idea.setTitle(rs.getString("idea_tile"));
 				idea.setContent(rs.getString("idea_content"));
-				idea.setPerson(null);
+				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				idea.setPost_date(rs.getDate("post_date"));
 				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));

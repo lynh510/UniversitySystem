@@ -7,18 +7,24 @@
 <title>List of idea</title>
 <link rel="stylesheet" href="/css/list_idea.css">
 <script type="text/javascript" src="/javascript/list_idea.js"></script>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<script
+	src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<jsp:useBean id="tags" class="com.system.models.IdeaTagManagement"
+	scope="page" />
 </head>
 <body>
 	<div class="container">
-	    <div class="row">
-	    	<%-- <c:forEach items="${ideas}" var="idea"> --%>
-		        <div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
-		            <div class="[ panel panel-default ] panel-google-plus">
-		                <!-- <div class="dropdown">
+		<c:forEach items="${ideas}" var="idea">
+			<div class="row">
+				<%-- <c:forEach items="${ideas}" var="idea"> --%>
+				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
+					<div class="[ panel panel-default ] panel-google-plus">
+						<!-- <div class="dropdown">
 		                    <span class="dropdown-toggle" type="button" data-toggle="dropdown">
 		                        <span class="[ glyphicon glyphicon-chevron-down ]"></span>
 		                    </span>
@@ -30,51 +36,61 @@
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
 		                    </ul>
 		                </div> -->
-		                <div class="panel-google-plus-tags">
-		                    <ul>
-		                        <li>#Millennials</li>
-		                        <li>#Generation</li>
-		                    </ul>
-		                </div>
-		                <div class="panel-heading">
-		                    <img class="[ img-circle pull-left ]" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="Mouse0270" />
-		                    <h3>${idea.person.person_name }</h3>
-		                    <h5><span>Shared publicly</span> - <span>${idea.post_date }</span> </h5>
-		                </div>
-		                <div class="panel-body">
-		                	<p><b>${idea.title}</b></p>
-		                    <p>${idea.content}</p>
-		                </div>
-		                <div class="panel-footer">
-		                    <button type="button" class="[ btn btn-default ]">
-		                    	<span class="[ glyphicon glyphicon-thumbs-up ]" style="color: blue;"></span>
-		                    </button>
-		                    <button type="button" class="[ btn btn-default ]">
-		                    	<span class="[ glyphicon glyphicon-thumbs-down ]" style="color: red;"></span>
-		                    </button>
-		                    <button type="button" class="[ btn btn-default ]">
-		                        <span class="[ glyphicon glyphicon-share-alt ]"></span>
-		                    </button>
-		                    <textarea class="input-placeholder">Add a comment...</textarea>
-		                </div>
-		                <div class="panel-google-plus-comment">
-		                    <img class="img-circle" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="User Image" />
-		                    <div class="panel-google-plus-textarea">
-		                        <textarea rows="4"></textarea>
-		                        <button type="submit" class="[ btn btn-success disabled ]">Post comment</button>
-		                        <button type="reset" class="[ btn btn-default ]">Cancel</button>
-		                    </div>
-		                    <div class="clearfix"></div>
-		                </div>
-		            </div>
-		        </div>
-	        <%-- </c:forEach> --%>
-	    </div>
+						<div class="panel-google-plus-tags">
+							<ul>
+								<c:forEach items="${tags.get_idea_tags(idea.id)}" var="t">
+									<li>${t.tag.description}</li>
+								</c:forEach>
+							</ul>
+						</div>
+						<div class="panel-heading">
+							<img class="[ img-circle pull-left ]"
+								src="${idea.person.person_picture}" alt="Mouse0270" />
+							<h3>${idea.person.person_name }</h3>
+							<h5>
+								<span>Shared publicly</span> - <span>${idea.post_date }</span>
+							</h5>
+						</div>
+						<div class="panel-body">
+							<p>
+								<b>${idea.title}</b>
+							</p>
+							<p>${idea.content}</p>
+						</div>
+						<div class="panel-footer">
+							<button type="button" class="[ btn btn-default ]">
+								<span class="[ glyphicon glyphicon-thumbs-up ]"
+									style="color: blue;"></span>
+							</button>
+							<button type="button" class="[ btn btn-default ]">
+								<span class="[ glyphicon glyphicon-thumbs-down ]"
+									style="color: red;"></span>
+							</button>
+							<button type="button" class="[ btn btn-default ]">
+								<span class="[ glyphicon glyphicon-share-alt ]"></span>
+							</button>
+							<textarea class="input-placeholder">Add a comment...</textarea>
+						</div>
+						<div class="panel-google-plus-comment">
+							<img class="img-circle"
+								src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46"
+								alt="User Image" />
+							<div class="panel-google-plus-textarea">
+								<textarea rows="4"></textarea>
+								<button type="submit" class="[ btn btn-success disabled ]">Post
+									comment</button>
+								<button type="reset" class="[ btn btn-default ]">Cancel</button>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+				<%-- </c:forEach> --%>
+			</div>
+		</c:forEach>
 	</div>
-	
-	<c:forEach items="${ideas}" var="idea">
-		<h1>${idea.title}</h1>
-	</c:forEach>
+
+
 	<%--For displaying Previous link except for the 1st page --%>
 	<c:if test="${currentPage != 1}">
 		<td><a href="${currentPage - 1}">Previous</a></td>

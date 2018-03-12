@@ -103,7 +103,7 @@ public class IdeaController {
 		try {
 			inputStream = file.getInputStream();
 			// edit path when use
-			File newFile = new File(auto_path_project + "\\src\\main\\resources\\upload_documents\\" + name);
+			File newFile = new File(auto_path_project + "\\src\\main\\resources\\uploads_document\\" + name);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}

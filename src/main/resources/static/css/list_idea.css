@@ -5,7 +5,9 @@ body {
     padding-top: 60px;
     padding-bottom: 30px;
 }
-
+img {
+	width: 40px;
+}
 .panel-google-plus {
     position: relative;
     border-radius: 0px;

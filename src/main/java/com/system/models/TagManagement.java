@@ -28,4 +28,21 @@ public class TagManagement {
 		}
 		return tags;
 	}
+
+	public Tag getTag(int id) {
+		Tag tag = new Tag();
+		String sqlQuery = "select * from Tag where tag_id = " + id;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				tag.setId(rs.getInt("tag_id"));
+				tag.setDescription(rs.getString("tag_des"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tag;
+	}
 }
