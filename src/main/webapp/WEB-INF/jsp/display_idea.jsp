@@ -4,10 +4,74 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>List of idea</title>
+<link rel="stylesheet" href="/css/list_idea.css">
+<script type="text/javascript" src="/javascript/list_idea.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 <body>
+	<div class="container">
+	    <div class="row">
+	    	<%-- <c:forEach items="${ideas}" var="idea"> --%>
+		        <div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
+		            <div class="[ panel panel-default ] panel-google-plus">
+		                <!-- <div class="dropdown">
+		                    <span class="dropdown-toggle" type="button" data-toggle="dropdown">
+		                        <span class="[ glyphicon glyphicon-chevron-down ]"></span>
+		                    </span>
+		                    <ul class="dropdown-menu" role="menu">
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+		                        <li role="presentation" class="divider"></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+		                    </ul>
+		                </div> -->
+		                <div class="panel-google-plus-tags">
+		                    <ul>
+		                        <li>#Millennials</li>
+		                        <li>#Generation</li>
+		                    </ul>
+		                </div>
+		                <div class="panel-heading">
+		                    <img class="[ img-circle pull-left ]" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="Mouse0270" />
+		                    <h3>${idea.person.person_name }</h3>
+		                    <h5><span>Shared publicly</span> - <span>${idea.post_date }</span> </h5>
+		                </div>
+		                <div class="panel-body">
+		                	<p><b>${idea.title}</b></p>
+		                    <p>${idea.content}</p>
+		                </div>
+		                <div class="panel-footer">
+		                    <button type="button" class="[ btn btn-default ]">
+		                    	<span class="[ glyphicon glyphicon-thumbs-up ]" style="color: blue;"></span>
+		                    </button>
+		                    <button type="button" class="[ btn btn-default ]">
+		                    	<span class="[ glyphicon glyphicon-thumbs-down ]" style="color: red;"></span>
+		                    </button>
+		                    <button type="button" class="[ btn btn-default ]">
+		                        <span class="[ glyphicon glyphicon-share-alt ]"></span>
+		                    </button>
+		                    <textarea class="input-placeholder">Add a comment...</textarea>
+		                </div>
+		                <div class="panel-google-plus-comment">
+		                    <img class="img-circle" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="User Image" />
+		                    <div class="panel-google-plus-textarea">
+		                        <textarea rows="4"></textarea>
+		                        <button type="submit" class="[ btn btn-success disabled ]">Post comment</button>
+		                        <button type="reset" class="[ btn btn-default ]">Cancel</button>
+		                    </div>
+		                    <div class="clearfix"></div>
+		                </div>
+		            </div>
+		        </div>
+	        <%-- </c:forEach> --%>
+	    </div>
+	</div>
+	
 	<c:forEach items="${ideas}" var="idea">
 		<h1>${idea.title}</h1>
 	</c:forEach>
