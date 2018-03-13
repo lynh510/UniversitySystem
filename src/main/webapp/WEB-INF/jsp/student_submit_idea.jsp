@@ -201,8 +201,8 @@
 												<div class="form-group">
 													<label for="modes" class="required">Modes</label> <select
 														class="form-control blur" name="mode" required>
-														<option value="0">Anonymous</option>
-														<option value="1">Published</option>
+														<option value="0" style="color: #000;">Anonymous</option>
+														<option value="1" style="color: #000;">Published</option>
 													</select>
 												</div>
 												<div class="form-group">
