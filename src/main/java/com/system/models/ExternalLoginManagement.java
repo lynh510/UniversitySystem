@@ -3,6 +3,7 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.system.entity.*;
 
@@ -37,8 +38,10 @@ public class ExternalLoginManagement {
 			if (rs.next()) {
 				p = pm.getPerson(rs.getInt(1));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (NullPointerException e) {
+
+		} catch (SQLException e) {
+
 		}
 		return p;
 	}

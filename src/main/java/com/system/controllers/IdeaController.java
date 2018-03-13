@@ -9,6 +9,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -53,9 +58,7 @@ public class IdeaController {
 			@RequestParam("tag") List<Integer> tags, @RequestParam("input-file-preview") List<MultipartFile> files,
 			@RequestParam("mode") int mode, Model model, RedirectAttributes redirectAttributes) {
 		String project_path = System.getProperty("user.dir");
-		Person p = new Person();
-		p.setId(1);
-		Idea idea = new Idea(0, title, content, p, null, new Date(), mode, 0, 0);
+		Idea idea = new Idea(0, title, content, getUserSession(), null, new Date(), mode, 0, 0);
 		int idea_id = im.insert_idea(idea);
 		idea.setId(idea_id);
 		insert_tags(tags, idea);
@@ -123,5 +126,12 @@ public class IdeaController {
 	private String getExtension(String filename) {
 		String[] parts = filename.split("\\.");
 		return parts[1];
+	}
+
+	private Person getUserSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		return (Person) session.getAttribute("user");
 	}
 }

@@ -16,8 +16,32 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <jsp:useBean id="tags" class="com.system.models.IdeaTagManagement"
 	scope="page" />
+<jsp:useBean id="likes" class="com.system.models.LikeManagement"
+	scope="page" />
 </head>
+<script type="text/javascript">
+	function onThumbUp(idea_id,like) {
+		document.getElementById("like" + idea_id).value = like;
+		document.getElementById("idea_id" + idea_id).value = idea_id;
+		$.ajax({
+			type : "Post",
+			url : "/like/like",
+			data : $("#like_form" + idea_id).serialize(),
+			success : function(response) {
+				jQuery('#like_view_'+idea_id).load(' #like_view_'+idea_id);
+			},
+			error: function(response){	
+				var data = JSON.parse(response.responseText);
+				alert(data.error);
+			}
+		});
+	}
+</script>
 <body>
+	<form id="like_form" method="post" action="/like/like">
+		<input type="hidden" id="idea_id" name="idea" value=""> <input
+			type="hidden" name="like" id="like" value="">
+	</form>
 	<div class="container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
@@ -56,19 +80,33 @@
 								<b>${idea.title}</b>
 							</p>
 							<p>${idea.content}</p>
+							<div id="like_view_${idea.id}">
+								<p>${likes.count_like(1,idea.id)} thumbup</p>
+								<p>${likes.count_like(2,idea.id)} thumbdown</p>
+							</div>
+
 						</div>
 						<div class="panel-footer">
-							<button type="button" class="[ btn btn-default ]">
+							<form id="like_form${idea.id}" method="post" action="/like/like">
+								<input type="hidden" id="idea_id${idea.id}" name="idea" value="">
+								<input type="hidden" name="like" id="like${idea.id}" value="">
+							</form>
+							<button type="button" class="[ btn btn-default ]"
+								onclick="onThumbUp(${idea.id},1)">
 								<span class="[ glyphicon glyphicon-thumbs-up ]"
 									style="color: blue;"></span>
 							</button>
-							<button type="button" class="[ btn btn-default ]">
+
+
+							<button type="button" class="[ btn btn-default ]"
+								onclick="onThumbUp(${idea.id},2)">
 								<span class="[ glyphicon glyphicon-thumbs-down ]"
 									style="color: red;"></span>
 							</button>
 							<button type="button" class="[ btn btn-default ]">
 								<span class="[ glyphicon glyphicon-share-alt ]"></span>
 							</button>
+
 							<textarea class="input-placeholder">Add a comment...</textarea>
 						</div>
 						<div class="panel-google-plus-comment">
