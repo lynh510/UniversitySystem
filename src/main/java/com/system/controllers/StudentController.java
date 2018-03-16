@@ -216,5 +216,21 @@ public class StudentController {
 		session.removeAttribute("user");
 		return model;
 	}
+	
+	// http://localhost:8080/student/activities
+		@GetMapping("/activities")
+		public ModelAndView activities() {
+			ModelAndView model = new ModelAndView("student_wall");
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			if (session.getAttribute("user") != null) {
+				Person p = (Person) session.getAttribute("user");
+				model.addObject("welcom", p);
+			} else {
+				model = new ModelAndView("redirect:/student/login");
+			}
+			return model;
+		}
 
 }
