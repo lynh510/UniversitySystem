@@ -94,11 +94,17 @@
 						</ul></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" aria-expanded="true"> <img alt=""
+<<<<<<< Updated upstream
 							class="img-circle" src="${welcom.person_picture}" width="30">
 							<span class="hidden-xs">${welcom.person_name}
 						</span>
+=======
+							class="img-circle" src="${welcom.person_picture}" width="30" height="30">
+							<span class="hidden-xs"><b>${welcom.person_name} </b></span>
+>>>>>>> Stashed changes
 					</a>
 						<ul class="dropdown-menu">
+							<li><a href="/student/activities"><i class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 									Profile</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change

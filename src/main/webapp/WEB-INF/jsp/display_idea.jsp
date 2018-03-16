@@ -8,6 +8,10 @@
 
 <link rel="stylesheet" href="/css/list_idea.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<<<<<<< Updated upstream
+=======
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+>>>>>>> Stashed changes
 
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -22,6 +26,7 @@
 <jsp:useBean id="likes" class="com.system.models.LikeManagement" scope="page" />
 </head>
 <script type="text/javascript">
+<<<<<<< Updated upstream
 	function onThumbUp(idea_id,like) {
 		document.getElementById("like" + idea_id).value = like;
 		document.getElementById("idea_id" + idea_id).value = idea_id;
@@ -53,22 +58,28 @@
 			type="hidden" name="like" id="like" value="">
 	</form>
 	<div class="container">
+=======
+	
+</script>
+<body>
+	<div class="section container">
+>>>>>>> Stashed changes
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
 					<div class="[ panel panel-default ] panel-google-plus">
-						<!-- <div class="dropdown">
+						<div class="dropdown">
 		                    <span class="dropdown-toggle" type="button" data-toggle="dropdown">
 		                        <span class="[ glyphicon glyphicon-chevron-down ]"></span>
 		                    </span>
 		                    <ul class="dropdown-menu" role="menu">
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" class="editIdea" onclick="return editIdea();">Edit</a></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
+		                        <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
 		                    </ul>
-		                </div> -->
+		                </div>
 						<div class="panel-google-plus-tags">
 							<ul>
 								<c:forEach items="${tags.get_idea_tags(idea.id)}" var="t">
@@ -85,6 +96,7 @@
 							</h5>
 						</div>
 						<div class="panel-body">
+<<<<<<< Updated upstream
 							<p>
 								<b>${idea.title}</b>
 							</p>
@@ -92,6 +104,30 @@
 							<div id="like_view_${idea.id}">
 								<p>${likes.count_like(1,idea.id)} thumbup</p>
 								<p>${likes.count_like(2,idea.id)} thumbdown</p>
+=======
+							<div class="ideaInfo">
+								<p>
+									<b>${idea.title}</b>
+								</p>
+								<p>${idea.content}</p>
+							</div>
+							<div class="editIdeaInfo">
+								<input class="form-control" name="title" required value="${idea.title}"/>
+								<textarea name="content" rows="4" required >${idea.content}</textarea>
+								<button type="submit" class="[ btn btn-success disabled ]">Edit post</button>
+								<button type="reset" class="[ btn btn-default ]">Cancel</button>
+							</div>
+							<div class="clearfix"></div>
+							<div class="box-likes">
+								<div class="row" id="like_view_${idea.id}">
+									<span><a href="#">${likes.count_like(1,idea.id)}</a></span> <span>Like
+										this</span> <span><a href="#">${likes.count_like(2,idea.id)}</a></span>
+									<span>Dislike this</span>
+								</div>
+								<div class="row">
+									<span>145 comments</span>
+								</div>
+>>>>>>> Stashed changes
 							</div>
 							
 							<div class="box-likes">
@@ -112,6 +148,7 @@
 								<input type="hidden" id="idea_id${idea.id}" name="idea" value="">
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
+<<<<<<< Updated upstream
 							<button type="button" class="[ btn btn-default ]" id="thumbUp"
 								onclick="onThumbUp(${idea.id},1)">
 								<span class="[ glyphicon glyphicon-thumbs-up ]"
@@ -119,6 +156,15 @@
 							</button>
 							<button type="button" class="[ btn btn-default ]" id="thumbDown"
 								onclick="onThumbUp(${idea.id},2)">
+=======
+							<button type="button" class="[ btn btn-default ]"
+								id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
+								<span class="[ glyphicon glyphicon-thumbs-up ]"
+									style="color: blue;"></span>
+							</button>
+							<button type="button" class="[ btn btn-default ]"
+								id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
+>>>>>>> Stashed changes
 								<span class="[ glyphicon glyphicon-thumbs-down ]"
 									style="color: red;"></span>
 							</button>
@@ -144,6 +190,7 @@
 								</div>
 							</div>
 							<div class="input-placeholder">Add a comment...</div>
+<<<<<<< Updated upstream
 		                </div>
 		                <div class="panel-google-plus-comment">
 		                    <img class="img-circle" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="User Image" />
@@ -154,6 +201,22 @@
 		                    </div>
 		                    <div class="clearfix"></div>
 		                </div>
+=======
+						</div>
+						<div class="panel-google-plus-comment">
+							<img class="img-circle"
+								src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46"
+								alt="User Image" />
+							<div class="panel-google-plus-textarea">
+								<textarea rows="4"></textarea>
+								<input type="checkbox" name="mode"/><span style="font-size: 12px; font-style: italic;"> Comment as Anonymous</span><br/>
+								<button type="submit" class="[ btn btn-success disabled ]">Post
+									comment</button>
+								<button type="reset" class="[ btn btn-default ]">Cancel</button>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+>>>>>>> Stashed changes
 					</div>
 				</div>
 			</div>
@@ -188,6 +251,39 @@
 	<c:if test="${currentPage lt noOfPages}">
 		<td><a href="${currentPage + 1}">Next</a></td>
 	</c:if>
+<<<<<<< Updated upstream
 	
+=======
+
+	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                    	<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"> <img alt=""
+							class="img-circle" src="${welcom.person_picture}" width="30">
+							<span class="hidden-xs">${welcom.person_name} </span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/student/activities"><i class="fa fa-fw fa-history"></i> View Activity Log</a></li>
+							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
+							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change Password</a></li>
+							<li class="divider"></li>
+							<li><a href="/student/logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
+						</ul>
+					</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+>>>>>>> Stashed changes
 </body>
 </html>
