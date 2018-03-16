@@ -4,39 +4,39 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ApiResponse {
-	   private HttpStatus status;
-	    private Object data;
-	    private String error;
+	private HttpStatus status;
+	private Object data;
+	private String message;
 
-	    public ApiResponse() {
-	        this(null);
-	    }
+	public ApiResponse() {
+		this(null);
+	}
 
-	    public ApiResponse(Object data) {
-	        this.data = data;
-	        this.error = null;
-	    }
+	public ApiResponse(Object data) {
+		this.data = data;
+		this.message = null;
+	}
 
 	public ResponseEntity<ApiResponse> send(HttpStatus status) {
-	        this.status = status;
-	        return new ResponseEntity<ApiResponse>(this, status);
-	    }
+		this.status = status;
+		return new ResponseEntity<ApiResponse>(this, status);
+	}
 
-	    public ResponseEntity<ApiResponse> send(HttpStatus status, String error) {
-	        this.status = status;
-	        this.error = error;
-	        return new ResponseEntity<ApiResponse>(this, status);
-	    }
+	public ResponseEntity<ApiResponse> send(HttpStatus status, String message) {
+		this.status = status;
+		this.message = message;
+		return new ResponseEntity<ApiResponse>(this, status);
+	}
 
-	    public Object getData() {
-	        return data;
-	    }
+	public Object getData() {
+		return data;
+	}
 
-	    public String getError() {
-	        return error;
-	    }
+	public String getMessage() {
+		return message;
+	}
 
-	    public HttpStatus getStatus() {
-	        return this.status;
-	    }
+	public HttpStatus getStatus() {
+		return this.status;
+	}
 }

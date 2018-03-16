@@ -12,19 +12,24 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.system.ApiResponse;
 import com.system.entity.*;
 import com.system.models.*;;
 
@@ -54,22 +59,25 @@ public class IdeaController {
 	}
 
 	@PostMapping("/submit")
-	public ModelAndView submit_idea(@RequestParam("title") String title, @RequestParam("content") String content,
-			@RequestParam("tag") List<Integer> tags, @RequestParam("input-file-preview") List<MultipartFile> files,
-			@RequestParam("mode") int mode, Model model, RedirectAttributes redirectAttributes) {
-		String project_path = System.getProperty("user.dir");
-		Idea idea = new Idea(0, title, content, getUserSession(), null, new Date(), mode, 0, 0);
-		int idea_id = im.insert_idea(idea);
-		idea.setId(idea_id);
-		insert_tags(tags, idea);
-		if (files.get(0).isEmpty()) {
-			System.out.println("file is null");
-		} else {
-			insert_attachfiles(files, idea);
+	@ResponseBody
+	public ResponseEntity<ApiResponse> submit_idea(@RequestParam("title") String title,
+			@RequestParam("content") String content, @RequestParam("tag") List<Integer> tags,
+			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode) {
+		try {
+			String project_path = System.getProperty("user.dir");
+			Idea idea = new Idea(0, title, content, getUserSession(), null, new Date(), mode, 0, 0);
+			int idea_id = im.insert_idea(idea);
+			idea.setId(idea_id);
+			insert_tags(tags, idea);
+			if (files.get(0).isEmpty()) {
+				System.out.println("no file is selected");
+			} else {
+				insert_attachfiles(files, idea);
+			}
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Idea posted successfully");
+		} catch (NullPointerException e) {
+			return new ApiResponse().send(HttpStatus.ACCEPTED, e.getMessage());
 		}
-		ModelAndView modelnv = new ModelAndView("redirect:/student/submit_idea");
-		redirectAttributes.addFlashAttribute("message", "Well done!! Idea posted successfully");
-		return modelnv;
 	}
 
 	private void insert_tags(List<Integer> tags, Idea idea) {
@@ -132,6 +140,11 @@ public class IdeaController {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		HttpSession session = request.getSession(false);
-		return (Person) session.getAttribute("user");
+		if (session.getAttribute("user") == null) {
+			throw new NullPointerException("Have to login first");
+		} else {
+			return (Person) session.getAttribute("user");
+		}
+
 	}
 }

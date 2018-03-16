@@ -52,9 +52,9 @@ public class LikeController {
 			} else if (check_is_liked == 0) {
 				lm.insert_like(idea_Emoji);
 			}
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "Liked");
-		} catch (Exception e) {
-			return new ApiResponse().send(HttpStatus.FORBIDDEN, "You have to login first");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Thank for your contribution");
+		} catch (NullPointerException e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "You have to login first");
 		}
 
 	}
@@ -63,7 +63,11 @@ public class LikeController {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		HttpSession session = request.getSession(false);
-		return (Person) session.getAttribute("user");
+		if (session.getAttribute("user") == null) {
+			throw new NullPointerException("Have to login first");
+		} else {
+			return (Person) session.getAttribute("user");
+		}
 	}
 
 }
