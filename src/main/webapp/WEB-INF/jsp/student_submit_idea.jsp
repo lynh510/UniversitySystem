@@ -92,17 +92,12 @@
 								</ul>
 							</li>
 						</ul></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-<<<<<<< Updated upstream
-							class="img-circle" src="${welcom.person_picture}" width="30">
-							<span class="hidden-xs">${welcom.person_name}
-						</span>
-=======
-							class="img-circle" src="${welcom.person_picture}" width="30" height="30">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" aria-expanded="true"> 
+							<img alt="" class="img-circle" src="${welcom.person_picture}" width="30" height="30">
 							<span class="hidden-xs"><b>${welcom.person_name} </b></span>
->>>>>>> Stashed changes
-					</a>
+						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/student/activities"><i class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
@@ -110,8 +105,8 @@
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
 									Password</a></li>
 							<li class="divider"></li>
-							<li><a href="/student/logout"><i class="fa fa-fw fa-power-off"></i>
-									Logout</a></li>
+							<li><a href="/student/logout"><i
+									class="fa fa-fw fa-power-off"></i> Logout</a></li>
 						</ul></li>
 				</ul>
 				<!--End::Header Right-->
@@ -145,8 +140,29 @@
 								</h4>
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
-								<form role="form" action="/idea/submit" method="post"
-									enctype="multipart/form-data">
+								<script type="text/javascript">
+									function submit_idea() {
+										$
+												.ajax({
+													type : "Post",
+													url : "/idea/submit",
+													enctype : 'multipart/form-data',
+													processData : false,
+													contentType : false,
+													cache : false,
+													data : new FormData(
+															$("#submit_idea_form")[0]),
+													success : function(response) {
+														alert(response.message);
+													},
+													error : function(response) {
+														alert(response.message);
+													}
+												});
+									}
+								</script>
+								<form role="form" id="submit_idea_form" action="/idea/submit"
+									method="post" enctype="multipart/form-data">
 									<div class="panel-body">
 										<div class="row">
 											<div class="col-md-12">
@@ -212,7 +228,7 @@
 													</select>
 												</div>
 												<div class="form-group">
-													<button type="submit" class="btn">
+													<button type="button" onclick="submit_idea()" class="btn">
 														<span class="glyphicon glyphicon-floppy-disk"></span>Submit
 													</button>
 													<div>
