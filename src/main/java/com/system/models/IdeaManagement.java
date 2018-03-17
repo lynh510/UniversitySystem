@@ -98,13 +98,15 @@ public class IdeaManagement {
 	}
 
 	public void insert_Idea_attachfiles(Idea_attachfiles ia) {
-		String sqlQuery = "Insert into Idea_attachfiles values(?,?,?)";
+		String sqlQuery = "Insert into Idea_attachfiles values(?,?,?,?,?)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, ia.getIdea().getId());
-			statement.setString(2, ia.getFile_type());
-			statement.setString(3, ia.getLink());
+			statement.setString(2, ia.getOld_name());
+			statement.setString(3, ia.getNew_name());
+			statement.setString(4, ia.getFile_type());
+			statement.setString(5, ia.getLink());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

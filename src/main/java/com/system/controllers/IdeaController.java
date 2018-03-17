@@ -95,7 +95,7 @@ public class IdeaController {
 				c.setTime(new Date());
 				Thread.sleep(1);
 				String extension = getExtension(fileName);
-				Idea_attachfiles ia = new Idea_attachfiles(0, idea, extension, c.getTimeInMillis() + "." + extension);
+				Idea_attachfiles ia = new Idea_attachfiles(0, idea,fileName,c.getTimeInMillis() + "." + extension, extension,"uploads_document" );
 				im.insert_Idea_attachfiles(ia);
 				save_file(multipartFile, c.getTimeInMillis() + "." + extension);
 			} catch (InterruptedException e) {

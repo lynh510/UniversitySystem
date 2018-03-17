@@ -70,6 +70,8 @@ tag_id int foreign key references Tag(tag_id),
 create table Idea_attachfiles(
 attachfile_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
+old_name varchar(500),
+new_name varchar(500),
 file_type varchar(20),
 link varchar(500)
 )
@@ -93,39 +95,15 @@ person_id int foreign key references Person(person_id),
 comment_text varchar(500),
 ); 
 
-create table TermConditions(
-term_id int primary key identity,
-term_des varchar(1000)
-)
-
 create table UserExternalLogin(
-user_id int foreign key references Person(person_id),
+userid int foreign key references Person(person_id),
 email varchar(50),
 );
 
------ extra to do if have enough time 
-create table CommentLike(
-id int primary key identity,
-emo_id int foreign key references Emoji(emo_id),
-)
 
-create table Activity(
-activity_id int primary key identity,
-activity_name varchar(100) --comment on an idea, idea is accepted
-)
-
-create table Notification(
-id int primary key identity,
-is_read boolean, -- seen, not seen
-sender_id int foreign key references Person(person_id), --who commented
-recipient_id int foreign key references Person(person_id), -- is the one who receives
-activity_type int foreign key references Activity(activity_id),
-notification_description varchar(100), --John just commented into your post .. ago
-url varchar(500),
-time_sent datetime
-)
- 
 SELECT * FROM Student
+insert into Emoji values ('Thumb Up'),('Thumb Down')
+insert into Tag values ('Course'),('Service')
 
 CREATE PROCEDURE add_student
     @stuID int,
@@ -150,10 +128,7 @@ BEGIN
     END CATCH
 
 END
---------
-DECLARE @responseMessage NVARCHAR(250);
-Exec add_student 1,'username','password', @responseMessage output;
-select @responseMessage as N'@responseMessage'
+
 
 CREATE PROCEDURE student_login
     @stuUsername NVARCHAR(254),
@@ -178,3 +153,30 @@ BEGIN
        select * from Person where person_id = 0
 
 END
+
+--------
+DECLARE @responseMessage NVARCHAR(250);
+Exec add_student 1,'username','password', @responseMessage output;
+select @responseMessage as N'@responseMessage'
+
+----- extra to do if have enough time 
+create table CommentLike(
+id int primary key identity,
+emo_id int foreign key references Emoji(emo_id),
+)
+
+create table Activity(
+activity_id int primary key identity,
+activity_name varchar(100) --comment on an idea, idea is accepted
+)
+
+create table Notification(
+id int primary key identity,
+is_read boolean, -- seen, not seen
+sender_id int foreign key references Person(person_id), --who commented
+recipient_id int foreign key references Person(person_id), -- is the one who receives
+activity_type int foreign key references Activity(activity_id),
+notification_description varchar(100), --John just commented into your post .. ago
+url varchar(500),
+time_sent datetime
+)
