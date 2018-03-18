@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.ApiResponse;
+import com.system.entity.Idea;
 import com.system.entity.Person;
 import com.system.entity.Student;
 import com.system.models.*;
@@ -216,15 +218,24 @@ public class StudentController {
 		return model;
 	}
 
-	// http://localhost:8080/student/activities
-	@GetMapping("/activities")
-	public ModelAndView activities() {
+	// http://localhost:8080/student/activities/1
+	@GetMapping("/activities/{person_id}/{numberOfPage}")
+	public ModelAndView activities(@PathVariable(value="person_id") int person_id,
+			@PathVariable("numberOfPage") String page) {
 		ModelAndView model = new ModelAndView("student_wall");
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		HttpSession session = request.getSession(false);
 		if (session.getAttribute("user") != null) {
-			Person p = (Person) session.getAttribute("user");
+			Person p = (Person) session.getAttribute("user");	
+			IdeaManagement im = new IdeaManagement();
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords();
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage,person_id));
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
 			model.addObject("welcom", p);
 		} else {
 			model = new ModelAndView("redirect:/student/login");
@@ -232,4 +243,25 @@ public class StudentController {
 		return model;
 	}
 
+	@PostMapping("/edit")
+	public ModelAndView edit_idea(@RequestParam("idea_id")int idea_id,
+			@RequestParam("person_id")int person_id,
+			@RequestParam("title") String title,
+			@RequestParam("content") String content) {
+		ModelAndView model = new ModelAndView("redirect:/student/activities/"+person_id+"/1");
+		IdeaManagement im = new IdeaManagement();
+		Idea idea = new Idea(idea_id,title,content);
+		im.eidt_idea(idea);
+		return model;
+	}
+	
+	@RequestMapping("/delete/{person_id}/{idea_id}")
+	public ModelAndView delete_idea(@PathVariable(value="idea_id") int id,
+			@PathVariable(value="person_id") int person_id) {
+		ModelAndView model = new ModelAndView("redirect:/student/activities/"+person_id+"/1");
+		IdeaManagement im = new IdeaManagement();
+		im.delete_idea(id);
+		return model;
+	}
+	
 }

@@ -57,7 +57,7 @@ person_id int foreign key references Person(person_id),
 post_date datetime,
 close_date datetime,
 idea_views int,
-mode tinyint, --0 for publish, 1 for anonymous, 2 private
+mode tinyint, --1 for publish, 0 for anonymous
 _status tinyint -- 0 for pending, 1 for opening, 2 for closed
 );
 
@@ -170,7 +170,7 @@ activity_id int primary key identity,
 activity_name varchar(100) --comment on an idea, idea is accepted
 )
 
-create table Notification(
+create table _Notification(
 id int primary key identity,
 is_read boolean, -- seen, not seen
 sender_id int foreign key references Person(person_id), --who commented
@@ -180,3 +180,6 @@ notification_description varchar(100), --John just commented into your post .. a
 url varchar(500),
 time_sent datetime
 )
+
+select * from idea
+

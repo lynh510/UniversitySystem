@@ -25,7 +25,7 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea ORDER BY post_date OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
+		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
 				+ " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -49,6 +49,33 @@ public class IdeaManagement {
 		return ideaList;
 	}
 
+	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage,int person_id) {
+		List<Idea> ideaList = new ArrayList<>();
+		int offset = itemPerPage * (currentPage - 1);
+		String sqlQuery = "SELECT * FROM Idea Where person_id = ? and _status = 0 ORDER BY post_date DESC";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, person_id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = new Idea();
+				idea.setId(rs.getInt("idea_id"));
+				idea.setTitle(rs.getString("idea_tile"));
+				idea.setContent(rs.getString("idea_content"));
+				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				idea.setPost_date(rs.getDate("post_date"));
+				idea.setClose_date(rs.getDate("close_date"));
+				idea.setViews(rs.getInt("idea_views"));
+				idea.setStatus(rs.getInt("_status"));
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+	
 	public int noOfRecords() {
 		int result = 0;
 		try {
@@ -139,4 +166,30 @@ public class IdeaManagement {
 		}
 	}
 
+	public void eidt_idea(Idea idea) {
+		String sqlQuery = "Update Idea Set idea_tile = ?, idea_content = ? where idea_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, idea.getTitle());
+			statement.setString(2, idea.getContent());
+			statement.setInt(3, idea.getId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void delete_idea(int idea_id) {
+		String sqlQuery = "Update Idea Set _status = ? where idea_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, 2);
+			statement.setInt(2, idea_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

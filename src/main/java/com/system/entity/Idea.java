@@ -31,6 +31,15 @@ public class Idea {
 		this.status = status;
 	}
 
+	
+	
+	public Idea(int id, String title, String content) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
+	}
+
 	public String getTitle() {
 		return title;
 	}

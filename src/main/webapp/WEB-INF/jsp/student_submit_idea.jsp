@@ -99,7 +99,7 @@
 							</b></span>
 					</a>
 						<ul class="dropdown-menu">
-							<li><a href="/student/activities"><i
+							<li><a href="/student/activities/${welcom.id}/1"><i
 									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 									Profile</a></li>

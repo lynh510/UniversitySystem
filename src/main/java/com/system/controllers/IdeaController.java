@@ -58,6 +58,7 @@ public class IdeaController {
 		return model;
 	}
 
+	
 	@PostMapping("/submit")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> submit_idea(@RequestParam("title") String title,
@@ -146,4 +147,22 @@ public class IdeaController {
 		}
 
 	}
+	
+	@PostMapping("/edit")
+	public ModelAndView edit_idea(@RequestParam("idea_id")int idea_id,
+			@RequestParam("title") String title,
+			@RequestParam("content") String content) {
+		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
+		Idea idea = new Idea(idea_id,title,content);
+		im.eidt_idea(idea);
+		return model;
+	}
+	
+	@RequestMapping("/delete/{idea_id}")
+	public ModelAndView delete_idea(@PathVariable(value="idea_id") int id) {
+		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
+		im.delete_idea(id);
+		return model;
+	}
+	
 }

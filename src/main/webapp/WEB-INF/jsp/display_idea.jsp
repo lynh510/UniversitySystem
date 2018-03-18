@@ -50,7 +50,7 @@
 										<li role="presentation"><a role="menuitem" tabindex="-1"
 											class="editIdea" onclick="return editIdea();">Edit</a></li>
 										<li role="presentation"><a role="menuitem" tabindex="-1"
-											href="#">Delete</a></li>
+											href="/idea/delete/${idea.id}">Delete</a></li>
 										<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
@@ -85,14 +85,17 @@
 									</p>
 									<p>${idea.content}</p>
 								</div>
-								<div class="editIdeaInfo">
-									<input class="form-control" name="title" required
-										value="${idea.title}" />
-									<textarea name="content" rows="4" required>${idea.content}</textarea>
-									<button type="submit" class="[ btn btn-success disabled ]">Edit
-										post</button>
-									<button type="reset" class="[ btn btn-default ]">Cancel</button>
-								</div>
+								<form id="edit_idea_form" method="post" action="/idea/edit">
+									<div class="editIdeaInfo">
+										<input type="hidden" name="idea_id" value="${idea.id}" /> <input
+											class="form-control" name="title" required
+											value="${idea.title}" />
+										<textarea name="content" rows="4" required>${idea.content}</textarea>
+										<button type="submit" class="[ btn btn-success disabled ]">Edit
+											post</button>
+										<button type="reset" class="[ btn btn-default ]">Cancel</button>
+									</div>
+								</form>
 								<div class="clearfix"></div>
 								<div class="box-likes">
 									<div class="row" id="like_view_${idea.id}">
@@ -190,9 +193,9 @@
 								<div class="input-placeholder">Add a comment...</div>
 								<<<<<<< HEAD ======= <<<<<<< Updated upstream
 							</div>
-<<<<<<< HEAD
+							<<<<<<< HEAD
 							<div class="input-placeholder">Add a comment...</div>
-=======
+							=======
 							<div class="panel-google-plus-comment">
 								<img class="img-circle"
 									src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46"

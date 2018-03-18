@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/list_idea.css">
 
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
@@ -15,57 +18,64 @@
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
 <script type="text/javascript" src="/javascript/list_idea.js"></script>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <title>Activity Log</title>
 </head>
 <body>
-<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                    	<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" src="${welcom.person_picture}" width="30" height="30">
-							<span class="hidden-xs"><b>${welcom.person_name} </b></span>
-						</a>
+	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#navbar-ex-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="navbar-ex-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" aria-expanded="true"> <img alt=""
+							class="img-circle" src="${welcom.person_picture}" width="30"
+							height="30"> <span class="hidden-xs"><b>${welcom.person_name}
+							</b></span>
+					</a>
 						<ul class="dropdown-menu">
-							<li><a href="/student/activities"><i class="fa fa-fw fa-history"></i> View Activity Log</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change Password</a></li>
+							<li><a href="/student/activities/${welcom.id}/1"><i
+									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
+							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
+									Profile</a></li>
+							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
+									Password</a></li>
 							<li class="divider"></li>
-							<li><a href="/student/logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
-						</ul>
-					</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-   	<div class="section container">
+							<li><a href="/student/logout"><i
+									class="fa fa-fw fa-power-off"></i> Logout</a></li>
+						</ul></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
 					<div class="[ panel panel-default ] panel-google-plus">
 						<div class="dropdown">
-		                    <span class="dropdown-toggle" type="button" data-toggle="dropdown">
-		                        <span class="[ glyphicon glyphicon-chevron-down ]"></span>
-		                    </span>
-		                    <ul class="dropdown-menu" role="menu">
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" class="editIdea" onclick="return editIdea();">Edit</a></li>
-		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
-		                        <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+							<span class="dropdown-toggle" type="button"
+								data-toggle="dropdown"> <span
+								class="[ glyphicon glyphicon-chevron-down ]"></span>
+							</span>
+							<ul class="dropdown-menu" role="menu">
+								<li role="presentation"><a role="menuitem" tabindex="-1"
+									class="editIdea" onclick="return editIdea();">Edit</a></li>
+								<li role="presentation"><a role="menuitem" tabindex="-1"
+									href="/student/delete/${welcom.id}/${idea.id}">Delete</a></li>
+								<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
-		                    </ul>
-		                </div>
+							</ul>
+						</div>
 						<div class="panel-google-plus-tags">
 							<ul>
 								<c:forEach items="${tags.get_idea_tags(idea.id)}" var="t">
@@ -88,12 +98,18 @@
 								</p>
 								<p>${idea.content}</p>
 							</div>
-							<div class="editIdeaInfo">
-								<input class="form-control" name="title" required value="${idea.title}"/>
-								<textarea name="content" rows="4" required >${idea.content}</textarea>
-								<button type="submit" class="[ btn btn-success disabled ]">Edit post</button>
-								<button type="reset" class="[ btn btn-default ]">Cancel</button>
-							</div>
+							<form id="edit_idea_form" method="post" action="/student/edit">
+								<div class="editIdeaInfo">
+									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
+										type="hidden" name="person_id" value="${welcom.id}" /> <input
+										class="form-control" name="title" required
+										value="${idea.title}" />
+									<textarea name="content" rows="4" required>${idea.content}</textarea>
+									<button type="submit" class="[ btn btn-success disabled ]">Edit
+										post</button>
+									<button type="reset" class="[ btn btn-default ]">Cancel</button>
+								</div>
+							</form>
 							<div class="clearfix"></div>
 							<div class="box-likes">
 								<div class="row" id="like_view_${idea.id}">
