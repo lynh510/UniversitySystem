@@ -53,11 +53,13 @@ function onThumbUp(idea_id,like) {
 				$('#btnthumbUp' + idea_id).css('background-color','blue');
 				$('#btnthumbUp' + idea_id + ' span').css('color','white');
 				$('#btnthumbDown' + idea_id).css('background-color','white');
+				$('#btnthumbDown' + idea_id + ' span').css('color','red');
 			}
 			if(like == 2) {
 				$('#btnthumbDown' + idea_id).css('background-color','red');
 				$('#btnthumbDown' + idea_id + ' span').css('color','white');
 				$('#btnthumbUp' + idea_id).css('background-color','white');
+				$('#btnthumbUp' + idea_id + ' span').css('color','blue');
 			}
 		},
 		error: function(xhr,response,error){	

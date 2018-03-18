@@ -16,18 +16,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.system.ApiResponse;
 import com.system.entity.Person;
 import com.system.entity.Student;
 import com.system.models.*;
@@ -67,24 +71,18 @@ public class StudentController {
 
 	// for submitting data to backend
 	@PostMapping("/registration")
-	public ModelAndView sub(@RequestParam("first_name") String first_name, @RequestParam("last_name") String last_name,
-			@RequestParam("user_name") String user_name, @RequestParam("email") String email,
-			@RequestParam("password") String password, @RequestParam("day") String day,
-			@RequestParam("month") String month, @RequestParam("year") String year, @RequestParam("gender") int gender,
-			@RequestParam("profilepic") MultipartFile profilepic, @RequestParam("phone") String phone,
-			@RequestParam("address") String address, Model model) {
-		ModelAndView mode = new ModelAndView("student_registration_form");
+	@ResponseBody
+	public ResponseEntity<ApiResponse> student_registration(@RequestParam("first_name") String first_name,
+			@RequestParam("last_name") String last_name, @RequestParam("user_name") String user_name,
+			@RequestParam("email") String email, @RequestParam("password") String password,
+			@RequestParam("day") String day, @RequestParam("month") String month, @RequestParam("year") String year,
+			@RequestParam("gender") int gender, @RequestParam("profilepic") MultipartFile profilepic,
+			@RequestParam("phone") String phone, @RequestParam("address") String address, Model model) {
 		StudentManagement sm = new StudentManagement();
-		String errors = "";
 		if (!sm.isUserNameExisted(user_name)) {
-			errors = "Username is existed!";
-			mode.addObject("errors", errors);
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Username is already existed!");
 		} else if (!sm.isEmailExist(email)) {
-			errors = "Email is existed!";
-			mode.addObject("errors", errors);
-		} else if (profilepic.isEmpty()) {
-			errors = "You have to choose avatar!";
-			mode.addObject("errors", errors);
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Email address is existed!");
 		} else {
 			String full_name = first_name + " " + last_name;
 			// get birthday
@@ -95,24 +93,28 @@ public class StudentController {
 				SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = simple_date.parse(format_date);
 				java.sql.Date birthday = new java.sql.Date(date.getTime());
-				Person p = new Person(c.getTimeInMillis() + ".png", full_name, 0, birthday, gender, 0, phone, address,
-						email, "");
+				Person p = new Person("", full_name, 0, birthday, gender, 0, phone, address, email, "");
+				if (profilepic.isEmpty()) {
+					p.setPerson_picture("login-user-icon.png");
+				} else {
+					p.setPerson_picture(c.getTimeInMillis() + ".png");
+				}
 				Student s = new Student(p, user_name, password);
 				if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
 					String auto_path_project = System.getProperty("user.dir");
+					if (!profilepic.isEmpty()) {
+						save_image(auto_path_project, profilepic, p.getPerson_picture());
+					}
+					return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
 
-					save_image(auto_path_project, profilepic, c.getTimeInMillis() + "");
-					mode = new ModelAndView("redirect:/student/login");
 				} else {
-					errors = "Some error from system!";
-					mode.addObject("errors", errors);
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error in system");
 				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			}
 		}
-		return mode;
 	}
 
 	private void save_image(String path, MultipartFile profilepic, String filename) {
@@ -120,7 +122,7 @@ public class StudentController {
 		OutputStream outputStream = null;
 		try {
 			inputStream = profilepic.getInputStream();
-			File newFile = new File(path + "\\src\\main\\resources\\uploads\\" + filename + ".png");
+			File newFile = new File(path + "\\src\\main\\resources\\uploads\\" + filename);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
@@ -147,11 +149,11 @@ public class StudentController {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		HttpSession session = request.getSession(false);
-		if (session.getAttribute("user") != null) {
+		if (session.getAttribute("user") == null) {
+			mnv = new ModelAndView("redirect:/student/login");
+		} else {
 			Person p = (Person) session.getAttribute("user");
 			mnv.addObject("welcom", p);
-		} else {
-			mnv = new ModelAndView("redirect:/student/login");
 		}
 		return mnv;
 	}
@@ -163,50 +165,47 @@ public class StudentController {
 	}
 
 	@PostMapping("/login")
-	public ModelAndView check_login(@RequestParam("user_name") String user_name,
+	@ResponseBody
+	public ResponseEntity<ApiResponse> check_login(@RequestParam("user_name") String user_name,
 			@RequestParam("password") String password) {
-		ModelAndView model = new ModelAndView("student_login");
 		StudentManagement sm = new StudentManagement();
-		String errors = "";
 		Student s = new Student();
 		s.setUsername(user_name);
 		s.setStudent_password(password);
 		Person p = sm.check_login(s);
 		if (user_name.isEmpty() && password.isEmpty()) {
-			errors = "You have to input data";
-			model.addObject("errors", errors);
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "You have to input data");
 		} else if (p.getId() != 0) {
-			model = new ModelAndView("redirect:/student/submit_idea");
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
-			String auto_path_project = System.getProperty("user.dir");
 			p.setPerson_picture("/uploads/" + p.getPerson_picture());
 			session.setAttribute("user", p);
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Thank for your contribution");
 		} else {
-			errors = "Your account not exist!";
-			model.addObject("errors", errors);
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
 		}
-		return model;
+
 	}
 
 	@PostMapping("/external_login")
-	public ModelAndView external_login(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+	@ResponseBody
+	public ResponseEntity<ApiResponse> external_login(@RequestParam("email") String email,
+			RedirectAttributes redirectAttributes) {
 		ExternalLoginManagement elm = new ExternalLoginManagement();
-		ModelAndView model = null;
 		Person p = elm.isExist(email);
 		if (p.getId() != 0) {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", p);
-			model = new ModelAndView("redirect:/student/submit_idea");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Login successfully");
 		} else {
-			model = new ModelAndView("redirect:/student/login");
-			redirectAttributes.addFlashAttribute("errors", "Account doesn't exist in the system");
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+					"Your account doesn't exist, contact administrator for more technical supports");
 		}
-		return model;
 	}
+
 	@GetMapping("/logout")
 	public ModelAndView logout(RedirectAttributes redirectAttributes) {
 		ModelAndView model = new ModelAndView("redirect:/student/login");
@@ -216,21 +215,21 @@ public class StudentController {
 		session.removeAttribute("user");
 		return model;
 	}
-	
+
 	// http://localhost:8080/student/activities
-		@GetMapping("/activities")
-		public ModelAndView activities() {
-			ModelAndView model = new ModelAndView("student_wall");
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
-			HttpSession session = request.getSession(false);
-			if (session.getAttribute("user") != null) {
-				Person p = (Person) session.getAttribute("user");
-				model.addObject("welcom", p);
-			} else {
-				model = new ModelAndView("redirect:/student/login");
-			}
-			return model;
+	@GetMapping("/activities")
+	public ModelAndView activities() {
+		ModelAndView model = new ModelAndView("student_wall");
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("user") != null) {
+			Person p = (Person) session.getAttribute("user");
+			model.addObject("welcom", p);
+		} else {
+			model = new ModelAndView("redirect:/student/login");
 		}
+		return model;
+	}
 
 }

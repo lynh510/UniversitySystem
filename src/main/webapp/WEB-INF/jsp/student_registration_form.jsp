@@ -8,13 +8,38 @@
 <link rel="stylesheet" href="/css/regis_form.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style type="text/css">
-	.form-control {
-	    color: #fff !important;
-	}
+.form-control {
+	color: #fff !important;
+}
 </style>
 <script type="text/javascript">
+$(document).ready(function() {
+	$("#registration_form").submit(function(e) {
+	 var message =	document.getElementById("errors");
+		e.preventDefault();
+		$.ajax({
+			type : "Post",
+			url : "/student/registration",
+			enctype : 'multipart/form-data',
+			processData : false,
+			contentType : false,
+			cache : false,
+			data : new FormData($("#registration_form")[0]),
+			success : function(response) {
+				message.style.color = 'green';
+				message.innerHTML = 'Registration successfully';
+			},
+			error : function(xhr, response, error) {
+				var err = JSON.parse(xhr.responseText);
+				message.innerHTML = err.message;
+			}
+		});
+		return false;
+	});
+});
 	//VALIDATE EMAIL
 	function validateForm() {
 	    var x = document.forms["registration-form"]["email"].value;
@@ -70,51 +95,69 @@
 <title>Student Registration</title>
 </head>
 <body class="main">
-<div class="login-screen">
+	<div class="login-screen">
 		<div class="container">
-    		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-5">
-    			<form role="form"  name="registration-form" action="" method="post" enctype="multipart/form-data" class="registration-form">
-					<h3><b>Student Registration Form</b></h3>
+			<div
+				class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-5">
+				<form role="form" id="registration_form" name="registration-form"
+					action="" method="post" enctype="multipart/form-data"
+					class="registration-form">
+					<h3>
+						<b>Student Registration Form</b>
+					</h3>
 					<p>Fill in the form below to insert student details</p>
-    				<hr>
+					<hr>
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
 								<label class="required" for="form-firstname">First Name</label>
-		                        <input type="text" name="first_name" id="first_name" class="form-control blur" placeholder="First Name" tabindex="1" required maxlength="20">
+								<input type="text" name="first_name" id="first_name"
+									class="form-control blur" placeholder="First Name" tabindex="1"
+									required maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<label class="required" for="form-lastname">Last Name</label>
-								<input type="text" name="last_name" id="last_name" class="form-control blur" placeholder="Last Name" tabindex="2" required maxlength="20">
+								<label class="required" for="form-lastname">Last Name</label> <input
+									type="text" name="last_name" id="last_name"
+									class="form-control blur" placeholder="Last Name" tabindex="2"
+									required maxlength="20">
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="required" for="form-username">Username</label> 
-                        <input type="text" name="user_name" id="user_name" class="form-control blur" placeholder="User Name" tabindex="3" required maxlength="10">
+						<label class="required" for="form-username">Username</label> <input
+							type="text" name="user_name" id="user_name"
+							class="form-control blur" placeholder="User Name" tabindex="3"
+							required maxlength="10">
 					</div>
 					<div class="form-group">
-						<label class="required" for="form-email">Email</label> 
-						<input type="text" name="email" id="email" onkeypress="validateForm()" required placeholder="Email Address" tabindex="4" required class="form-email form-control blur" id="form-email">
+						<label class="required" for="form-email">Email</label> <input
+							type="text" name="email" id="email" onkeypress="validateForm()"
+							required placeholder="Email Address" tabindex="4" required
+							class="form-email form-control blur" id="form-email">
 						<h6 style="color: red" id="message"></h6>
 					</div>
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<label class="required" for="form-password">Password</label> 
-								<input type="password" name="password" id="password" class="form-control blur" placeholder="Password" tabindex="5" required  maxlength="20">
+								<label class="required" for="form-password">Password</label> <input
+									type="password" name="password" id="password"
+									class="form-control blur" placeholder="Password" tabindex="5"
+									required maxlength="20">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6">
 							<div class="form-group">
-								<label class="required" for="form-cfpass">Confirm Password</label> 
-								<input type="password" name="password_confirmation" id="password_confirmation" onkeyup='check();' class="form-control blur" required placeholder="Confirm Password" tabindex="6"  maxlength="20">
+								<label class="required" for="form-cfpass">Confirm
+									Password</label> <input type="password" name="password_confirmation"
+									id="password_confirmation" onkeyup='check();'
+									class="form-control blur" required
+									placeholder="Confirm Password" tabindex="6" maxlength="20">
 							</div>
 						</div>
 						<h6 style="color: red; margin-left: 5%;" id="msgConfirm"></h6>
-						
+
 					</div>
 					<div class="form-group">
 						<div>
@@ -122,7 +165,8 @@
 						</div>
 						<div class="date-col">
 							<select class="form-control blur" required name="day">
-								<option value="" selected="" disabled="disabled" hidden>Select a day</option>
+								<option value="" selected="" disabled="disabled" hidden>Select
+									a day</option>
 								<c:forEach items="${days}" var="day">
 									<option value="${day}">${day}</option>
 								</c:forEach>
@@ -130,15 +174,18 @@
 						</div>
 						<div class="date-col">
 							<select name="month" required class="form-control datebox blur">
-								<option value="" selected="" disabled="disabled" hidden>Select a month</option>
+								<option value="" selected="" disabled="disabled" hidden>Select
+									a month</option>
 								<c:forEach items="${months}" var="month">
 									<option value="${month}">${month}</option>
 								</c:forEach>
 							</select>
 						</div>
 						<div class="date-col">
-							<select name="year" value="" required class="form-control datebox blur">
-								<option selected="" disabled="disabled" hidden>Select a year</option>
+							<select name="year" value="" required
+								class="form-control datebox blur">
+								<option selected="" disabled="disabled" hidden>Select a
+									year</option>
 								<c:forEach items="${years}" var="year">
 									<option value="${year}">${year}</option>
 								</c:forEach>
@@ -146,19 +193,25 @@
 						</div>
 						<div class="form-group">
 							<div style="margin-top: 8%;">
-								<label class="labeltxt required">Gender</label><br/>
+								<label class="labeltxt required">Gender</label><br />
 								<div>
-		                            <input type="radio" name="gender" class="gender" id="male" tabindex="2" placeholder="Gender" value="1" title="Male"> Male
-		                            <input type="radio" name="gender" class="gender" id="female" tabindex="2" placeholder="Gender" value="2" title="Female"> Female
-		                            <input type="radio" name="gender" class="gender" id="unknown" tabindex="2" placeholder="Gender" value="3" title="Unknown"> Unknown
-		                        </div>
+									<input type="radio" name="gender" class="gender" id="male"
+										tabindex="2" placeholder="Gender" value="1" title="Male">
+									Male <input type="radio" name="gender" class="gender"
+										id="female" tabindex="2" placeholder="Gender" value="2"
+										title="Female"> Female <input type="radio"
+										name="gender" class="gender" id="unknown" tabindex="2"
+										placeholder="Gender" value="3" title="Unknown">
+									Unknown
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<div style="margin-top: 2%;">
-								<label class="labeltxt">Profile picture (Optional)</label> 
+								<label class="labeltxt">Profile picture (Optional)</label>
 							</div>
-							<input type="file" class="form-control blur" accept="image/*" name="profilepic" onchange="showMyImage(this)">
+							<input type="file" class="form-control blur" accept="image/*"
+								name="profilepic" onchange="showMyImage(this)">
 							<div class="profile-pic">
 								<img id="thumbnail" height="100%" width="100%" />
 							</div>
@@ -185,28 +238,34 @@
 							</script>
 						</div>
 						<div class="form-group">
-							<label class="required" for="form-phone">Phone number</label> 
-							<input type="text" name="phone" required placeholder="Phone number..."
-								class="form-control blur" id="form-phone"  maxlength="12" onkeypress="phonenumber(this)">
+							<label class="required" for="form-phone">Phone number</label> <input
+								type="text" name="phone" required placeholder="Phone number..."
+								class="form-control blur" id="form-phone" maxlength="12"
+								onkeypress="phonenumber(this)">
 							<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 						</div>
 						<div class="form-group">
 							<label class="required" for="form-address">Address</label> <input
 								type="text" name="address" required placeholder="Address..."
-								class="form-control blur" id="form-address"  maxlength="200">
+								class="form-control blur" id="form-address" maxlength="200">
 						</div>
 						<div class="form-group">
-			                <label>
-			                    By clicking <span class="label label-primary" style="font-size: 15px; background-color: teal; ">Sign up</span>, you agree to the <a href="/student/terms">Terms and Conditions</a> set out by this site
-			                </label>
-					    </div>
+							<label> By clicking <span class="label label-primary"
+								style="font-size: 15px; background-color: teal;">Sign up</span>,
+								you agree to the <a href="/student/terms">Terms and
+									Conditions</a> set out by this site
+							</label>
+						</div>
 						<h6 style="color: red" id="errors">${errors}</h6>
-						
+
 						<button type="submit" class="btn btn-reg">Sign up</button>
-                        <h5 style="margin-top: 5%;">You have already account. <a href="/student/login" id="unflip-btn" class="login-link">Log in now!</a></h5>
-    			</form>
-    		</div>
-   		</div>
-</div>
+						<h5 style="margin-top: 5%;">
+							You have already account. <a href="/student/login"
+								id="unflip-btn" class="login-link">Log in now!</a>
+						</h5>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
