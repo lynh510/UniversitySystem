@@ -30,7 +30,6 @@ public class StudentManagement {
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				message = resultSet.getString(1);
-				System.out.println(message);
 			}
 			ExternalUser eu = new ExternalUser(person_id, s.getStudent_id().getEmail());
 			elm.insert_external_user(eu);

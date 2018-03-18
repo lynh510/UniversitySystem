@@ -5,7 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.system.entity.Idea_Emoji;
+import com.system.entity.Person;
 
 public class LikeManagement {
 	public void insert_like(Idea_Emoji ie) {
@@ -40,7 +47,7 @@ public class LikeManagement {
 		return found;
 	}
 
-	public void update_like(int like_id, int idea_id,int user_id) {
+	public void update_like(int like_id, int idea_id, int user_id) {
 		String sqlQuery = "update Idea_emojis set emo_id = ? where idea_id = ? and person_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -72,7 +79,8 @@ public class LikeManagement {
 		}
 		return count;
 	}
-	public void unlike(int like_id, int idea_id,int user_id) {
+
+	public void unlike(int like_id, int idea_id, int user_id) {
 		String sqlQuery = "delete from Idea_emojis where emo_id = ? and idea_id = ? and person_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -84,6 +92,38 @@ public class LikeManagement {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	// return 0 if user has not liked the idea
+	public int check_like(int idea_id) {
+		int flag = 0;
+		String sqlQuery = "select * from Idea_emojis where idea_id = ? and person_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, idea_id);
+			statement.setInt(2, getUserSession().getId());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				flag = result.getInt(2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return flag;
+	}
+
+	private Person getUserSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("user") == null) {
+			// throw new NullPointerException("Have to login first");
+			return new Person();
+		} else {
+			return (Person) session.getAttribute("user");
 		}
 	}
 }

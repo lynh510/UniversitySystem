@@ -7,6 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.system.entity.*;
 
 public class IdeaManagement {
@@ -110,6 +116,26 @@ public class IdeaManagement {
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public boolean check_idea_belong(int user_id) {
+		if (getUserSession().getId() == user_id) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private Person getUserSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("user") == null) {
+			//throw new NullPointerException("Have to login first");
+			return new Person();
+		} else {
+			return (Person) session.getAttribute("user");
 		}
 	}
 

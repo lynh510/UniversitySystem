@@ -64,7 +64,6 @@ public class IdeaController {
 			@RequestParam("content") String content, @RequestParam("tag") List<Integer> tags,
 			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode) {
 		try {
-			String project_path = System.getProperty("user.dir");
 			Idea idea = new Idea(0, title, content, getUserSession(), null, new Date(), mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
@@ -76,7 +75,7 @@ public class IdeaController {
 			}
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Idea posted successfully");
 		} catch (NullPointerException e) {
-			return new ApiResponse().send(HttpStatus.ACCEPTED, e.getMessage());
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
 

@@ -15,14 +15,35 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id"
 	content="273733011923-n5lqfqjb265s8s8k5mka9drdkr2t78e8.apps.googleusercontent.com">
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	 $("#login_form").submit(function(e){
+		 e.preventDefault();
+			$.ajax({
+				type : "Post",
+				url : "/student/login",
+				data : $("#login_form").serialize(),
+				success : function(response) {
+					window.location.href = "/student/submit_idea";
+				},
+				error : function(xhr, response, error) {
+					var err = JSON.parse(xhr.responseText);
+					document.getElementById("errors").innerHTML = err.message;
+				}
+			});
+			return false;
+	 });
+});
+</script>
 </head>
 <body class="main">
 	<div class="login-screen">
 		<div class="container">
 			<div
 				class="col-xs-12 col-sm-8 col-md-5 col-sm-offset-2 col-md-offset-6">
-				<form role="form" name="login-form" action="" method="post"
-					class="login-form">
+				<form role="form" name="login-form" id="login_form"
+					action="/student/login" method="post" class="login-form">
 					<h2>
 						<b>Student Login Form</b>
 					</h2>
@@ -38,7 +59,7 @@
 							class="form-control blur" placeholder="Password" tabindex="2"
 							required maxlength="20">
 					</div>
-					<h6 style="color: red" id="errors">${errors}</h6>
+					<h6 style="color: red" id="errors"></h6>
 					<button type="submit" class="btn btn-reg">Login</button>
 					<p style="margin-top: 5%;">
 						<a href="#" class="forgot login-link">Forgotten your username
@@ -65,8 +86,22 @@
 						var name = profile.getName();
 						var email = profile.getEmail();
 						document.getElementById("email").value = email;
-						document.getElementById("external_login").submit();
+						//document.getElementById("external_login").submit();
+						$
+								.ajax({
+									type : "Post",
+									url : "/student/external_login",
+									data : $("#external_login").serialize(),
+									success : function(response) {
+										window.location.href = "/student/submit_idea";
+									},
+									error : function(xhr, response, error) {
+										var err = JSON.parse(xhr.responseText);
+										document.getElementById("errors").innerHTML = err.message;
+									}
+								});
 						gapi.auth2.getAuthInstance().disconnect();
+
 					}
 				</script>
 			</div>
