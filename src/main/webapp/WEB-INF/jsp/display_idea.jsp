@@ -138,21 +138,6 @@
 								</div>
 							</div>
 							<div class="input-placeholder">Add a comment...</div>
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-		                </div>
-		                <div class="panel-google-plus-comment">
-		                    <img class="img-circle" src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46" alt="User Image" />
-		                    <div class="panel-google-plus-textarea">
-		                        <textarea rows="4"></textarea>
-		                        <button type="submit" class="[ btn btn-success disabled ]">Post comment</button>
-		                        <button type="reset" class="[ btn btn-default ]">Cancel</button>
-		                    </div>
-		                    <div class="clearfix"></div>
-		                </div>
-=======
->>>>>>> Frontend_List_Idea
 						</div>
 						<div class="panel-google-plus-comment">
 							<img class="img-circle"
@@ -160,20 +145,13 @@
 								alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea rows="4"></textarea>
-<<<<<<< HEAD
-=======
 								<input type="checkbox" name="mode"/><span style="font-size: 12px; font-style: italic;"> Comment as Anonymous</span><br/>
->>>>>>> Frontend_List_Idea
 								<button type="submit" class="[ btn btn-success disabled ]">Post
 									comment</button>
 								<button type="reset" class="[ btn btn-default ]">Cancel</button>
 							</div>
 							<div class="clearfix"></div>
 						</div>
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
->>>>>>> Frontend_List_Idea
 					</div>
 				</div>
 			</div>
