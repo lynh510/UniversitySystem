@@ -183,3 +183,4 @@ time_sent datetime
 
 select * from idea
 
+SELECT * FROM Idea  Where person_id = 1 ORDER BY post_date DESC
