@@ -205,8 +205,6 @@
 								</div>
 								<div class="clearfix"></div>
 							</div>
-							======= >>>>>>> Frontend_List_Idea
->>>>>>> 2bacdd78b12048c616af16f271f332684f81842b
 						</div>
 						<div class="panel-google-plus-comment">
 							<img class="img-circle"
@@ -214,24 +212,15 @@
 								alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea rows="4"></textarea>
-<<<<<<< HEAD
-								<input type="checkbox" name="mode"/><span style="font-size: 12px; font-style: italic;"> Comment as Anonymous</span><br/>
-=======
-								<<<<<<< HEAD ======= <input type="checkbox" name="mode" /><span
+								<input type="checkbox" name="mode" /><span
 									style="font-size: 12px; font-style: italic;"> Comment as
-									Anonymous</span><br /> >>>>>>> Frontend_List_Idea
->>>>>>> 2bacdd78b12048c616af16f271f332684f81842b
+									Anonymous</span><br />
 								<button type="submit" class="[ btn btn-success disabled ]">Post
 									comment</button>
 								<button type="reset" class="[ btn btn-default ]">Cancel</button>
 							</div>
 							<div class="clearfix"></div>
 						</div>
-<<<<<<< HEAD
-=======
-						<<<<<<< HEAD ======= >>>>>>> Stashed changes >>>>>>>
-						Frontend_List_Idea
->>>>>>> 2bacdd78b12048c616af16f271f332684f81842b
 					</div>
 				</div>
 			</div>
