@@ -4,6 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import com.system.entity.Person;
 
 public class PersonManagement {
@@ -24,5 +30,17 @@ public class PersonManagement {
 		}
 
 		return p;
+	}
+
+	public Person getUserSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("user") == null) {
+			throw new NullPointerException("Have to login first");
+		} else {
+			return (Person) session.getAttribute("user");
+		}
+
 	}
 }

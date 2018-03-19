@@ -26,8 +26,7 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		
-		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
+		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date DESC OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
 				+ " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();

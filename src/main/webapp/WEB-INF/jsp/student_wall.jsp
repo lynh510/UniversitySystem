@@ -19,6 +19,12 @@
 	crossorigin="anonymous"></script>
 <script type="text/javascript" src="/javascript/list_idea.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<jsp:useBean id="likes" class="com.system.models.LikeManagement"
+	scope="page" />
+<jsp:useBean id="comments" class="com.system.models.CommentManagement"
+	scope="page" />
+<jsp:useBean id="tags" class="com.system.models.IdeaTagManagement"
+	scope="page" />
 <title>Activity Log</title>
 </head>
 <body>
@@ -55,7 +61,10 @@
 			</div>
 		</div>
 	</div>
-
+	<form action="/comment/submit" id="comment_form" method="post">
+		<input type="hidden" name="idea_id" id="idea_id" value=""> <input
+			type="hidden" name="text" id="commentText" value="">
+	</form>
 	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
@@ -118,7 +127,7 @@
 									<span>Dislike this</span>
 								</div>
 								<div class="row">
-									<span>145 comments</span>
+									<span>${comments.countComments(idea.id) } comment(s)</span>
 								</div>
 							</div>
 						</div>
@@ -128,50 +137,64 @@
 								<input type="hidden" id="idea_id${idea.id}" name="idea" value="">
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
-							<button type="button" class="[ btn btn-default ]"
-								id="thumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
-								<span class="[ glyphicon glyphicon-thumbs-up ]"
-									style="color: blue;"></span>
-							</button>
-							<button type="button" class="[ btn btn-default ]"
-								id="thumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
-								<span class="[ glyphicon glyphicon-thumbs-down ]"
-									style="color: red;"></span>
-							</button>
+							<c:choose>
+								<c:when test="${likes.check_like(idea.id)  == 1}">
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbUp${idea.id}" style="background: blue;"
+										onclick="onThumbUp(${idea.id},1)">
+										<span class="[ glyphicon glyphicon-thumbs-up ]"
+											style="color: white;"></span>
+									</button>
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
+										<span class="[ glyphicon glyphicon-thumbs-down ]"
+											style="color: red;"></span>
+									</button>
+								</c:when>
+								<c:when test="${likes.check_like(idea.id) == 2}">
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
+										<span class="[ glyphicon glyphicon-thumbs-up ]"
+											style="color: blue;"></span>
+									</button>
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbDown${idea.id}" style="background: red;"
+										onclick="onThumbUp(${idea.id},2)">
+										<span class="[ glyphicon glyphicon-thumbs-down ]"
+											style="color: white;"></span>
+									</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
+										<span class="[ glyphicon glyphicon-thumbs-up ]"
+											style="color: blue;"></span>
+									</button>
+									<button type="button" class="[ btn btn-default ]"
+										id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
+										<span class="[ glyphicon glyphicon-thumbs-down ]"
+											style="color: red;"></span>
+									</button>
+								</c:otherwise>
+							</c:choose>
 							<div class="box-click">
-								<span><a href="#">View 140 more comments</a></span>
+								<span><a href="#">View
+										${comments.countComments(idea.id) } more comment(s)</a></span>
 							</div>
-							<div class="box-comments">
-								<div class="comment">
-									<img src="https://goo.gl/oM0Y8G" alt="" />
-									<div class="content">
-										<h3>
-											<a href="">Emily Rudd</a><span><time> 1 hr - </time><a
-												href="#">Like</a></span>
-										</h3>
-										<p>Wow irealy, i love here. Nice idea</p>
+							<div id="box_comments${idea.id }" class="box-comments">
+								<c:forEach items="${comments.getCommentByIdea(idea.id)}"
+									var="comment">
+									<div class="comment">
+										<img src="${comment.person.person_picture}" alt="" />
+										<div class="content">
+											<h3>
+												<a href="">${comment.person.person_name}</a><span> <time>
+													${comments.toRelative(comment.comment_time)} </time><a href="#">Like</a></span>
+											</h3>
+											<p>${comment.comment_text}</p>
+										</div>
 									</div>
-								</div>
-								<div class="comment">
-									<img src="https://goo.gl/vswgSn" alt="" />
-									<div class="content">
-										<h3>
-											<a href="">barbara Palvin</a><span><time> 1 hr
-												- </time><a href="#">Like</a></span>
-										</h3>
-										<p>The life is perfect, <3 Nice</p>
-									</div>
-								</div>
-								<div class="comment">
-									<img src="https://goo.gl/4W27eB" alt="" />
-									<div class="content">
-										<h3>
-											<a href="">Erica Mohn</a><span><time> 1 hr - </time><a
-												href="#">Like</a></span>
-										</h3>
-										<p>Keep up, look pro :D</p>
-									</div>
-								</div>
+								</c:forEach>
 							</div>
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
@@ -180,9 +203,9 @@
 								src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46"
 								alt="User Image" />
 							<div class="panel-google-plus-textarea">
-								<textarea rows="4"></textarea>
-								<button type="submit" class="[ btn btn-success disabled ]">Post
-									comment</button>
+								<textarea id="commentText${idea.id}" rows="4"></textarea>
+								<button type="submit" onclick="onComment(${idea.id})"
+									class="[ btn btn-success disabled ]">Post comment</button>
 								<button type="reset" class="[ btn btn-default ]">Cancel</button>
 							</div>
 							<div class="clearfix"></div>
@@ -193,33 +216,34 @@
 		</c:forEach>
 	</div>
 
+	<div style="width: 70%; margin: auto; text-align: center;">
+		<%--For displaying Previous link except for the 1st page --%>
+		<c:if test="${currentPage != 1}">
+			<td><a href="${currentPage - 1}">Previous</a></td>
+		</c:if>
 
-
-	<%--For displaying Previous link except for the 1st page --%>
-	<c:if test="${currentPage != 1}">
-		<td><a href="${currentPage - 1}">Previous</a></td>
-	</c:if>
-
-	<%--For displaying Page numbers. 
+		<%--For displaying Page numbers. 
     The when condition does not display a link for the current page--%>
-	<table border="1" cellpadding="5" cellspacing="5">
-		<tr>
-			<c:forEach begin="1" end="${noOfPages}" var="i">
-				<c:choose>
-					<c:when test="${currentPage eq i}">
-						<td>${i}</td>
-					</c:when>
-					<c:otherwise>
-						<td><a href="${i}">${i}</a></td>
-					</c:otherwise>
-				</c:choose>
-			</c:forEach>
-		</tr>
-	</table>
+		<table border="1" cellpadding="5" cellspacing="5">
+			<tr>
+				<c:forEach begin="1" end="${noOfPages}" var="i">
+					<c:choose>
+						<c:when test="${currentPage eq i}">
+							<td>${i}</td>
+						</c:when>
+						<c:otherwise>
+							<td><a href="${i}">${i}</a></td>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+			</tr>
+		</table>
 
-	<%--For displaying Next link --%>
-	<c:if test="${currentPage lt noOfPages}">
-		<td><a href="${currentPage + 1}">Next</a></td>
-	</c:if>
+		<%--For displaying Next link --%>
+		<c:if test="${currentPage lt noOfPages}">
+			<td><a href="${currentPage + 1}">Next</a></td>
+		</c:if>
+	</div>
+
 </body>
 </html>

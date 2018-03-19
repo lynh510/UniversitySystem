@@ -17,6 +17,11 @@ public class Idea {
 		super();
 	}
 
+	public Idea(int id) {
+		super();
+		this.id = id;
+	}
+
 	public Idea(int id, String title, String content, Person person, Date post_date, Date close_date, int mode,
 			int views, int status) {
 		super();
