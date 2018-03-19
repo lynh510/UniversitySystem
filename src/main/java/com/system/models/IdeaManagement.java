@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,6 +26,7 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
+		
 		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
 				+ " ROWS ONLY";
 		try {
@@ -41,6 +43,7 @@ public class IdeaManagement {
 				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
 				idea.setStatus(rs.getInt("_status"));
+				idea.setMode(rs.getInt("mode"));
 				ideaList.add(idea);
 			}
 		} catch (Exception e) {
