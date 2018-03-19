@@ -93,6 +93,7 @@ comment_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 person_id int foreign key references Person(person_id),
 comment_text varchar(500),
+comment_time datetime
 ); 
 
 create table UserExternalLogin(
