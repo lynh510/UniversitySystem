@@ -82,7 +82,7 @@ public class IdeaManagement {
 		int result = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
-			PreparedStatement statement = connection.prepareStatement("select count(*) from Idea");
+			PreparedStatement statement = connection.prepareStatement("select count(*) from Idea where _status = 0");
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				result = rs.getInt(1);

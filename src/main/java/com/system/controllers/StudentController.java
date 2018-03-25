@@ -97,7 +97,7 @@ public class StudentController {
 				java.sql.Date birthday = new java.sql.Date(date.getTime());
 				Person p = new Person("", full_name, 0, birthday, gender, 0, phone, address, email, "");
 				if (profilepic.isEmpty()) {
-					p.setPerson_picture("login-user-icon.png");
+					p.setPerson_picture("default_avatar.png");
 				} else {
 					p.setPerson_picture(c.getTimeInMillis() + ".png");
 				}
@@ -220,48 +220,51 @@ public class StudentController {
 
 	// http://localhost:8080/student/activities/1
 	@GetMapping("/activities/{person_id}/{numberOfPage}")
-	public ModelAndView activities(@PathVariable(value="person_id") int person_id,
+	public ModelAndView activities(@PathVariable(value = "person_id") int person_id,
 			@PathVariable("numberOfPage") String page) {
 		ModelAndView model = new ModelAndView("student_wall");
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession(false);
-		if (session.getAttribute("user") != null) {
-			Person p = (Person) session.getAttribute("user");	
-			IdeaManagement im = new IdeaManagement();
-			int currentPage = Integer.parseInt(page);
-			int recordsPerPage = 5;
-			int noOfRecords = im.noOfRecords();
-			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-			model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage,person_id));
-			model.addObject("noOfPages", noOfPages);
-			model.addObject("currentPage", currentPage);
-			model.addObject("welcom", p);
-		} else {
+		try {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			if (session.getAttribute("user") != null) {
+				Person p = (Person) session.getAttribute("user");
+				IdeaManagement im = new IdeaManagement();
+				int currentPage = Integer.parseInt(page);
+				int recordsPerPage = 5;
+				int noOfRecords = im.noOfRecords();
+				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+				model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage, person_id));
+				model.addObject("noOfPages", noOfPages);
+				model.addObject("currentPage", currentPage);
+				model.addObject("welcom", p);
+			} else {
+				model = new ModelAndView("redirect:/student/login");
+			}
+		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/student/login");
 		}
+
 		return model;
 	}
 
 	@PostMapping("/edit")
-	public ModelAndView edit_idea(@RequestParam("idea_id")int idea_id,
-			@RequestParam("person_id")int person_id,
-			@RequestParam("title") String title,
-			@RequestParam("content") String content) {
-		ModelAndView model = new ModelAndView("redirect:/student/activities/"+person_id+"/1");
+	public ModelAndView edit_idea(@RequestParam("idea_id") int idea_id, @RequestParam("person_id") int person_id,
+			@RequestParam("title") String title, @RequestParam("content") String content) {
+		ModelAndView model = new ModelAndView("redirect:/student/activities/" + person_id + "/1");
 		IdeaManagement im = new IdeaManagement();
-		Idea idea = new Idea(idea_id,title,content);
+		Idea idea = new Idea(idea_id, title, content);
 		im.eidt_idea(idea);
 		return model;
 	}
-	
+
 	@RequestMapping("/delete/{person_id}/{idea_id}")
-	public ModelAndView delete_idea(@PathVariable(value="idea_id") int id,
-			@PathVariable(value="person_id") int person_id) {
-		ModelAndView model = new ModelAndView("redirect:/student/activities/"+person_id+"/1");
+	public ModelAndView delete_idea(@PathVariable(value = "idea_id") int id,
+			@PathVariable(value = "person_id") int person_id) {
+		ModelAndView model = new ModelAndView("redirect:/student/activities/" + person_id + "/1");
 		IdeaManagement im = new IdeaManagement();
 		im.delete_idea(id);
 		return model;
 	}
-	
+
 }

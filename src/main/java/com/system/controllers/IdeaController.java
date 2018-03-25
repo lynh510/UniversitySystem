@@ -54,7 +54,7 @@ public class IdeaController {
 		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 		List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 		for (Idea idea : listIdea) {
-			System.out.println(idea.getPerson().getPerson_picture());
+			//System.out.println(idea.getPerson().getPerson_picture());
 			if (idea.getMode() == 0) {
 				idea.getPerson().setPerson_name("Anonymous");
 				idea.getPerson().setPerson_picture("/uploads/default_avatar.png");
@@ -82,7 +82,7 @@ public class IdeaController {
 			} else {
 				insert_attachfiles(files, idea);
 			}
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Idea posted successfully");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}

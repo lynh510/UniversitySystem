@@ -13,6 +13,7 @@
 
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
@@ -42,8 +43,9 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" src="${welcom.person_picture}" width="30"
-							height="30"> <span class="hidden-xs"><b>${welcom.person_name}
+							class="img-circle" id="userpicture"
+							src="${welcom.person_picture}" width="30" height="30"> <span
+							class="hidden-xs"><b id="username">${welcom.person_name}
 							</b></span>
 					</a>
 						<ul class="dropdown-menu">
@@ -126,8 +128,9 @@
 										this</span> <span><a href="#">${likes.count_like(2,idea.id)}</a></span>
 									<span>Dislike this</span>
 								</div>
-								<div class="row">
-									<span>${comments.countComments(idea.id) } comment(s)</span>
+								<div id="comment-count-${idea.id}" class="row">
+									<span>${comments.countCommentsPerIdea(idea.id) }
+										comment(s)</span>
 								</div>
 							</div>
 						</div>
@@ -137,71 +140,62 @@
 								<input type="hidden" id="idea_id${idea.id}" name="idea" value="">
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
-							<c:choose>
-								<c:when test="${likes.check_like(idea.id)  == 1}">
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbUp${idea.id}" style="background: blue;"
-										onclick="onThumbUp(${idea.id},1)">
-										<span class="[ glyphicon glyphicon-thumbs-up ]"
-											style="color: white;"></span>
-									</button>
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
-										<span class="[ glyphicon glyphicon-thumbs-down ]"
-											style="color: red;"></span>
-									</button>
-								</c:when>
-								<c:when test="${likes.check_like(idea.id) == 2}">
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
-										<span class="[ glyphicon glyphicon-thumbs-up ]"
-											style="color: blue;"></span>
-									</button>
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbDown${idea.id}" style="background: red;"
-										onclick="onThumbUp(${idea.id},2)">
-										<span class="[ glyphicon glyphicon-thumbs-down ]"
-											style="color: white;"></span>
-									</button>
-								</c:when>
-								<c:otherwise>
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
-										<span class="[ glyphicon glyphicon-thumbs-up ]"
-											style="color: blue;"></span>
-									</button>
-									<button type="button" class="[ btn btn-default ]"
-										id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
-										<span class="[ glyphicon glyphicon-thumbs-down ]"
-											style="color: red;"></span>
-									</button>
-								</c:otherwise>
-							</c:choose>
-							<div class="box-click">
-								<span><a href="#">View
-										${comments.countComments(idea.id) } more comment(s)</a></span>
+							<div id="like-box${idea.id}">
+								<c:choose>
+									<c:when test="${likes.check_like(idea.id)  == 1}">
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbUp${idea.id}" style="background: blue;"
+											onclick="onThumbUp(${idea.id},1)">
+											<span class="[ glyphicon glyphicon-thumbs-up ]"
+												style="color: white;"></span>
+										</button>
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
+											<span class="[ glyphicon glyphicon-thumbs-down ]"
+												style="color: red;"></span>
+										</button>
+									</c:when>
+									<c:when test="${likes.check_like(idea.id) == 2}">
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
+											<span class="[ glyphicon glyphicon-thumbs-up ]"
+												style="color: blue;"></span>
+										</button>
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbDown${idea.id}" style="background: red;"
+											onclick="onThumbUp(${idea.id},2)">
+											<span class="[ glyphicon glyphicon-thumbs-down ]"
+												style="color: white;"></span>
+										</button>
+									</c:when>
+									<c:otherwise>
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
+											<span class="[ glyphicon glyphicon-thumbs-up ]"
+												style="color: blue;"></span>
+										</button>
+										<button type="button" class="[ btn btn-default ]"
+											id="btnthumbDown${idea.id}" onclick="onThumbUp(${idea.id},2)">
+											<span class="[ glyphicon glyphicon-thumbs-down ]"
+												style="color: red;"></span>
+										</button>
+									</c:otherwise>
+								</c:choose>
 							</div>
-							<div id="box_comments${idea.id }" class="box-comments">
-								<c:forEach items="${comments.getCommentByIdea(idea.id)}"
-									var="comment">
-									<div class="comment">
-										<img src="${comment.person.person_picture}" alt="" />
-										<div class="content">
-											<h3>
-												<a href="">${comment.person.person_name}</a><span> <time>
-													${comments.toRelative(comment.comment_time)} </time><a href="#">Like</a></span>
-											</h3>
-											<p>${comment.comment_text}</p>
-										</div>
-									</div>
-								</c:forEach>
+							<div id="more-comment-box-${idea.id}" class="box-click">
+								<button id="btnViewComments${idea.id}" onclick="onViewComments(${idea.id})">Comments</button>
+								<input type="hidden" id="noOfComments${idea.id}"
+									value="${comments.noOfComments(idea.id)}"> <span>
+									<a id="moreComments${idea.id}" style="display: none"
+									onclick="onLoadMoreComments(${idea.id})">View more comment(s)</a>
+								</span>
 							</div>
+							<div id="box_comments${idea.id }" class="box-comments"></div>
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle"
-								src="https://lh3.googleusercontent.com/uFp_tsTJboUY7kue5XAsGA=s46"
-								alt="User Image" />
+							<img class="img-circle" src="${idea.person.person_picture}"
+								width="50" height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea id="commentText${idea.id}" rows="4"></textarea>
 								<button type="submit" onclick="onComment(${idea.id})"

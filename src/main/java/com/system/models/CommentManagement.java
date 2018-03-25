@@ -40,8 +40,32 @@ public class CommentManagement {
 		return comments;
 	}
 
-	public void insertComment(Comment c) {
-		String sqlQuery = "Insert into Comments values (?,?,?,getdate())";
+	public List<Comment> getComments(int idea_id, int position) {
+		List<Comment> comments = new ArrayList();
+		int offset = 5 * (position - 1);
+		String sqlQuery = "SELECT * FROM Comments where idea_id = ? ORDER BY comment_time OFFSET " + offset
+				+ " ROWS FETCH NEXT 5 ROWS ONLY";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, idea_id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Comment c = new Comment();
+				c.setComment_id(rs.getInt("comment_id"));
+				c.setPerson(pm.getPerson(rs.getInt("person_id")));
+				c.setComment_time(rs.getTimestamp("comment_time"));
+				c.setComment_text(rs.getString("comment_text"));
+				comments.add(c);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return comments;
+	}
+
+	public int insertComment(Comment c) {
+		String sqlQuery = "Insert into Comments values (?,?,?,getdate()); SELECT SCOPE_IDENTITY()";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -49,12 +73,47 @@ public class CommentManagement {
 			statement.setInt(2, c.getPerson().getId());
 			statement.setString(3, c.getComment_text());
 			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				return rs.getInt(1);
+			} else {
+				return 0;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
 	}
 
-	public int countComments(int idea_id) {
+	public Comment getComment(int id) {
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement("select * from Comments where comment_id = ?");
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				Comment c = new Comment();
+				c.setComment_id(rs.getInt("comment_id"));
+				c.setPerson(pm.getPerson(rs.getInt("person_id")));
+				c.setComment_text(rs.getString("comment_text"));
+				c.setComment_time(rs.getTimestamp("comment_time"));
+				return c;
+			} else {
+				return new Comment();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	public int noOfComments(int idea_id) {
+		int noOfComments = (int) Math.ceil(countCommentsPerIdea(idea_id) * 1.0 / 5);
+		return noOfComments;
+	}
+
+	public int countCommentsPerIdea(int idea_id) {
 		String sqlQuery = "select count(*) from Comments where idea_id = " + idea_id;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -97,5 +156,10 @@ public class CommentManagement {
 	public String toRelative(Date start) {
 		Date now = new Date();
 		return toDuration(now.getTime() - start.getTime());
+	}
+
+	public String toRelative2(long start) {
+		Date now = new Date();
+		return toDuration(now.getTime() - start);
 	}
 }
