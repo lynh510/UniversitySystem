@@ -23,7 +23,14 @@ public class PersonManagement {
 			if (rs.next()) {
 				p.setId(id);
 				p.setPerson_picture("/uploads/" + rs.getString(2));
-				p.setPerson_name(rs.getString(3));
+				p.setPerson_name(rs.getString("person_name"));	
+				p.setPerson_role(rs.getInt("person_role"));
+				p.setBirthdate(rs.getDate("birthdate"));
+				p.setGender(rs.getInt("gender"));
+				p.setStatus(rs.getInt("_status"));
+				p.setPhone(rs.getString("phone_number"));
+				p.setEnroll_date(rs.getDate("enroll_date"));
+				p.setEmail(rs.getString("email"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.ApiResponse;
+import com.system.MailApi;
 import com.system.entity.*;
 import com.system.models.*;;
 
@@ -65,6 +67,22 @@ public class IdeaController {
 		model.addObject("currentPage", currentPage);
 		return model;
 	}
+	@GetMapping("/")
+	public ModelAndView get() {
+		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
+		return model;
+	}
+	@GetMapping("/{idea_id}")
+	public ModelAndView getIdea(@PathVariable("idea_id") Integer idea_id) {
+		im = new IdeaManagement();
+		ModelAndView model = new ModelAndView("display_idea");
+		List<Idea> listIdea = new ArrayList();
+		listIdea.add(im.get_Idea(idea_id));
+		model.addObject("ideas", listIdea);
+		model.addObject("noOfPages", 1);
+		model.addObject("currentPage", 1);
+		return model;
+	}
 
 	
 	@PostMapping("/submit")
@@ -77,11 +95,14 @@ public class IdeaController {
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
 			insert_tags(tags, idea);
+			MailApi m = new MailApi();
+			
 			if (files.get(0).isEmpty()) {
 				System.out.println("no file is selected");
 			} else {
 				insert_attachfiles(files, idea);
 			}
+			//m.sendHtmlEmail("ducpa1996@gmail.com","Idea submission","<a>Click here</a>");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

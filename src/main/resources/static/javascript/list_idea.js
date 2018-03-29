@@ -135,8 +135,8 @@ function onComment(idea_id) {
 											+ '</p></div></div>');
 					$('#comment-count-' + idea_id).load(
 							' #comment-count-' + idea_id);
-//					$('#more-comment-box-' + idea_id).load(
-//							' #more-comment-box-' + idea_id);
+					// $('#more-comment-box-' + idea_id).load(
+					// ' #more-comment-box-' + idea_id);
 				},
 				error : function(xhr, response, error) {
 					var err = JSON.parse(xhr.responseText);
@@ -149,7 +149,7 @@ function onViewComments(idea_id) {
 	var moreComments = document.getElementById("moreComments" + idea_id);
 	var btnViewComments = document.getElementById("btnViewComments" + idea_id);
 	var boxComments = document.getElementById("box_comments" + idea_id);
-	boxComments.innerHTML = "";
+
 	if (noOfComments.value > 0) {
 		$
 				.ajax({
@@ -158,7 +158,7 @@ function onViewComments(idea_id) {
 							+ noOfComments.value,
 					data : null,
 					success : function(response) {
-
+						boxComments.innerHTML = "";
 						showComments(response.data, idea_id);
 						if (noOfComments.value > 0) {
 							noOfComments.value = noOfComments.value - 1;

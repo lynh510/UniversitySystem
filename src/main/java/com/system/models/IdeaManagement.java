@@ -26,8 +26,8 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date DESC OFFSET " + offset + " ROWS FETCH NEXT " + itemPerPage
-				+ " ROWS ONLY";
+		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date DESC OFFSET " + offset
+				+ " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -35,7 +35,7 @@ public class IdeaManagement {
 			while (rs.next()) {
 				Idea idea = new Idea();
 				idea.setId(rs.getInt("idea_id"));
-				idea.setTitle(rs.getString("idea_tile"));
+				idea.setTitle(rs.getString("idea_title"));
 				idea.setContent(rs.getString("idea_content"));
 				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				idea.setPost_date(rs.getDate("post_date"));
@@ -51,7 +51,7 @@ public class IdeaManagement {
 		return ideaList;
 	}
 
-	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage,int person_id) {
+	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage, int person_id) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
 		String sqlQuery = "SELECT * FROM Idea Where person_id = ? and _status = 0 ORDER BY post_date DESC";
@@ -63,7 +63,7 @@ public class IdeaManagement {
 			while (rs.next()) {
 				Idea idea = new Idea();
 				idea.setId(rs.getInt("idea_id"));
-				idea.setTitle(rs.getString("idea_tile"));
+				idea.setTitle(rs.getString("idea_title"));
 				idea.setContent(rs.getString("idea_content"));
 				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				idea.setPost_date(rs.getDate("post_date"));
@@ -77,7 +77,7 @@ public class IdeaManagement {
 		}
 		return ideaList;
 	}
-	
+
 	public int noOfRecords() {
 		int result = 0;
 		try {
@@ -147,24 +147,36 @@ public class IdeaManagement {
 			e.printStackTrace();
 		}
 	}
+	public Idea get_Idea (int idea_id) {
+		String sqlQuery = "Select * from Idea where idea_id = ?";
+		Idea idea = new Idea();
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, idea_id);
+			ResultSet rs =  statement.executeQuery();
+			if(rs.next()) {
+				idea = new Idea(rs.getInt(1),
+						rs.getString("idea_title"),
+						rs.getString("idea_content"),
+						pm.getPerson(rs.getInt("person_id")),
+						rs.getTimestamp("post_date"),
+						rs.getTimestamp("close_date"),
+						rs.getInt("idea_views"),
+						rs.getInt("mode"),
+						rs.getInt("_status"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return idea;
+	}
 
 	public boolean check_idea_belong(int user_id) {
-		if (getUserSession().getId() == user_id) {
+		if (pm.getUserSession().getId() == user_id) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	private Person getUserSession() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession(false);
-		if (session.getAttribute("user") == null) {
-			//throw new NullPointerException("Have to login first");
-			return new Person();
-		} else {
-			return (Person) session.getAttribute("user");
 		}
 	}
 
@@ -181,7 +193,7 @@ public class IdeaManagement {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void delete_idea(int idea_id) {
 		String sqlQuery = "Update Idea Set _status = ? where idea_id = ?";
 		try {

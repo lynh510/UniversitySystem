@@ -23,12 +23,6 @@ dept_id int primary key identity,
 dept_name varchar(100),
 );
 
-create table StaffRole(
-role_id int primary key identity,
-role_name varchar(50), 
-dept_id int foreign key references Department(dept_id) 
-);
-
 create table Student(
 student_id int foreign key references Person(person_id) UNIQUE,
 username varchar(50),
@@ -36,9 +30,23 @@ password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
 
+create table QAManager(
+manager_id int foreign key references Person(person_id) UNIQUE,
+username varchar(50),
+password_hash binary(64) not null,
+salt UNIQUEIDENTIFIER 
+);
+
+create table Administrator(
+admin_id int foreign key references Person(person_id) UNIQUE,
+username varchar(50),
+password_hash binary(64) not null,
+salt UNIQUEIDENTIFIER 
+);
+
 create table Staff(
 staff_id int foreign key references Person(person_id) UNIQUE,
-role_id int foreign key references StaffRole(role_id),
+dep_id int foreign key references Department(dept_id),
 username varchar(50),
 password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
@@ -51,7 +59,7 @@ tag_des varchar(500) --services, courses
 
 create table Idea(
 idea_id int primary key identity,
-idea_tile varchar(500),
+idea_title varchar(500),
 idea_content varchar(2000),
 person_id int foreign key references Person(person_id),
 post_date datetime,
@@ -105,7 +113,8 @@ email varchar(50),
 SELECT * FROM Student
 insert into Emoji values ('Thumb Up'),('Thumb Down')
 insert into Tag values ('Course'),('Service')
-
+-- stored procdure for adding new student
+--run from here
 CREATE PROCEDURE add_student
     @stuID int,
 	@stuUserName VARCHAR(50),
@@ -129,8 +138,9 @@ BEGIN
     END CATCH
 
 END
-
-
+---stop here
+-- Stored procedure for loggin in 
+---run from here
 CREATE PROCEDURE student_login
     @stuUsername NVARCHAR(254),
     @stuPassword NVARCHAR(50)
@@ -154,7 +164,56 @@ BEGIN
        select * from Person where person_id = 0
 
 END
+--stop here
 
+-- start here 
+CREATE PROCEDURE add_QAManager
+    @managerID int,
+	@managerUserName VARCHAR(50),
+    @managerPassword VARCHAR(50),
+    @responseMessage NVARCHAR(250) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    DECLARE @salt UNIQUEIDENTIFIER=NEWID()
+    BEGIN TRY
+
+        INSERT INTO QAManager(manager_id, username,password_hash, salt)
+        VALUES(@managerID,@managerUserName, HASHBYTES('SHA2_512', @managerPassword+CAST(@salt AS NVARCHAR(36))), @salt)
+
+       SET @responseMessage='Success'
+
+    END TRY
+    BEGIN CATCH
+        SET @responseMessage=ERROR_MESSAGE() 
+    END CATCH
+
+END
+--stop here
+CREATE PROCEDURE QAManager_login
+    @managerUsername NVARCHAR(254),
+    @managerPassword NVARCHAR(50)
+AS
+BEGIN
+
+    SET NOCOUNT ON
+
+    DECLARE @userID INT
+
+    IF EXISTS (SELECT TOP 1 manager_id FROM QAManager WHERE username=@managerUsername)
+    BEGIN
+        SET @userID=(SELECT manager_id FROM QAManager WHERE username=@managerUsername AND password_hash=HASHBYTES('SHA2_512', @managerPassword+CAST(salt AS NVARCHAR(36))))
+
+       IF(@userID IS NULL)
+           select * from Person where person_id = 0
+       ELSE 
+           select * from Person where person_id = @userID
+    END
+    ELSE
+       select * from Person where person_id = 0
+
+END
 --------
 DECLARE @responseMessage NVARCHAR(250);
 Exec add_student 1,'username','password', @responseMessage output;

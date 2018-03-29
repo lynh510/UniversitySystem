@@ -1,5 +1,7 @@
 package com.system.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.system.ApiResponse;
+import com.system.MailApi;
 import com.system.entity.Comment;
 import com.system.entity.Idea;
 import com.system.models.*;
@@ -20,10 +23,12 @@ import com.system.models.*;
 public class CommentController {
 	private CommentManagement cm;
 	private PersonManagement pm;
+	private IdeaManagement im;
 
 	public CommentController() {
 		cm = new CommentManagement();
 		pm = new PersonManagement();
+		im = new IdeaManagement();
 	}
 
 	@PostMapping("/submit")
@@ -33,12 +38,18 @@ public class CommentController {
 		try {
 			Comment c = cm
 					.getComment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)));
+			Idea idea = im.get_Idea(idea_id);
+			MailApi mail = new MailApi();
+			if (pm.getUserSession().getId() != idea.getPerson().getId()) {
+				mail.sendHtmlEmail(idea.getPerson().getEmail(),
+						pm.getUserSession().getPerson_name() + " commented on your idea",
+						"<a href=\"" + "http://localhost:8080/idea/" + idea_id + "\">Click here to see</a>\"");
+			}
 			return new ApiResponse().sendData(c, HttpStatus.ACCEPTED, "Well done!! Commnet is successfully posted");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
-
 
 	@GetMapping("/moreComments/{idea_id}/{no_comment}")
 	@ResponseBody

@@ -146,17 +146,22 @@ public class StudentController {
 	@GetMapping("/submit_idea")
 	public ModelAndView submit_idea(RedirectAttributes redirectAttributes) {
 		ModelAndView mnv = new ModelAndView("student_submit_idea");
-		TagManagement tm = new TagManagement();
-		mnv.addObject("tags", tm.getTags());
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession(false);
-		if (session.getAttribute("user") == null) {
+		try {
+			TagManagement tm = new TagManagement();
+			mnv.addObject("tags", tm.getTags());
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			if (session.getAttribute("user") == null) {
+				mnv = new ModelAndView("redirect:/student/login");
+			} else {
+				Person p = (Person) session.getAttribute("user");
+				mnv.addObject("welcom", p);
+			}
+		} catch (NullPointerException e) {
 			mnv = new ModelAndView("redirect:/student/login");
-		} else {
-			Person p = (Person) session.getAttribute("user");
-			mnv.addObject("welcom", p);
 		}
+
 		return mnv;
 	}
 
@@ -211,10 +216,14 @@ public class StudentController {
 	@GetMapping("/logout")
 	public ModelAndView logout(RedirectAttributes redirectAttributes) {
 		ModelAndView model = new ModelAndView("redirect:/student/login");
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession(false);
-		session.removeAttribute("user");
+		try {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			session.removeAttribute("user");
+		} catch (Exception e) {
+			return model;
+		}
 		return model;
 	}
 
