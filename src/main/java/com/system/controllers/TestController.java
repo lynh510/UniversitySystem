@@ -16,5 +16,10 @@ public class TestController {
 	public ModelAndView staffLogin() {
 		return new ModelAndView("login");
 	}
+	
+	@RequestMapping("/addCategory")
+	public ModelAndView addIdea() {
+		return new ModelAndView("add_category");
+	}
 
 }
