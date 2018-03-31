@@ -11,5 +11,10 @@ public class TestController {
 	public ModelAndView firstPage() {
 		return new ModelAndView("redirect:/student/login");
 	}
+	
+	@RequestMapping("/login")
+	public ModelAndView staffLogin() {
+		return new ModelAndView("login");
+	}
 
 }
