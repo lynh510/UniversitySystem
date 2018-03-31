@@ -18,42 +18,68 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
-<title>Add new category</title>
+<title>List Category</title>
 <style type="text/css">
 	.container {
 		margin-top: 5%;
+		margin-left: 20%;
 	}
-	.form-group {
-		margin-top: 3%;
+	.single {
+		padding: 30px 15px;
+		margin-top: 40px;
+		background: #fcfcfc;
+		border: 1px solid #f0f0f0; 
+	}
+	.single h3.side-title {
+		margin: 0;
+		margin-bottom: 10px;
+		padding: 0;
+		font-size: 20px;
+		color: #333;
+		text-transform: uppercase; 
+	}
+	.single h3.side-title:after {
+		content: '';
+		width: 100%;
+		height: 1px;
+		background: #ff173c;
+		display: block;
+		margin-top: 6px; 
+	}
+	.single ul {
+		margin-bottom: 0; 
+	}
+	.single li {
+		color: #666;
+		font-size: 14px;
+		text-transform: uppercase;
+		border-bottom: 1px solid #f0f0f0;
+		line-height: 40px;
+		display: block;
+		text-decoration: none; 
+	}
+	.single li a:hover {
+		color: #ff173c; 
+	}
+	.single li a {
+		float: right; 
+	}
+	.single li:last-child a {
+		border-bottom: 0; 
+	}
+	.count {
+		background-color: silver;
+		border-radius: 20px;
+		padding: 1%;
+		margin-left: 5%;
 	}
 	.navbar-nav.navbar-right:last-child {
 		margin-right: 3%;
 	}
-	body {
-		background-color: #fff;
-	}
 </style>
-<script type="text/javascript">
-var check = function() {
-	var title = document.getElementById('title');
-	var splChars = "*|,\":<>[]{}`\';()@&$#%";
-	for (var i = 0; i < title.value.length; i++) {
-		if (splChars.indexOf(title.value.charAt(i)) != -1) {
-			document.getElementById('msgCheck').innerHTML = "The category name mustn't have special character!";
-			title.focus();
-			return false;
-		}
-		if (splChars.indexOf(title.value.charAt(i)) == -1) {
-			document.getElementById('msgCheck').innerHTML = "";
-			title.focus();
-			return true;
-		}
-	}
-}
-</script>
 </head>
 <body>
-<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
 				data-target="#navbar-ex-collapse">
@@ -86,31 +112,23 @@ var check = function() {
 		</div>
 	</div>
 	<div class="container">
-    	<div class="row">
-			<form class="form-horizontal">
-			        <!-- Form Name -->
-			        <h3>Add new category</h3>
-					<hr/>
-			        <!-- Text input-->
-			        <div class="form-group">
-			            <label class="col-md-4 control-label" for="title">Category Name</label>
-			
-			            <div class="col-md-5">
-			                <input id="title" name="title" type="text" placeholder="Category name" class="form-control input-md" required onkeyup='check();' >
-			                <h6 style="color: red; margin-left: 5%;" id="msgCheck"></h6>
-			            </div>
-			        </div>
-			
-			        <!-- Button (Double) -->
-			        <div class="form-group">
-			            <label class="col-md-4 control-label" for="saveBtn"></label>
-			
-			            <div class="col-md-8">
-			                <button id="saveBtn" name="saveBtn" class="btn btn-primary">Save</button>
-			                <button id="cancelBtn" name="cancelBtn" class="btn btn-inverse">Cancel</button>
-			            </div>
-			        </div>
-			</form>
+		<div class="row">
+			<div class="col-sm-10">
+				<!-- Category -->
+				<div class="single category">
+					<h3 class="side-title">Category</h3>
+					<ul class="list-unstyled">
+						<li>Business <span class="count"> 13 </span><a href="">Delete</a></li>
+						<li>Technology <span class="count">13</span><a href="">Delete</a></li>
+						<li>Web <span class="count">13</span><a href="">Delete</a></li>
+						<li>Ecommerce <span class="count">13</span><a href="">Delete</a></li>
+						<li>Wordpress <span class="count">13</span><a href="">Delete</a></li>
+						<li>Android <span class="count">13</span><a href="">Delete</a></li>
+						<li>IOS <span class="count">13</span><a href="">Delete</a></li>
+						<li>Windows <span class="count">13</span><a href="">Delete</a></li>
+					</ul>
+			   </div>
+			</div> 
 		</div>
 	</div>
 </body>

@@ -18,8 +18,13 @@ public class TestController {
 	}
 	
 	@RequestMapping("/addCategory")
-	public ModelAndView addIdea() {
+	public ModelAndView addCategory() {
 		return new ModelAndView("add_category");
+	}
+	
+	@RequestMapping("/listCategory")
+	public ModelAndView listCategory() {
+		return new ModelAndView("list_category");
 	}
 
 }
