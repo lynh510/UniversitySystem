@@ -7,12 +7,32 @@
 <link href="/css/form_login.css" rel="stylesheet">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="/javascript/login.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id"
 	content="273733011923-n5lqfqjb265s8s8k5mka9drdkr2t78e8.apps.googleusercontent.com">
 <title>Login - Register</title>
+<script type="text/javascript">
+$(document).ready(function() {
+	 $("#login-form").submit(function(e){
+		 e.preventDefault();
+			$.ajax({
+				type : "Post",
+				url : "/qa/authorization",
+				data : $("#login-form").serialize(),
+				success : function(response) {
+					window.location.href = response.message;
+				},
+				error : function(xhr, response, error) {
+					var err = JSON.parse(xhr.responseText);
+					$("#errors").text(err.message);
+				}
+			});
+			return false;
+	 });
+});
+</script>
 </head>
 <body>
 	<div class="container">
@@ -33,7 +53,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<form id="login-form" action="https://phpoll.com/login/process" method="post" role="form" style="display: block;">
+								<form id="login-form" action="/qa/authorization" method="post" role="form" style="display: block;">
 									<div class="form-group">
 										<label for="username">Username</label>
 										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required maxlength="10">
@@ -42,8 +62,10 @@
 										<label for="password">Password</label>
 										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required maxlength="20">
 									</div>
+									<h5 style="color: red" id="errors"></h5>
 									<div class="form-group">
-										<div class="g-signin2" data-onsuccess="onSignIn" id="myP"></div>
+										<div class="g-signin2" data-onsuccess="onSignIn" id="myP">
+										</div>
 									</div>
 									<div class="form-group">
 										<div class="row">
@@ -66,7 +88,7 @@
 								<form id="register-form" action="https://phpoll.com/register/process" method="post" role="form" style="display: none;">
 									<div class="form-group">
 										<label class="required" for="form-username">Username</label>
-										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required maxlength="10">
+										<input type="text" name="username" id="regis_username" tabindex="1" class="form-control" placeholder="Username" value="" required maxlength="10">
 									</div>
 									<div class="form-group">
 										<label class="required" for="form-email">Email</label>
@@ -75,7 +97,7 @@
 									</div>
 									<div class="form-group">
 										<label class="required" for="form-password">Password</label>
-										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required maxlength="20">
+										<input type="password" name="password" id="regis_password" tabindex="2" class="form-control" placeholder="Password" required maxlength="20">
 									</div>
 									<div class="form-group">
 										<label class="required" for="form-cfpass">Confirm Password</label>

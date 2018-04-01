@@ -54,7 +54,10 @@ salt UNIQUEIDENTIFIER
 
 create table Tag(
 tag_id int primary key identity,
-tag_des varchar(500) --services, courses
+tag_des varchar(50), --services, courses
+tag_created_time datetime,
+tag_close_time datetime,
+tag_status int
 );
 
 create table Idea(

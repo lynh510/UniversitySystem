@@ -1,3 +1,23 @@
+//$(document).ready(function() {
+//	 $("#login-form").submit(function(e){
+//		 e.preventDefault();
+//			$.ajax({
+//				type : "post",
+//				url : "/qa/authorization",
+//				data : $("#login_form").serialize(),
+//				success : function(response) {
+//						
+//				},
+//				error : function(response) {
+////					var err = JSON.parse(xhr.responseText);
+////					alert(err);
+//					//document.getElementById("errors").innerHTML = err.message;
+//				}
+//			});
+//			return false;
+//	 });
+//});
+
 $(function() {
 
     $('#login-form-link').click(function(e) {

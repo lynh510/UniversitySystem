@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,72 +10,83 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/list_idea.css">
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="https://momentjs.com/downloads/moment.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
+<jsp:useBean id="tag" class="com.system.models.TagManagement"
+	scope="page" />
 <title>List Category</title>
 <style type="text/css">
-	.container {
-		margin-top: 5%;
-		margin-left: 20%;
-	}
-	.single {
-		padding: 30px 15px;
-		margin-top: 40px;
-		background: #fcfcfc;
-		border: 1px solid #f0f0f0; 
-	}
-	.single h3.side-title {
-		margin: 0;
-		margin-bottom: 10px;
-		padding: 0;
-		font-size: 20px;
-		color: #333;
-		text-transform: uppercase; 
-	}
-	.single h3.side-title:after {
-		content: '';
-		width: 100%;
-		height: 1px;
-		background: #ff173c;
-		display: block;
-		margin-top: 6px; 
-	}
-	.single ul {
-		margin-bottom: 0; 
-	}
-	.single li {
-		color: #666;
-		font-size: 14px;
-		text-transform: uppercase;
-		border-bottom: 1px solid #f0f0f0;
-		line-height: 40px;
-		display: block;
-		text-decoration: none; 
-	}
-	.single li a:hover {
-		color: #ff173c; 
-	}
-	.single li a {
-		float: right; 
-	}
-	.single li:last-child a {
-		border-bottom: 0; 
-	}
-	.count {
-		background-color: silver;
-		border-radius: 20px;
-		padding: 1%;
-		margin-left: 5%;
-	}
-	.navbar-nav.navbar-right:last-child {
-		margin-right: 3%;
-	}
+.container {
+	margin-top: 5%;
+	margin-left: 20%;
+}
+
+.single {
+	padding: 30px 15px;
+	margin-top: 40px;
+	background: #fcfcfc;
+	border: 1px solid #f0f0f0;
+}
+
+.single h3.side-title {
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 0;
+	font-size: 20px;
+	color: #333;
+	text-transform: uppercase;
+}
+
+.single h3.side-title:after {
+	content: '';
+	width: 100%;
+	height: 1px;
+	background: #ff173c;
+	display: block;
+	margin-top: 6px;
+}
+
+.single ul {
+	margin-bottom: 0;
+}
+
+.single li {
+	color: #666;
+	font-size: 14px;
+	text-transform: uppercase;
+	border-bottom: 1px solid #f0f0f0;
+	line-height: 40px;
+	display: block;
+	text-decoration: none;
+}
+
+.single li a:hover {
+	color: #ff173c;
+}
+
+.single li a {
+	float: right;
+}
+
+.single li:last-child a {
+	border-bottom: 0;
+}
+
+.count {
+	background-color: silver;
+	border-radius: 20px;
+	padding: 1%;
+	margin-left: 5%;
+}
+
+.navbar-nav.navbar-right:last-child {
+	margin-right: 3%;
+}
 </style>
 </head>
 <body>
@@ -92,10 +103,9 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture"
-						src="${welcom.person_picture}" width="30" height="30"> <span
-						class="hidden-xs"><b id="username">Username
-						</b></span>
+						class="img-circle" id="userpicture" src="${welcom.person_picture}"
+						width="30" height="30"> <span class="hidden-xs"><b
+							id="username">Username </b></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/student/activities/${welcom.id}/1"><i
@@ -111,6 +121,28 @@
 			</ul>
 		</div>
 	</div>
+	<div style="width: 80%; margin: auto; margin-top: 10%">
+		<form id="">
+			<div class="form-group">
+				<label class="required" for="cate_name">Category Name</label> <input
+					type="text" name="cate_name" id="cate_name"
+					class="form-control blur" placeholder="Category Name" tabindex="3"
+					required maxlength="10">
+			</div>
+			<div class="form-group">
+				<label class="required" for="closeDay">Close days after creation</label> <select
+					class="form-control blur" id="closeDay" required name="day">
+					<option value="" selected="" disabled="disabled" hidden>Select
+						a day</option>
+					<option value="">3 days</option>
+					<option value="">7 days</option>
+					<option value="">14 days</option>
+				</select>
+				<h6 style="color: red" id="message"></h6>
+			</div>
+			<button type="submit" class="btn btn-reg">Create</button>
+		</form>
+	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-10">
@@ -118,17 +150,22 @@
 				<div class="single category">
 					<h3 class="side-title">Category</h3>
 					<ul class="list-unstyled">
-						<li>Business <span class="count"> 13 </span><a href="">Delete</a></li>
-						<li>Technology <span class="count">13</span><a href="">Delete</a></li>
-						<li>Web <span class="count">13</span><a href="">Delete</a></li>
-						<li>Ecommerce <span class="count">13</span><a href="">Delete</a></li>
-						<li>Wordpress <span class="count">13</span><a href="">Delete</a></li>
-						<li>Android <span class="count">13</span><a href="">Delete</a></li>
-						<li>IOS <span class="count">13</span><a href="">Delete</a></li>
-						<li>Windows <span class="count">13</span><a href="">Delete</a></li>
+						<c:forEach items="${tags}" var="t">
+							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
+								scope="page" />
+							<li>${t.description}<span class="count">Mentioned <c:out
+										value="${count}" /> time(s)
+							</span> <a>Close</a> <c:choose>
+									<c:when test="${count > 0}">
+										<a href="${t.id}">Delete</a>
+									</c:when>
+								</c:choose>
+							</li>
+						</c:forEach>
+
 					</ul>
-			   </div>
-			</div> 
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

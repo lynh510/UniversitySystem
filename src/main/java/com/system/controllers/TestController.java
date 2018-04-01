@@ -12,10 +12,7 @@ public class TestController {
 		return new ModelAndView("redirect:/student/login");
 	}
 	
-	@RequestMapping("/login")
-	public ModelAndView staffLogin() {
-		return new ModelAndView("login");
-	}
+
 	
 	@RequestMapping("/addCategory")
 	public ModelAndView addCategory() {

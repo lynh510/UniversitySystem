@@ -102,9 +102,10 @@ public class StudentManagement {
 			statement.setString(2, s.getStudent_password());
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				p.setId(rs.getInt(1));
-				p.setPerson_picture(rs.getString(2));
-				p.setPerson_name(rs.getString(3));
+				p.setId(rs.getInt("person_id"));
+				p.setPerson_picture(rs.getString("person_picture"));
+				p.setPerson_name(rs.getString("person_name"));
+				p.setPerson_role(rs.getInt("person_role"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
