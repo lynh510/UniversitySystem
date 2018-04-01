@@ -13,8 +13,10 @@ public class StaticResourceConfiguration extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String project_path = System.getProperty("user.dir");
 		registry.addResourceHandler("/uploads/**")
-				.addResourceLocations("file:///" + project_path + "/src/main/resources/uploads/");
-		registry.addResourceHandler("/uploads_document/**")
-				.addResourceLocations("file:///" + project_path + "/src/main/resources/uploads_document/");
+				.addResourceLocations("/","classpath:/uploads/");
+//		registry.addResourceHandler("/uploads_document/**")
+//				.addResourceLocations("file:///" + project_path + "/src/main/resources/uploads_document/");
+		registry.addResourceHandler("/uploaded_documents/**")
+		.addResourceLocations("/","classpath:/uploads_document/");
 	}
 }
