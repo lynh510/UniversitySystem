@@ -87,16 +87,16 @@ var check = function() {
 	</div>
 	<div class="container">
     	<div class="row">
-			<form class="form-horizontal">
+			<form class="form-horizontal" action="/tag/add">
 			        <!-- Form Name -->
 			        <h3>Add new category</h3>
 					<hr/>
 			        <!-- Text input-->
 			        <div class="form-group">
-			            <label class="col-md-4 control-label" for="title">Category Name</label>
+			            <label class="col-md-4 control-label" for="title">Tag Name</label>
 			
 			            <div class="col-md-5">
-			                <input id="title" name="title" type="text" placeholder="Category name" class="form-control input-md" required onkeyup='check();' >
+			                <input id="title" name="tag_name" type="text" placeholder="Category name" class="form-control input-md" required onkeyup='check();' >
 			                <h6 style="color: red; margin-left: 5%;" id="msgCheck"></h6>
 			            </div>
 			        </div>
@@ -106,6 +106,7 @@ var check = function() {
 			            <label class="col-md-4 control-label" for="saveBtn"></label>
 			
 			            <div class="col-md-8">
+			            	<h6 style="color: red" id="errors">${error}</h6>
 			                <button id="saveBtn" name="saveBtn" class="btn btn-primary">Save</button>
 			                <button id="cancelBtn" name="cancelBtn" class="btn btn-inverse">Cancel</button>
 			            </div>

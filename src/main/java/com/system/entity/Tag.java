@@ -1,6 +1,6 @@
 package com.system.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Tag {
 	private int id;
@@ -21,9 +21,8 @@ public class Tag {
 	}
 
 
-	public Tag(int id, String description, Date create_time, Date close_time, int status) {
+	public Tag(String description, Date create_time, Date close_time, int status) {
 		super();
-		this.id = id;
 		this.description = description;
 		this.create_time = create_time;
 		this.close_time = close_time;

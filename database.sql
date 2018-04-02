@@ -17,33 +17,33 @@ _address varchar(500),
 email varchar(50),
 _description varchar(500)
 );
-
+go
 create table Department(
 dept_id int primary key identity,
 dept_name varchar(100),
 );
-
+go
 create table Student(
 student_id int foreign key references Person(person_id) UNIQUE,
 username varchar(50),
 password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
-
+go
 create table QAManager(
 manager_id int foreign key references Person(person_id) UNIQUE,
 username varchar(50),
 password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
-
+go
 create table Administrator(
 admin_id int foreign key references Person(person_id) UNIQUE,
 username varchar(50),
 password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
-
+go
 create table Staff(
 staff_id int foreign key references Person(person_id) UNIQUE,
 dep_id int foreign key references Department(dept_id),
@@ -51,7 +51,7 @@ username varchar(50),
 password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
-
+go
 create table Tag(
 tag_id int primary key identity,
 tag_des varchar(50), --services, courses
@@ -59,7 +59,7 @@ tag_created_time datetime,
 tag_close_time datetime,
 tag_status int
 );
-
+go
 create table Idea(
 idea_id int primary key identity,
 idea_title varchar(500),
@@ -71,13 +71,13 @@ idea_views int,
 mode tinyint, --1 for publish, 0 for anonymous
 _status tinyint -- 0 for pending, 1 for opening, 2 for closed
 );
-
+go
 create table Idea_tags(
 idea_tag_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 tag_id int foreign key references Tag(tag_id),
 );
-
+go
 create table Idea_attachfiles(
 attachfile_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
@@ -86,19 +86,19 @@ new_name varchar(500),
 file_type varchar(20),
 link varchar(500)
 )
-
+go
 create table Emoji(
 emo_id int primary key identity,
 emo_des varchar(50), --Like and Dislike
 );
-
+go
 create table Idea_emojis(
 idea_emoji_id int primary key identity,
 emo_id int foreign key references Emoji(emo_id),
 idea_id int foreign key references Idea(idea_id),
 person_id int foreign key references Person(person_id)
 );
-
+go
 create table Comments(
 comment_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
@@ -106,7 +106,7 @@ person_id int foreign key references Person(person_id),
 comment_text varchar(500),
 comment_time datetime
 ); 
-
+go
 create table UserExternalLogin(
 userid int foreign key references Person(person_id),
 email varchar(50),
