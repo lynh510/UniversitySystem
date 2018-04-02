@@ -121,28 +121,6 @@
 			</ul>
 		</div>
 	</div>
-	<div style="width: 80%; margin: auto; margin-top: 10%">
-		<form id="">
-			<div class="form-group">
-				<label class="required" for="cate_name">Category Name</label> <input
-					type="text" name="cate_name" id="cate_name"
-					class="form-control blur" placeholder="Category Name" tabindex="3"
-					required maxlength="10">
-			</div>
-			<div class="form-group">
-				<label class="required" for="closeDay">Close days after creation</label> <select
-					class="form-control blur" id="closeDay" required name="day">
-					<option value="" selected="" disabled="disabled" hidden>Select
-						a day</option>
-					<option value="">3 days</option>
-					<option value="">7 days</option>
-					<option value="">14 days</option>
-				</select>
-				<h6 style="color: red" id="message"></h6>
-			</div>
-			<button type="submit" class="btn btn-reg">Create</button>
-		</form>
-	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-10">
@@ -155,11 +133,8 @@
 								scope="page" />
 							<li>${t.description}<span class="count">Mentioned <c:out
 										value="${count}" /> time(s)
-							</span> <a>Close</a> <c:choose>
-									<c:when test="${count > 0}">
-										<a href="${t.id}">Delete</a>
-									</c:when>
-								</c:choose>
+							</span> <a>Close</a> <a href="/tag/delete/${t.id}">Delete</a>
+
 							</li>
 						</c:forEach>
 

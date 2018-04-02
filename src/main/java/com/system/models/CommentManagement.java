@@ -3,6 +3,7 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -65,13 +66,14 @@ public class CommentManagement {
 	}
 
 	public int insertComment(Comment c) {
-		String sqlQuery = "Insert into Comments values (?,?,?,getdate()); SELECT SCOPE_IDENTITY()";
+		String sqlQuery = "Insert into Comments values (?,?,?,?); SELECT SCOPE_IDENTITY()";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, c.getIdea().getId());
 			statement.setInt(2, c.getPerson().getId());
 			statement.setString(3, c.getComment_text());
+			statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {

@@ -87,7 +87,7 @@ var check = function() {
 	</div>
 	<div class="container">
     	<div class="row">
-			<form class="form-horizontal" action="/tag/add">
+			<form class="form-horizontal" action="/tag/add" method="post">
 			        <!-- Form Name -->
 			        <h3>Add new category</h3>
 					<hr/>

@@ -1,5 +1,7 @@
 package com.system.controllers;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -36,16 +38,20 @@ public class CommentController {
 	public ResponseEntity<ApiResponse> submit_comment(@RequestParam("idea_id") int idea_id,
 			@RequestParam("text") String comment_text) {
 		try {
-			Comment c = cm
-					.getComment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)));
+			Comment comment = new Comment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)),null,pm.getUserSession(),null,comment_text);
+//			Comment c = cm
+//					.getComment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)));
 			Idea idea = im.get_Idea(idea_id);
 			MailApi mail = new MailApi();
 			if (pm.getUserSession().getId() != idea.getPerson().getId()) {
 				mail.sendHtmlEmail(idea.getPerson().getEmail(),
 						pm.getUserSession().getPerson_name() + " commented on your idea",
-						"<a href=\"" + "http://localhost:8080/idea/" + idea_id + "\">Click here to see</a>\"");
+						"<a href=\""
+								+ "http://openshift-quickstarts-university-system.193b.starter-ca-central-1.openshiftapps.com/idea/"
+								+ idea_id + "\">Click here to see</a>\""
+								+ "\n This is an automatic mail, Please do not reply");
 			}
-			return new ApiResponse().sendData(c, HttpStatus.ACCEPTED, "Well done!! Commnet is successfully posted");
+			return new ApiResponse().sendData(comment, HttpStatus.ACCEPTED, "Well done!! Commnet is successfully posted");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}

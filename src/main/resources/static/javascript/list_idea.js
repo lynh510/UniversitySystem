@@ -118,7 +118,7 @@ function onComment(idea_id) {
 				success : function(response) {
 					var boxComments = document.getElementById("box_comments"
 							+ idea_id);
-					var date = new Date(response.data.comment_time);
+					var date = new Date();
 					boxComments
 							.insertAdjacentHTML(
 									'beforeend',
@@ -129,7 +129,7 @@ function onComment(idea_id) {
 											+ '<h3><a href="">'
 											+ response.data.person.person_name
 											+ '</a><span> <time>'
-											+ moment(date).fromNow()
+											+ moment.utc(date).fromNow()
 											+ '</time><a href="#"> Like</a></span></h3><p>'
 											+ response.data.comment_text
 											+ '</p></div></div>');

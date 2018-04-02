@@ -52,11 +52,11 @@ public class IdeaController {
 		int currentPage = Integer.parseInt(page);
 		int recordsPerPage = 5;
 		int noOfRecords = im.noOfRecords();
-		
+
 		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 		List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 		for (Idea idea : listIdea) {
-			//System.out.println(idea.getPerson().getPerson_picture());
+			// System.out.println(idea.getPerson().getPerson_picture());
 			if (idea.getMode() == 0) {
 				idea.getPerson().setPerson_name("Anonymous");
 				idea.getPerson().setPerson_picture("/uploads/default_avatar.png");
@@ -67,11 +67,13 @@ public class IdeaController {
 		model.addObject("currentPage", currentPage);
 		return model;
 	}
+
 	@GetMapping("/")
 	public ModelAndView get() {
 		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
 		return model;
 	}
+
 	@GetMapping("/{idea_id}")
 	public ModelAndView getIdea(@PathVariable("idea_id") Integer idea_id) {
 		im = new IdeaManagement();
@@ -84,7 +86,6 @@ public class IdeaController {
 		return model;
 	}
 
-	
 	@PostMapping("/submit")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> submit_idea(@RequestParam("title") String title,
@@ -96,13 +97,15 @@ public class IdeaController {
 			idea.setId(idea_id);
 			insert_tags(tags, idea);
 			MailApi m = new MailApi();
-			
+
 			if (files.get(0).isEmpty()) {
 				System.out.println("no file is selected");
 			} else {
 				insert_attachfiles(files, idea);
 			}
-			//m.sendHtmlEmail("ducpa1996@gmail.com","Idea submission","<a>Click here</a>");
+			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "Idea submission", "<a href=\""
+					+ "http://openshift-quickstarts-university-system.193b.starter-ca-central-1.openshiftapps.com/idea/"
+					+ idea_id + "\">Click here to see</a>\"" + "\n This is an automatic mail, Please do not reply");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -124,7 +127,8 @@ public class IdeaController {
 				c.setTime(new Date());
 				Thread.sleep(1);
 				String extension = getExtension(fileName);
-				Idea_attachfiles ia = new Idea_attachfiles(0, idea,fileName,c.getTimeInMillis() + "." + extension, extension,"uploads_document" );
+				Idea_attachfiles ia = new Idea_attachfiles(0, idea, fileName, c.getTimeInMillis() + "." + extension,
+						extension, "uploads_document");
 				im.insert_Idea_attachfiles(ia);
 				save_file(multipartFile, c.getTimeInMillis() + "." + extension);
 			} catch (InterruptedException e) {
@@ -176,22 +180,21 @@ public class IdeaController {
 		}
 
 	}
-	
+
 	@PostMapping("/edit")
-	public ModelAndView edit_idea(@RequestParam("idea_id")int idea_id,
-			@RequestParam("title") String title,
+	public ModelAndView edit_idea(@RequestParam("idea_id") int idea_id, @RequestParam("title") String title,
 			@RequestParam("content") String content) {
 		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
-		Idea idea = new Idea(idea_id,title,content);
+		Idea idea = new Idea(idea_id, title, content);
 		im.eidt_idea(idea);
 		return model;
 	}
-	
+
 	@RequestMapping("/delete/{idea_id}")
-	public ModelAndView delete_idea(@PathVariable(value="idea_id") int id) {
+	public ModelAndView delete_idea(@PathVariable(value = "idea_id") int id) {
 		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
 		im.delete_idea(id);
 		return model;
 	}
-	
+
 }

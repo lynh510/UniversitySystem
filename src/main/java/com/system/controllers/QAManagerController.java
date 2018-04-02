@@ -40,7 +40,7 @@ public class QAManagerController {
 			HttpSession session = request.getSession(true);
 			p.setPerson_picture("/uploads/" + p.getPerson_picture());
 			session.setAttribute("user", p);
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "/category/listCategory");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "/tag/listCategory");
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
 		}

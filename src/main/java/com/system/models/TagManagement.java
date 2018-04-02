@@ -64,7 +64,7 @@ public class TagManagement {
 
 	public boolean delete_tag(int tag_id) {
 		boolean flag = false;
-		String sqlQuery = "delete from Tags where tag_id = " + tag_id;
+		String sqlQuery = "delete from Tag where tag_id = " + tag_id;
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
