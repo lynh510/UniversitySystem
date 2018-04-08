@@ -7,7 +7,7 @@ create table Person(
 person_id int identity(1,1) primary key,
 person_picture varchar(500),
 person_name varchar(50),
-person_role tinyint, --0 for student, 1 for staff , 2 for anonymouse user, etc
+person_role tinyint, --0 for student, 1 for staff , 2 for QA coordinator, 3 for QA Manager, 4 for Admin user, etc
 birthdate date,
 gender tinyint, --0 for male, 1 for female
 _status tinyint, --0 for active, 1 for disable
@@ -52,12 +52,16 @@ password_hash binary(64) not null,
 salt UNIQUEIDENTIFIER 
 );
 go
+create table QACoordinator (
+coordinator_id int foreign key references Person(person_id) UNIQUE,
+username varchar(50),
+password_hash binary(64) not null,
+salt UNIQUEIDENTIFIER 
+);
+go
 create table Tag(
 tag_id int primary key identity,
 tag_des varchar(50), --services, courses
-tag_created_time datetime,
-tag_close_time datetime,
-tag_status int
 );
 go
 create table Idea(
@@ -72,13 +76,13 @@ mode tinyint, --1 for publish, 0 for anonymous
 _status tinyint -- 0 for pending, 1 for opening, 2 for closed
 );
 go
-create table Idea_tags(
+create table Idea_tag(
 idea_tag_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 tag_id int foreign key references Tag(tag_id),
 );
 go
-create table Idea_attachfiles(
+create table Idea_attachfile(
 attachfile_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 old_name varchar(500),
@@ -92,14 +96,14 @@ emo_id int primary key identity,
 emo_des varchar(50), --Like and Dislike
 );
 go
-create table Idea_emojis(
+create table Idea_emoji(
 idea_emoji_id int primary key identity,
 emo_id int foreign key references Emoji(emo_id),
 idea_id int foreign key references Idea(idea_id),
 person_id int foreign key references Person(person_id)
 );
 go
-create table Comments(
+create table Comment(
 comment_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 person_id int foreign key references Person(person_id),
@@ -224,8 +228,10 @@ select @responseMessage as N'@responseMessage'
 
 ----- extra to do if have enough time 
 create table CommentLike(
-id int primary key identity,
+comment_like_id int primary key identity,
 emo_id int foreign key references Emoji(emo_id),
+comment_id int foreign key references Comment(comment_id),
+person_id int foreign key references Person(person_id)
 )
 
 create table Activity(
@@ -234,8 +240,8 @@ activity_name varchar(100) --comment on an idea, idea is accepted
 )
 
 create table _Notification(
-id int primary key identity,
-is_read boolean, -- seen, not seen
+notify_id int primary key identity,
+is_read int, -- seen, not seen
 sender_id int foreign key references Person(person_id), --who commented
 recipient_id int foreign key references Person(person_id), -- is the one who receives
 activity_type int foreign key references Activity(activity_id),

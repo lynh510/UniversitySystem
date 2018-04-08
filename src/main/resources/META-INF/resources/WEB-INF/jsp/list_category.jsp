@@ -133,13 +133,14 @@
 								scope="page" />
 							<li>${t.description}<span class="count">Mentioned <c:out
 										value="${count}" /> time(s)
-							</span> <a>Close</a> <a href="/tag/delete/${t.id}">Delete</a>
+							</span><a href="/tag/delete/${t.id}">Delete</a>
 
 							</li>
 						</c:forEach>
 
 					</ul>
 				</div>
+				<h2>${message}</h2>
 			</div>
 		</div>
 	</div>

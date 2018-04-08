@@ -1,9 +1,5 @@
 package com.system.controllers;
 
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,8 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.system.ApiResponse;
 import com.system.MailApi;
-import com.system.entity.Comment;
-import com.system.entity.Idea;
+import com.system.entity.*;
 import com.system.models.*;
 
 @Controller
@@ -38,20 +33,19 @@ public class CommentController {
 	public ResponseEntity<ApiResponse> submit_comment(@RequestParam("idea_id") int idea_id,
 			@RequestParam("text") String comment_text) {
 		try {
-			Comment comment = new Comment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)),null,pm.getUserSession(),null,comment_text);
-//			Comment c = cm
-//					.getComment(cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)));
+			Comment comment = new Comment(
+					cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)), null,
+					pm.getUserSession(), null, comment_text);
 			Idea idea = im.get_Idea(idea_id);
 			MailApi mail = new MailApi();
 			if (pm.getUserSession().getId() != idea.getPerson().getId()) {
 				mail.sendHtmlEmail(idea.getPerson().getEmail(),
 						pm.getUserSession().getPerson_name() + " commented on your idea",
-						"<a href=\""
-								+ "http://openshift-quickstarts-university-system.193b.starter-ca-central-1.openshiftapps.com/idea/"
-								+ idea_id + "\">Click here to see</a>\""
-								+ "\n This is an automatic mail, Please do not reply");
+						"<a href=\"" + "/idea/" + idea_id + "\">Click here to see</a>\""
+								+ "/n This is an automatic mail, Please do not reply");
 			}
-			return new ApiResponse().sendData(comment, HttpStatus.ACCEPTED, "Well done!! Commnet is successfully posted");
+			return new ApiResponse().sendData(comment, HttpStatus.ACCEPTED,
+					"Well done!! Commnet is successfully posted");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -62,12 +56,10 @@ public class CommentController {
 	public ResponseEntity<ApiResponse> get_more_comments(@PathVariable("idea_id") int idea_id,
 			@PathVariable("no_comment") int no_comment) {
 		try {
-			// calculate how many time have to click on more comments
-			// int noOfComments = (int) Math.ceil(cm.countCommentsPerIdea(idea_id) * 1.0 /
-			// 5);
-			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment), HttpStatus.ACCEPTED, "");
+			int user_role = pm.getUserSession().getPerson_role();
+			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, user_role), HttpStatus.ACCEPTED, "");
 		} catch (NullPointerException e) {
-			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, 0), HttpStatus.ACCEPTED, "");
 		}
 	}
 

@@ -22,7 +22,7 @@ public class PersonManagement {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				p.setId(id);
-				p.setPerson_picture("/uploads/" + rs.getString(2));
+				p.setPerson_picture("/image/" + rs.getString(2));
 				p.setPerson_name(rs.getString("person_name"));	
 				p.setPerson_role(rs.getInt("person_role"));
 				p.setBirthdate(rs.getDate("birthdate"));

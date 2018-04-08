@@ -120,7 +120,7 @@ public class IdeaManagement {
 	}
 
 	public void insert_Idea_tags(Idea_Tag it) {
-		String sqlQuery = "Insert into Idea_tags values(?,?)";
+		String sqlQuery = "Insert into Idea_tag values(?,?)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -133,7 +133,7 @@ public class IdeaManagement {
 	}
 
 	public void insert_Idea_attachfiles(Idea_attachfiles ia) {
-		String sqlQuery = "Insert into Idea_attachfiles values(?,?,?,?,?)";
+		String sqlQuery = "Insert into Idea_attachfile values(?,?,?,?,?)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

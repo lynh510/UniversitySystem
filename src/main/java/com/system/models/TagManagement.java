@@ -48,7 +48,7 @@ public class TagManagement {
 
 	public int count_tag_being_used(int tag_id) {
 		int count = 0;
-		String sqlQuery = "select count(*) from Idea_tags where tag_id = " + tag_id;
+		String sqlQuery = "select count(*) from Idea_tag where tag_id = " + tag_id;
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -77,14 +77,11 @@ public class TagManagement {
 	}
 
 	public void insert_tag(Tag t) {
-		String sqlQuery = "insert into Tag values(?,?,?,?)";
+		String sqlQuery = "insert into Tag values(?)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, t.getDescription());
-			statement.setDate(2, new java.sql.Date(t.getCreate_time().getTime()));
-			statement.setDate(3, new java.sql.Date(t.getClose_time().getTime()));
-			statement.setInt(4, t.getStatus());
 			statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,7 +90,7 @@ public class TagManagement {
 
 	public boolean chec_exist(String tag_name) {
 		boolean flag = false;
-		String sqlQuery = "select * from Tags where tag_des = ?";
+		String sqlQuery = "select * from Tag where tag_des = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

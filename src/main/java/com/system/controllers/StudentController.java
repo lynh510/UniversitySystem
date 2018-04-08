@@ -103,9 +103,8 @@ public class StudentController {
 				}
 				Student s = new Student(p, user_name, password);
 				if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
-					String auto_path_project = System.getProperty("user.dir");
 					if (!profilepic.isEmpty()) {
-						save_image(auto_path_project, profilepic, p.getPerson_picture());
+						save_image(profilepic, p.getPerson_picture());
 					}
 					return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
 
@@ -119,12 +118,12 @@ public class StudentController {
 		}
 	}
 
-	private void save_image(String path, MultipartFile profilepic, String filename) {
+	private void save_image(MultipartFile profilepic, String filename) {
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		try {
 			inputStream = profilepic.getInputStream();
-			File newFile = new File(path + "\\src\\main\\resources\\uploads\\" + filename);
+			File newFile = new File("file/" + filename);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
@@ -186,7 +185,7 @@ public class StudentController {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
-			p.setPerson_picture("/uploads/" + p.getPerson_picture());
+			p.setPerson_picture("/image/" + p.getPerson_picture());
 			session.setAttribute("user", p);
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Thank for your contribution");
 		} else {

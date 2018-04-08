@@ -38,7 +38,7 @@ public class QAManagerController {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
-			p.setPerson_picture("/uploads/" + p.getPerson_picture());
+			p.setPerson_picture("/image/" + p.getPerson_picture());
 			session.setAttribute("user", p);
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "/tag/listCategory");
 		} else {

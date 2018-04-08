@@ -149,7 +149,7 @@ function onViewComments(idea_id) {
 	var moreComments = document.getElementById("moreComments" + idea_id);
 	var btnViewComments = document.getElementById("btnViewComments" + idea_id);
 	var boxComments = document.getElementById("box_comments" + idea_id);
-
+	btnViewComments.setAttribute("disabled","disabled");
 	if (noOfComments.value > 0) {
 		$
 				.ajax({
@@ -162,6 +162,7 @@ function onViewComments(idea_id) {
 						showComments(response.data, idea_id);
 						if (noOfComments.value > 0) {
 							noOfComments.value = noOfComments.value - 1;
+							moreComments.style = "";
 						}
 						if (noOfComments.value == 0) {
 							moreComments.style = "display:none";
@@ -172,10 +173,9 @@ function onViewComments(idea_id) {
 						alert(err.message);
 					}
 				});
-		moreComments.style = "";
-		btnViewComments.onclick = "";
+		
+		
 	}
-
 }
 function showComments(data, idea_id) {
 	var boxComments = document.getElementById("box_comments" + idea_id);
@@ -189,15 +189,6 @@ function showComments(data, idea_id) {
 				+ moment(date).fromNow()
 				+ '</time><a href="#"> Like</a></span></h3><p>'
 				+ data[i].comment_text + '</p></div></div>';
-		// boxComments.insertAdjacentHTML('beforeend',
-		//				
-		// '<div class="comment"><img src="'
-		// + data[i].person.person_picture + '" alt="" /> '
-		// + '<div class="content">' + '<h3><a href="">'
-		// + data[i].person.person_name + '</a><span> <time>'
-		// + moment(date).fromNow()
-		// + '</time><a href="#"> Like</a></span></h3><p>'
-		// + data[i].comment_text + '</p></div></div>');
 	}
 	boxComments.insertAdjacentHTML('afterbegin', list);
 
@@ -205,6 +196,7 @@ function showComments(data, idea_id) {
 function onLoadMoreComments(idea_id) {
 	var noOfComments = document.getElementById("noOfComments" + idea_id);
 	var moreComments = document.getElementById("moreComments" + idea_id);
+	alert(idea_id);
 	if (noOfComments.value > 0) {
 		$
 				.ajax({

@@ -141,8 +141,10 @@
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
 							<div id="like-box${idea.id}">
+							<c:set var="checklike" value="${likes.check_like(idea.id)}"
+								scope="page" />
 								<c:choose>
-									<c:when test="${likes.check_like(idea.id)  == 1}">
+									<c:when test="${checklike  == 1}">
 										<button type="button" class="[ btn btn-default ]"
 											id="btnthumbUp${idea.id}" style="background: blue;"
 											onclick="onThumbUp(${idea.id},1)">
@@ -155,7 +157,7 @@
 												style="color: red;"></span>
 										</button>
 									</c:when>
-									<c:when test="${likes.check_like(idea.id) == 2}">
+									<c:when test="${checklike == 2}">
 										<button type="button" class="[ btn btn-default ]"
 											id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
 											<span class="[ glyphicon glyphicon-thumbs-up ]"

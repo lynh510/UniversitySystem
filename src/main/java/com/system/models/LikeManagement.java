@@ -17,7 +17,7 @@ import com.system.entity.Person;
 public class LikeManagement {
 	public void insert_like(Idea_Emoji ie) {
 		try {
-			String sqlQuery = "insert into Idea_emojis values (?,?,?)";
+			String sqlQuery = "insert into Idea_emoji values (?,?,?)";
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, ie.getEmoji().getId());
@@ -32,7 +32,7 @@ public class LikeManagement {
 	public int isLiked(int user_id, int idea_id) {
 		int found = 0;
 		try {
-			String sqlQuery = "select * from Idea_emojis where person_id = ? and idea_id = ?";
+			String sqlQuery = "select * from Idea_emoji where person_id = ? and idea_id = ?";
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, user_id);
@@ -48,7 +48,7 @@ public class LikeManagement {
 	}
 
 	public void update_like(int like_id, int idea_id, int user_id) {
-		String sqlQuery = "update Idea_emojis set emo_id = ? where idea_id = ? and person_id = ?";
+		String sqlQuery = "update Idea_emoji set emo_id = ? where idea_id = ? and person_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -65,7 +65,7 @@ public class LikeManagement {
 	public int count_like(int like_id, int idea_id) {
 		int count = 0;
 		try {
-			String sqlQuery = "select count(*) from Idea_emojis where emo_id = ? and idea_id = ?";
+			String sqlQuery = "select count(*) from Idea_emoji where emo_id = ? and idea_id = ?";
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, like_id);
@@ -81,7 +81,7 @@ public class LikeManagement {
 	}
 
 	public void unlike(int like_id, int idea_id, int user_id) {
-		String sqlQuery = "delete from Idea_emojis where emo_id = ? and idea_id = ? and person_id = ?";
+		String sqlQuery = "delete from Idea_emoji where emo_id = ? and idea_id = ? and person_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -98,7 +98,7 @@ public class LikeManagement {
 	// return 0 if user has not liked the idea
 	public int check_like(int idea_id) {
 		int flag = 0;
-		String sqlQuery = "select * from Idea_emojis where idea_id = ? and person_id = ?";
+		String sqlQuery = "select * from Idea_emoji where idea_id = ? and person_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

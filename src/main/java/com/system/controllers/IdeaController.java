@@ -39,9 +39,11 @@ import com.system.models.*;;
 @RequestMapping("/idea")
 public class IdeaController {
 	private IdeaManagement im;
+	private PersonManagement pm;
 
 	public IdeaController() {
 		im = new IdeaManagement();
+		pm = new PersonManagement();
 	}
 
 	// http://localhost:8080/idea/page/1
@@ -56,7 +58,6 @@ public class IdeaController {
 		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 		List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 		for (Idea idea : listIdea) {
-			// System.out.println(idea.getPerson().getPerson_picture());
 			if (idea.getMode() == 0) {
 				idea.getPerson().setPerson_name("Anonymous");
 				idea.getPerson().setPerson_picture("/uploads/default_avatar.png");
@@ -92,7 +93,7 @@ public class IdeaController {
 			@RequestParam("content") String content, @RequestParam("tag") List<Integer> tags,
 			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode) {
 		try {
-			Idea idea = new Idea(0, title, content, getUserSession(), null, new Date(), mode, 0, 0);
+			Idea idea = new Idea(0, title, content, pm.getUserSession(), null, new Date(), mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
 			insert_tags(tags, idea);
@@ -104,7 +105,7 @@ public class IdeaController {
 				insert_attachfiles(files, idea);
 			}
 			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "Idea submission", "<a href=\""
-					+ "http://openshift-quickstarts-university-system.193b.starter-ca-central-1.openshiftapps.com/idea/"
+					+ "/idea/"
 					+ idea_id + "\">Click here to see</a>\"" + "\n This is an automatic mail, Please do not reply");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
@@ -128,7 +129,7 @@ public class IdeaController {
 				Thread.sleep(1);
 				String extension = getExtension(fileName);
 				Idea_attachfiles ia = new Idea_attachfiles(0, idea, fileName, c.getTimeInMillis() + "." + extension,
-						extension, "uploads_document");
+						extension, "/file/");
 				im.insert_Idea_attachfiles(ia);
 				save_file(multipartFile, c.getTimeInMillis() + "." + extension);
 			} catch (InterruptedException e) {
@@ -141,13 +142,12 @@ public class IdeaController {
 	}
 
 	private void save_file(MultipartFile file, String name) {
-		String auto_path_project = System.getProperty("user.dir");
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		try {
 			inputStream = file.getInputStream();
 			// edit path when use
-			File newFile = new File(auto_path_project + "\\src\\main\\resources\\uploads_document\\" + name);
+			File newFile = new File("file/" + name);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
@@ -169,17 +169,6 @@ public class IdeaController {
 		return parts[1];
 	}
 
-	private Person getUserSession() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
-		HttpSession session = request.getSession(false);
-		if (session.getAttribute("user") == null) {
-			throw new NullPointerException("Have to login first");
-		} else {
-			return (Person) session.getAttribute("user");
-		}
-
-	}
 
 	@PostMapping("/edit")
 	public ModelAndView edit_idea(@RequestParam("idea_id") int idea_id, @RequestParam("title") String title,
