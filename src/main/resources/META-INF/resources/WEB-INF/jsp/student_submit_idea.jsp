@@ -5,9 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Student - Submit Your Idea</title>
-<link
-	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-	rel="stylesheet" id="bootstrap-css">
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <!------ Include the above in your HEAD tag ---------->
 
 <link
@@ -55,13 +53,13 @@
 		</div> -->
 
 				<!--Begin::Mobile View Navigation-->
-				<button type="button" class="navbar-toggle collapsed"
+				<!-- <button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
 					aria-expanded="false">
 					<span class="sr-only">Toggle navigation</span> <span
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
-				</button>
+				</button> -->
 				<!--End::Mobile View Navigation-->
 
 				<!--Begin::Header right-->
@@ -120,6 +118,8 @@
 						<ul class="dropdown-menu">
 							<li><a href="/student/activities/${welcom.id}/1"><i
 									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
+							<li><a href="/student/submit_idea"><i
+									class="fa fa-fw fa-plus"></i> Add idea</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 									Profile</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
@@ -158,7 +158,7 @@
 									</span>POST NEW IDEA</a>
 
 								</h4>
-								<h2 style="color: red;" id="message"></h2>
+								<!-- <h2 style="color: red;" id="message"></h2> -->
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
 
@@ -230,7 +230,7 @@
 												</div>
 												<div class="form-group">
 													<div>
-														<input type="radio" required="required"><a href="/student/terms">Before
+														<input type="radio" required><a href="/student/terms">Before
 															submitting please carefully read these terms and
 															conditions</a>
 													</div>

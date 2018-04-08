@@ -177,6 +177,10 @@ select option {
 	border: none;
 }
 
+.panel-title {
+	margin-top: 5%;
+}
+
 .panel-primary .panel-heading {
 	background: transparent !important;
 }

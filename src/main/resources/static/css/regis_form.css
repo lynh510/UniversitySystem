@@ -73,9 +73,6 @@
     left: 0;
 }
 
-.container {
-	float: right;
-}
 
 .blur {
 	z-index: auto; 

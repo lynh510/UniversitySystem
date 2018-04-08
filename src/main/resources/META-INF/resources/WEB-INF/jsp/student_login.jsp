@@ -63,7 +63,7 @@ $(document).ready(function() {
 	<div class="login-screen">
 		<div class="container">
 			<div
-				class="col-xs-12 col-sm-8 col-md-5 col-sm-offset-2 col-md-offset-6">
+				class="col-xs-12 col-sm-12 col-md-5 col-md-offset-6">
 				<form role="form" name="login-form" id="login_form"
 					action="/student/login" method="post" class="login-form">
 					<h2>

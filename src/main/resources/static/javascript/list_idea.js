@@ -103,6 +103,9 @@ function onThumbUp(idea_id, like) {
 				error : function(xhr, response, error) {
 					var err = JSON.parse(xhr.responseText);
 					alert(err.message);
+					if (err.message == "You have to login first") {
+						window.location = "/student/login.html";
+					}
 				}
 			});
 }
@@ -133,8 +136,9 @@ function onComment(idea_id) {
 											+ '</time><a href="#"> Like</a></span></h3><p>'
 											+ response.data.comment_text
 											+ '</p></div></div>');
-					$('#comment-count-' + idea_id).load(
-							' #comment-count-' + idea_id);
+
+					$('#commentText' + idea_id).val('');
+					$('#comment-count-' + idea_id).load(' #comment-count-' + idea_id);
 					// $('#more-comment-box-' + idea_id).load(
 					// ' #more-comment-box-' + idea_id);
 				},

@@ -122,7 +122,7 @@ $(document).ready(function() {
 	<div class="login-screen">
 		<div class="container">
 			<div
-				class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-5">
+				class="col-xs-12 col-sm-12 col-md-6 col-md-offset-5">
 				<form role="form" id="registration_form" name="registration-form"
 					action="" method="post" enctype="multipart/form-data"
 					class="registration-form">
@@ -132,7 +132,7 @@ $(document).ready(function() {
 					<p>Fill in the form below to insert student details</p>
 					<hr>
 					<div class="row">
-						<div class="col-xs-12 col-sm-6 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="form-group">
 								<label class="required" for="form-firstname">First Name</label>
 								<input type="text" name="first_name" id="first_name"
@@ -140,7 +140,7 @@ $(document).ready(function() {
 									required maxlength="20">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-6 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="form-group">
 								<label class="required" for="form-lastname">Last Name</label> <input
 									type="text" name="last_name" id="last_name"
@@ -163,7 +163,7 @@ $(document).ready(function() {
 						<!-- <h6 style="color: red" id="message"></h6> -->
 					</div>
 					<div class="row">
-						<div class="col-xs-12 col-sm-6 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="form-group">
 								<label class="required" for="form-password">Password</label> <input
 									type="password" name="password" id="password"
@@ -171,7 +171,7 @@ $(document).ready(function() {
 									required maxlength="20">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-6 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="form-group">
 								<label class="required" for="form-cfpass">Confirm
 									Password</label> <input type="password" name="password_confirmation"
@@ -189,8 +189,7 @@ $(document).ready(function() {
 						</div>
 						<div class="date-col">
 							<select class="form-control blur" required name="day">
-								<option value="" selected="" disabled="disabled" hidden>Select
-									a day</option>
+								<option value="" selected="" disabled="disabled" hidden>-- Day --</option>
 								<c:forEach items="${days}" var="day">
 									<option value="${day}">${day}</option>
 								</c:forEach>
@@ -198,8 +197,7 @@ $(document).ready(function() {
 						</div>
 						<div class="date-col">
 							<select name="month" required class="form-control datebox blur">
-								<option value="" selected="" disabled="disabled" hidden>Select
-									a month</option>
+								<option value="" selected="" disabled="disabled" hidden>-- Month --</option>
 								<c:forEach items="${months}" var="month">
 									<option value="${month}">${month}</option>
 								</c:forEach>
@@ -208,8 +206,7 @@ $(document).ready(function() {
 						<div class="date-col">
 							<select name="year" value="" required
 								class="form-control datebox blur">
-								<option selected="" disabled="disabled" hidden>Select a
-									year</option>
+								<option selected="" disabled="disabled" hidden>-- Year --</option>
 								<c:forEach items="${years}" var="year">
 									<option value="${year}">${year}</option>
 								</c:forEach>
