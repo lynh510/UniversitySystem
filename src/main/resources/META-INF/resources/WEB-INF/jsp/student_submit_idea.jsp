@@ -27,6 +27,25 @@
 <script type="text/javascript" src="/javascript/stu_sub_idea.js"></script>
 </head>
 <body class="main">
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <p id="message"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 	<div class="screen">
 		<!-- HEADER -->
 		<div class="navbar navbar-default navbar-fixed-top">
@@ -210,14 +229,14 @@
 													</select>
 												</div>
 												<div class="form-group">
-													<button type="submit" class="btn">
-														<span class="glyphicon glyphicon-floppy-disk"></span>Submit
-													</button>
 													<div>
-														<input type="radio"><a href="/student/terms">Before
+														<input type="radio" required="required"><a href="/student/terms">Before
 															submitting please carefully read these terms and
 															conditions</a>
 													</div>
+													<button type="submit" class="btn">
+														<span class="glyphicon glyphicon-floppy-disk"></span>Submit
+													</button>
 												</div>
 											</div>
 										</div>

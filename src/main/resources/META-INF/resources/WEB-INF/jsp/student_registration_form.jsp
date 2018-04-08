@@ -8,7 +8,8 @@
 <link rel="stylesheet" href="/css/regis_form.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style type="text/css">
 .form-control {
@@ -18,7 +19,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#registration_form").submit(function(e) {
-	 var message =	document.getElementById("errors");
 		e.preventDefault();
 		$.ajax({
 			type : "Post",
@@ -29,12 +29,17 @@ $(document).ready(function() {
 			cache : false,
 			data : new FormData($("#registration_form")[0]),
 			success : function(response) {
-				message.style.color = 'green';
-				message.innerHTML = 'Registration successfully';
+				$('#myModal h4').text('Message');
+				$('#myModal #message').css('color', 'green');
+				$('#myModal #message').text('Registration successfully');
+				$('#myModal').modal('show');
 			},
 			error : function(xhr, response, error) {
 				var err = JSON.parse(xhr.responseText);
-				message.innerHTML = err.message;
+				$('#myModal h4').text('Message');
+				$('#myModal #message').css('color', 'red');
+				$('#myModal #message').text(err.message);
+				$('#myModal').modal('show');
 			}
 		});
 		return false;
@@ -95,6 +100,25 @@ $(document).ready(function() {
 <title>Student Registration</title>
 </head>
 <body class="main">
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <p id="message"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 	<div class="login-screen">
 		<div class="container">
 			<div
@@ -136,7 +160,7 @@ $(document).ready(function() {
 							type="text" name="email" id="email" onkeypress="validateForm()"
 							required placeholder="Email Address" tabindex="4" required
 							class="form-email form-control blur" id="form-email">
-						<h6 style="color: red" id="message"></h6>
+						<!-- <h6 style="color: red" id="message"></h6> -->
 					</div>
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6">
@@ -156,7 +180,7 @@ $(document).ready(function() {
 									placeholder="Confirm Password" tabindex="6" maxlength="20">
 							</div>
 						</div>
-						<h6 style="color: red; margin-left: 5%;" id="msgConfirm"></h6>
+						<h3 style="color: red; margin-left: 5%;" id="msgConfirm"></h3>
 
 					</div>
 					<div class="form-group">
@@ -256,7 +280,7 @@ $(document).ready(function() {
 									Conditions</a> set out by this site
 							</label>
 						</div>
-						<h6 style="color: red" id="errors">${errors}</h6>
+						<%-- <h6 style="color: red" id="errors">${errors}</h6> --%>
 
 						<button type="submit" class="btn btn-reg">Sign up</button>
 						<h5 style="margin-top: 5%;">

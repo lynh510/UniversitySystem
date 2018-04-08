@@ -20,13 +20,17 @@ $(document).ready(function() {
 			cache : false,
 			data : new FormData($("#submit_idea_form")[0]),
 			success : function(response) {
-				message.style.color = 'green';
-				message.innerHTML = 'Your idea is successfully posted';
+				$('#myModal h4').text('Message');
+				$('#myModal #message').css('color', 'green');
+				$('#myModal #message').text('Your idea is successfully posted');
+				$('#myModal').modal('show');
 			},
 			error : function(xhr, response, error) {
 				var err = JSON.parse(xhr.responseText);
-				message.style.color = 'red';
-				message.innerHTML = err.message;
+				$('#myModal h4').text('Message');
+				$('#myModal #message').css('color', 'red');
+				$('#myModal #message').text(err.message);
+				$('#myModal').modal('show');
 			}
 		});
 		return false;
