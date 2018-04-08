@@ -196,7 +196,7 @@
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle" src="${idea.person.person_picture}"
+							<img class="img-circle" src="${welcom.person_picture}"
 								width="50" height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea id="commentText${idea.id}" rows="4"></textarea>
