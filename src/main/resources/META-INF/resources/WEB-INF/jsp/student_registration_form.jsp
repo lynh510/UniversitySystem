@@ -97,7 +97,7 @@ $(document).ready(function() {
 	}
 	
 </script>
-<title>Student Registration</title>
+<title>Registration</title>
 </head>
 <body class="main">
 <div id="myModal" class="modal fade" role="dialog">
@@ -127,9 +127,9 @@ $(document).ready(function() {
 					action="" method="post" enctype="multipart/form-data"
 					class="registration-form">
 					<h3>
-						<b>Student Registration Form</b>
+						<b>Registration Form</b>
 					</h3>
-					<p>Fill in the form below to insert student details</p>
+					<p>Fill in the form below to insert user details</p>
 					<hr>
 					<div class="row">
 						<div class="col-xs-12 col-sm-12 col-md-6">
@@ -212,78 +212,91 @@ $(document).ready(function() {
 								</c:forEach>
 							</select>
 						</div>
-						<div class="form-group">
-							<div style="margin-top: 8%;">
-								<label class="labeltxt required">Gender</label><br />
-								<div>
-									<input type="radio" name="gender" class="gender" id="male"
-										tabindex="2" placeholder="Gender" value="1" title="Male">
-									Male <input type="radio" name="gender" class="gender"
-										id="female" tabindex="2" placeholder="Gender" value="2"
-										title="Female"> Female <input type="radio"
-										name="gender" class="gender" id="unknown" tabindex="2"
-										placeholder="Gender" value="3" title="Unknown">
-									Unknown
-								</div>
+					</div>
+					<div class="form-group">
+						<div style="margin-top: 8%;">
+							<label class="labeltxt required">Gender</label><br />
+							<div>
+								<input type="radio" name="gender" class="gender" id="male"
+									tabindex="2" placeholder="Gender" value="1" title="Male">
+								Male <input type="radio" name="gender" class="gender"
+									id="female" tabindex="2" placeholder="Gender" value="2"
+									title="Female"> Female <input type="radio"
+									name="gender" class="gender" id="unknown" tabindex="2"
+									placeholder="Gender" value="3" title="Unknown">
+								Unknown
 							</div>
 						</div>
-						<div class="form-group">
-							<div style="margin-top: 2%;">
-								<label class="labeltxt">Profile picture (Optional)</label>
-							</div>
-							<input type="file" class="form-control blur" accept="image/*"
-								name="profilepic" onchange="showMyImage(this)">
-							<div class="profile-pic">
-								<img id="thumbnail" height="100%" width="100%" />
-							</div>
-							<script>
-								function showMyImage(fileInput) {
-									var files = fileInput.files;
-									for (var i = 0; i < files.length; i++) {
-										var file = files[i];
-										var imageType = /image.*/;
-										if (!file.type.match(imageType)) {
-											continue;
-										}
-										var img = document.getElementById("thumbnail");
-										img.file = file;
-										var reader = new FileReader();
-										reader.onload = (function(aImg) {
-											return function(e) {
-												aImg.src = e.target.result;
-											};
-										})(img);
-										reader.readAsDataURL(file);
+					</div>
+					<div class="form-group">
+						<div style="margin-top: 2%;">
+							<label class="labeltxt">Profile picture (Optional)</label>
+						</div>
+						<input type="file" class="form-control blur" accept="image/*"
+							name="profilepic" onchange="showMyImage(this)">
+						<div class="profile-pic">
+							<img id="thumbnail" height="100%" width="100%" />
+						</div>
+						<script>
+							function showMyImage(fileInput) {
+								var files = fileInput.files;
+								for (var i = 0; i < files.length; i++) {
+									var file = files[i];
+									var imageType = /image.*/;
+									if (!file.type.match(imageType)) {
+										continue;
 									}
+									var img = document.getElementById("thumbnail");
+									img.file = file;
+									var reader = new FileReader();
+									reader.onload = (function(aImg) {
+										return function(e) {
+											aImg.src = e.target.result;
+										};
+									})(img);
+									reader.readAsDataURL(file);
 								}
-							</script>
+							}
+						</script>
+					</div>
+					<div class="form-group">
+						<label class="required" for="form-phone">Phone number</label> <input
+							type="text" name="phone" required placeholder="Phone number..."
+							class="form-control blur" id="form-phone" maxlength="12"
+							onkeypress="phonenumber(this)">
+						<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
+					</div>
+					<div class="form-group">
+						<label class="required" for="form-address">Address</label> <input
+							type="text" name="address" required placeholder="Address..."
+							class="form-control blur" id="form-address" maxlength="200">
+					</div>
+					<div class="form-group">
+						<div>
+							<label class="labeltxt required">Role</label>
 						</div>
-						<div class="form-group">
-							<label class="required" for="form-phone">Phone number</label> <input
-								type="text" name="phone" required placeholder="Phone number..."
-								class="form-control blur" id="form-phone" maxlength="12"
-								onkeypress="phonenumber(this)">
-							<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
+						<div class="role">
+							<select class="form-control blur" required name="userrole">
+								<option value="" selected="" disabled="disabled" hidden>-- Role --</option>
+								<option value="staff">Staff</option>
+								<option value="student">Student</option>
+							</select>
 						</div>
-						<div class="form-group">
-							<label class="required" for="form-address">Address</label> <input
-								type="text" name="address" required placeholder="Address..."
-								class="form-control blur" id="form-address" maxlength="200">
-						</div>
-						<div class="form-group">
-							<label> By clicking <span class="label label-primary"
-								style="font-size: 15px; background-color: teal;">Sign up</span>,
-								you agree to the <a href="/student/terms">Terms and
-									Conditions</a> set out by this site
-							</label>
-						</div>
-						<%-- <h6 style="color: red" id="errors">${errors}</h6> --%>
+					</div>
+					<div class="form-group">
+						<label> By clicking <span class="label label-primary"
+							style="font-size: 15px; background-color: teal;">Sign up</span>,
+							you agree to the <a href="/student/terms">Terms and
+								Conditions</a> set out by this site
+						</label>
+					</div>
+					<%-- <h6 style="color: red" id="errors">${errors}</h6> --%>
 
-						<button type="submit" class="btn btn-reg">Sign up</button>
-						<h5 style="margin-top: 5%;">
-							You have already account. <a href="/student/login"
-								id="unflip-btn" class="login-link">Log in now!</a>
-						</h5>
+					<button type="submit" class="btn btn-reg">Sign up</button>
+					<h5 style="margin-top: 5%;">
+						You have already account. <a href="/student/login"
+							id="unflip-btn" class="login-link">Log in now!</a>
+					</h5>
 				</form>
 			</div>
 		</div>
