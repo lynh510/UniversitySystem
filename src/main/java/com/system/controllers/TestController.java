@@ -24,6 +24,11 @@ public class TestController {
 	public ModelAndView firstPage() {
 		return new ModelAndView("redirect:/student/login");
 	}
+	
+	@RequestMapping("/chart.html")
+	public ModelAndView chartPage() {
+		return new ModelAndView("chart");
+	}
 
 	@GetMapping("/image/{name:.+}")
 	public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {

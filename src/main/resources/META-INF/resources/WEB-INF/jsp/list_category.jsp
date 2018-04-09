@@ -13,10 +13,16 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
+	
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
 <jsp:useBean id="tag" class="com.system.models.TagManagement"
 	scope="page" />
 <title>List Category</title>
@@ -105,7 +111,7 @@
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
 						class="img-circle" id="userpicture" src="${welcom.person_picture}"
 						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">Username </b></span>
+							id="username">${welcom.person_name} </b></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/student/activities/${welcom.id}/1"><i
@@ -144,5 +150,10 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="chart"></div>
+	<script type="text/javascript">
+		$( "#chart" ).load( "/chart.html" );
+	</script>
 </body>
 </html>
