@@ -30,6 +30,18 @@ public class TestController {
 	public ModelAndView chartPage() {
 		return new ModelAndView("chart");
 	}
+	
+	@RequestMapping("/navbar.html")
+	public ModelAndView navbarPage() {
+		return new ModelAndView("navbar");
+	}
+	
+	
+	
+	@RequestMapping("/departments.html")
+	public ModelAndView departmentPage() {
+		return new ModelAndView("departments");
+	}
 
 	@GetMapping("/image/{name:.+}")
 	public ResponseEntity<byte[]> getImage(@PathVariable("name") String name) throws IOException {

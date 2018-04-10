@@ -114,8 +114,8 @@
 							id="username">${welcom.person_name} </b></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/student/activities/${welcom.id}/1"><i
-								class="fa fa-fw fa-history"></i> View Activity Log</a></li>
+						<li><a href="/tag/addCategory"><i
+								class="fa fa-fw fa-plus"></i> Add new tag</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 								Profile</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change

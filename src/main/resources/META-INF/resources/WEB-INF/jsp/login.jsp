@@ -63,12 +63,12 @@ $(document).ready(function() {
 				<div class="panel panel-login">
 					<div class="panel-heading">
 						<div class="row">
-							<div class="col-xs-6">
+							<div class="col-xs-12">
 								<a href="#" class="active" id="login-form-link">Login</a>
 							</div>
-							<div class="col-xs-6">
+							<!-- <div class="col-xs-6">
 								<a href="#" id="register-form-link">Register</a>
-							</div>
+							</div> -->
 						</div>
 						<hr>
 					</div>
@@ -107,7 +107,7 @@ $(document).ready(function() {
 									</div> -->
 
 								</form>
-								<form id="register-form" action="https://phpoll.com/register/process" method="post" role="form" style="display: none;">
+								<!-- <form id="register-form" action="https://phpoll.com/register/process" method="post" role="form" style="display: none;">
 									<div class="form-group">
 										<label class="required" for="form-username">Username</label>
 										<input type="text" name="username" id="regis_username" tabindex="1" class="form-control" placeholder="Username" value="" required maxlength="10">
@@ -133,7 +133,7 @@ $(document).ready(function() {
 											</div>
 										</div>
 									</div>
-								</form>
+								</form> -->
 							</div>
 						</div>
 					</div>
