@@ -1,13 +1,22 @@
 package com.system.entity;
 
-import java.util.Date;
-
 public class Tag {
 	private int id;
 	private String description;
+	private Department department;
 
 	public Tag() {
 		super();
+	}
+
+
+	public Department getDepartment() {
+		return department;
+	}
+
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 

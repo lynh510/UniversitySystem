@@ -116,7 +116,7 @@
 							</b></span>
 					</a>
 						<ul class="dropdown-menu">
-							<li><a href="/student/activities/${welcom.id}/1"><i
+							<li><a href="/student/activities/${user_id}/1"><i
 									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="/student/submit_idea"><i
 									class="fa fa-fw fa-plus"></i> Add idea</a></li>

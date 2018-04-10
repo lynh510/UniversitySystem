@@ -15,21 +15,35 @@ import com.system.models.*;
 @RequestMapping("/tag")
 public class TagController {
 	private TagManagement tm;
+	private QAManagerManagement qmm;
 
 	public TagController() {
 		tm = new TagManagement();
+		qmm = new QAManagerManagement();
 	}
 
 	@RequestMapping("/listCategory")
 	public ModelAndView listTag() {
 		ModelAndView model = new ModelAndView("list_category");
-		model.addObject("tags", tm.getTags());
+		try {
+			qmm.getQAManagerSession();
+			model.addObject("tags", tm.getTags());
+		} catch (NullPointerException e) {
+			model = new ModelAndView("redirect:/qa/login");
+		}
 		return model;
 	}
 
 	@RequestMapping("/addCategory")
 	public ModelAndView addCategory() {
-		return new ModelAndView("add_category");
+		ModelAndView model = new ModelAndView("add_category");
+		try {
+			qmm.getQAManagerSession();
+			model.addObject("tags", tm.getTags());
+		} catch (NullPointerException e) {
+			model = new ModelAndView("redirect:/qa/login");
+		}
+		return model;
 	}
 
 	@PostMapping("/add")

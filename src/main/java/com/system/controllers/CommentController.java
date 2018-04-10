@@ -1,5 +1,7 @@
 package com.system.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,18 +33,23 @@ public class CommentController {
 	@PostMapping("/submit")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> submit_comment(@RequestParam("idea_id") int idea_id,
-			@RequestParam("text") String comment_text) {
+			@RequestParam("text") String comment_text, HttpServletRequest request) {
 		try {
+			if(im.get_Idea(idea_id).getStatus() == 3) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,"The idea has been closed");
+			}
+			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+					request.getServerPort());
 			Comment comment = new Comment(
 					cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)), null,
 					pm.getUserSession(), null, comment_text);
 			Idea idea = im.get_Idea(idea_id);
 			MailApi mail = new MailApi();
-			if (pm.getUserSession().getId() != idea.getPerson().getId()) {
+			if (pm.getUserSession().getId() != idea.getPerson().getId() && pm.getUserSession().getPerson_role() == 0) {
 				mail.sendHtmlEmail(idea.getPerson().getEmail(),
 						pm.getUserSession().getPerson_name() + " commented on your idea",
-						"<a href=\"" + "/idea/" + idea_id + "\">Click here to see</a>\""
-								+ "/n This is an automatic mail, Please do not reply");
+						"<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
+								+ "\n This is an automatic mail, Please do not reply");
 			}
 			return new ApiResponse().sendData(comment, HttpStatus.ACCEPTED,
 					"Well done!! Commnet is successfully posted");

@@ -26,6 +26,8 @@
 	scope="page" />
 <jsp:useBean id="tags" class="com.system.models.IdeaTagManagement"
 	scope="page" />
+<jsp:useBean id="ideaManager" class="com.system.models.IdeaManagement"
+	scope="page" />
 <title>Activity Log</title>
 </head>
 <body>
@@ -75,19 +77,24 @@
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
 					<div class="[ panel panel-default ] panel-google-plus">
 						<div class="dropdown">
-							<span class="dropdown-toggle" type="button"
-								data-toggle="dropdown"> <span
-								class="[ glyphicon glyphicon-chevron-down ]"></span>
-							</span>
-							<ul class="dropdown-menu" role="menu">
-								<li role="presentation"><a role="menuitem" tabindex="-1"
-									class="editIdea" onclick="return editIdea();">Edit</a></li>
-								<li role="presentation"><a role="menuitem" tabindex="-1"
-									href="/student/delete/${welcom.id}/${idea.id}">Delete</a></li>
-								<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+							<c:choose>
+								<c:when
+									test="${ideaManager.check_idea_belong(idea.person.id) == true}">
+									<span class="dropdown-toggle" type="button"
+										data-toggle="dropdown"> <span
+										class="[ glyphicon glyphicon-chevron-down ]"></span>
+									</span>
+									<ul class="dropdown-menu" role="menu">
+										<li role="presentation"><a role="menuitem" tabindex="-1"
+											class="editIdea" onclick="return editIdea();">Edit</a></li>
+										<li role="presentation"><a role="menuitem" tabindex="-1"
+											href="/student/delete/${welcom.id}/${idea.id}">Delete</a></li>
+										<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
-							</ul>
+									</ul>
+								</c:when>
+							</c:choose>
 						</div>
 						<div class="panel-google-plus-tags">
 							<ul>
@@ -143,8 +150,8 @@
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
 							<div id="like-box${idea.id}">
-							<c:set var="checklike" value="${likes.check_like(idea.id)}"
-								scope="page" />
+								<c:set var="checklike" value="${likes.check_like(idea.id)}"
+									scope="page" />
 								<c:choose>
 									<c:when test="${checklike  == 1}">
 										<button type="button" class="[ btn btn-default ]"
@@ -187,19 +194,21 @@
 								</c:choose>
 							</div>
 							<div id="more-comment-box-${idea.id}" class="box-click">
-								<button id="btnViewComments${idea.id}" onclick="onViewComments(${idea.id})">Comments</button>
+								<button id="btnViewComments${idea.id}"
+									onclick="onViewComments(${idea.id})">Comments</button>
 								<input type="hidden" id="noOfComments${idea.id}"
 									value="${comments.noOfComments(idea.id)}"> <span>
 									<a id="moreComments${idea.id}" style="display: none"
-									onclick="onLoadMoreComments(${idea.id})">View more comment(s)</a>
+									onclick="onLoadMoreComments(${idea.id})">View more
+										comment(s)</a>
 								</span>
 							</div>
 							<div id="box_comments${idea.id }" class="box-comments"></div>
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle" src="${welcom.person_picture}"
-								width="50" height="50" alt="User Image" />
+							<img class="img-circle" src="${welcom.person_picture}" width="50"
+								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea id="commentText${idea.id}" rows="4"></textarea>
 								<button type="submit" onclick="onComment(${idea.id})"

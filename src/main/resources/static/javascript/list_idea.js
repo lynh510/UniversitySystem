@@ -200,7 +200,6 @@ function showComments(data, idea_id) {
 function onLoadMoreComments(idea_id) {
 	var noOfComments = document.getElementById("noOfComments" + idea_id);
 	var moreComments = document.getElementById("moreComments" + idea_id);
-	alert(idea_id);
 	if (noOfComments.value > 0) {
 		$
 				.ajax({

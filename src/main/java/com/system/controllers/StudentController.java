@@ -33,14 +33,19 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.ApiResponse;
-import com.system.entity.Idea;
-import com.system.entity.Person;
-import com.system.entity.Student;
+import com.system.Helper;
+import com.system.entity.*;
 import com.system.models.*;
 
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	private PersonManagement pm;
+	private Helper helper;
+
+	public StudentController() {
+		pm = new PersonManagement();
+	}
 
 	// First run the java file in com.system then parse url below into your browser
 	// http://localhost:8080/student/registration
@@ -148,19 +153,12 @@ public class StudentController {
 		try {
 			TagManagement tm = new TagManagement();
 			mnv.addObject("tags", tm.getTags());
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
-			HttpSession session = request.getSession(false);
-			if (session.getAttribute("user") == null) {
-				mnv = new ModelAndView("redirect:/student/login");
-			} else {
-				Person p = (Person) session.getAttribute("user");
-				mnv.addObject("welcom", p);
-			}
+			Person p = (Person) pm.getUserSession();
+			mnv.addObject("user_id", helper.encryptID(p.getId() + ""));
+			mnv.addObject("welcom", p);
 		} catch (NullPointerException e) {
 			mnv = new ModelAndView("redirect:/student/login");
 		}
-
 		return mnv;
 	}
 
@@ -228,9 +226,10 @@ public class StudentController {
 
 	// http://localhost:8080/student/activities/1
 	@GetMapping("/activities/{person_id}/{numberOfPage}")
-	public ModelAndView activities(@PathVariable(value = "person_id") int person_id,
+	public ModelAndView activities(@PathVariable(value = "person_id") String person_id,
 			@PathVariable("numberOfPage") String page) {
 		ModelAndView model = new ModelAndView("student_wall");
+		int user_id = helper.decodeID(person_id);
 		try {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
@@ -240,9 +239,9 @@ public class StudentController {
 				IdeaManagement im = new IdeaManagement();
 				int currentPage = Integer.parseInt(page);
 				int recordsPerPage = 5;
-				int noOfRecords = im.noOfRecords();
+				int noOfRecords = im.noOfRecords(user_id);
 				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-				model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage, person_id));
+				model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage, user_id));
 				model.addObject("noOfPages", noOfPages);
 				model.addObject("currentPage", currentPage);
 				model.addObject("welcom", p);

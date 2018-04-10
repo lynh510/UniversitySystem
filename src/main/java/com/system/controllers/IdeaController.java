@@ -53,8 +53,7 @@ public class IdeaController {
 		ModelAndView model = new ModelAndView("display_idea");
 		int currentPage = Integer.parseInt(page);
 		int recordsPerPage = 5;
-		int noOfRecords = im.noOfRecords();
-
+		int noOfRecords = im.noOfRecords(0);
 		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 		List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 		for (Idea idea : listIdea) {
@@ -62,6 +61,13 @@ public class IdeaController {
 				idea.getPerson().setPerson_name("Anonymous");
 				idea.getPerson().setPerson_picture("/uploads/default_avatar.png");
 			}
+		}
+		try {
+			model.addObject("welcom", pm.getUserSession());
+		} catch (NullPointerException e) {
+			Person p = new Person();
+			p.setPerson_picture("/uploads/default_avatar.png");
+			model.addObject("welcom", p);
 		}
 		model.addObject("ideas", listIdea);
 		model.addObject("noOfPages", noOfPages);
@@ -91,8 +97,11 @@ public class IdeaController {
 	@ResponseBody
 	public ResponseEntity<ApiResponse> submit_idea(@RequestParam("title") String title,
 			@RequestParam("content") String content, @RequestParam("tag") List<Integer> tags,
-			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode) {
+			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode,
+			HttpServletRequest request) {
 		try {
+			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+					request.getServerPort());
 			Idea idea = new Idea(0, title, content, pm.getUserSession(), null, new Date(), mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
@@ -104,9 +113,9 @@ public class IdeaController {
 			} else {
 				insert_attachfiles(files, idea);
 			}
-			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "Idea submission", "<a href=\""
-					+ "/idea/"
-					+ idea_id + "\">Click here to see</a>\"" + "\n This is an automatic mail, Please do not reply");
+			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "Idea submission",
+					"<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
+							+ "\n This is an automatic mail, Please do not reply");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -168,7 +177,6 @@ public class IdeaController {
 		String[] parts = filename.split("\\.");
 		return parts[1];
 	}
-
 
 	@PostMapping("/edit")
 	public ModelAndView edit_idea(@RequestParam("idea_id") int idea_id, @RequestParam("title") String title,

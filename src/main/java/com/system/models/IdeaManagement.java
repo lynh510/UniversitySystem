@@ -54,7 +54,9 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage, int person_id) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where person_id = ? and _status = 0 ORDER BY post_date DESC";
+		String sqlQuery = "SELECT * FROM Idea Where person_id = ? and _status = 0 ORDER BY post_date DESC OFFSET "
+				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
+		;
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -78,11 +80,15 @@ public class IdeaManagement {
 		return ideaList;
 	}
 
-	public int noOfRecords() {
+	public int noOfRecords(int user_id) {
 		int result = 0;
+		String sqlQuery = "select count(*) from Idea where _status = 0";
+		if (user_id != 0) {
+			sqlQuery = "select count(*) from Idea where _status = 0 and person_id = " + user_id;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
-			PreparedStatement statement = connection.prepareStatement("select count(*) from Idea where _status = 0");
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				result = rs.getInt(1);
@@ -147,23 +153,19 @@ public class IdeaManagement {
 			e.printStackTrace();
 		}
 	}
-	public Idea get_Idea (int idea_id) {
+
+	public Idea get_Idea(int idea_id) {
 		String sqlQuery = "Select * from Idea where idea_id = ?";
 		Idea idea = new Idea();
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, idea_id);
-			ResultSet rs =  statement.executeQuery();
-			if(rs.next()) {
-				idea = new Idea(rs.getInt(1),
-						rs.getString("idea_title"),
-						rs.getString("idea_content"),
-						pm.getPerson(rs.getInt("person_id")),
-						rs.getTimestamp("post_date"),
-						rs.getTimestamp("close_date"),
-						rs.getInt("idea_views"),
-						rs.getInt("mode"),
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				idea = new Idea(rs.getInt(1), rs.getString("idea_title"), rs.getString("idea_content"),
+						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"),
+						rs.getTimestamp("close_date"), rs.getInt("idea_views"), rs.getInt("mode"),
 						rs.getInt("_status"));
 			}
 		} catch (Exception e) {
@@ -173,11 +175,16 @@ public class IdeaManagement {
 	}
 
 	public boolean check_idea_belong(int user_id) {
-		if (pm.getUserSession().getId() == user_id) {
-			return true;
-		} else {
+		try {
+			if (pm.getUserSession().getId() == user_id) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NullPointerException e) {
 			return false;
 		}
+
 	}
 
 	public void eidt_idea(Idea idea) {

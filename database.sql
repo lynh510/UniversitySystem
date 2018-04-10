@@ -7,7 +7,8 @@ create table Person(
 person_id int identity(1,1) primary key,
 person_picture varchar(500),
 person_name varchar(50),
-person_role tinyint, --0 for student, 1 for staff , 2 for QA coordinator, 3 for QA Manager, 4 for Admin user, etc
+person_role tinyint, --0 for student, 1 for staff 
+--, 2 for anonymouse user, 3 for QA manager, 4 for QA coordinator, 5 for Admin etc
 birthdate date,
 gender tinyint, --0 for male, 1 for female
 _status tinyint, --0 for active, 1 for disable
@@ -221,6 +222,102 @@ BEGIN
        select * from Person where person_id = 0
 
 END
+
+CREATE PROCEDURE staff_login
+    @staffUsername NVARCHAR(254),
+    @staffPassword NVARCHAR(50)
+AS
+BEGIN
+
+    SET NOCOUNT ON
+
+    DECLARE @userID INT
+
+    IF EXISTS (SELECT TOP 1 staff_id FROM Staff WHERE username=@staffUsername)
+    BEGIN
+        SET @userID=(SELECT staff_id FROM Staff WHERE username=@staffUsername AND password_hash=HASHBYTES('SHA2_512', @staffPassword+CAST(salt AS NVARCHAR(36))))
+
+       IF(@userID IS NULL)
+           select * from Person where person_id = 0
+       ELSE 
+           select * from Person where person_id = @userID
+    END
+    ELSE
+       select * from Person where person_id = 0
+
+END
+
+CREATE PROCEDURE add_staff
+    @staffID int,
+	@staffUserName VARCHAR(50),
+    @staffPassword VARCHAR(50),
+    @responseMessage NVARCHAR(250) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON
+
+    DECLARE @salt UNIQUEIDENTIFIER=NEWID()
+    BEGIN TRY
+
+        INSERT INTO Staff(staff_id, username,password_hash, salt)
+        VALUES(@staffID,@staffUserName, HASHBYTES('SHA2_512', @staffPassword+CAST(@salt AS NVARCHAR(36))), @salt)
+
+       SET @responseMessage='Success'
+
+    END TRY
+    BEGIN CATCH
+        SET @responseMessage=ERROR_MESSAGE() 
+    END CATCH
+
+END
+
+CREATE PROCEDURE admin_login
+    @adminUsername NVARCHAR(254),
+    @adminPassword NVARCHAR(50)
+AS
+BEGIN
+
+    SET NOCOUNT ON
+
+    DECLARE @userID INT
+
+    IF EXISTS (SELECT TOP 1 admin_id FROM Administrator WHERE username=@adminUsername)
+    BEGIN
+        SET @userID=(SELECT admin_id FROM Administrator WHERE username=@adminUsername AND password_hash=HASHBYTES('SHA2_512', @adminPassword+CAST(salt AS NVARCHAR(36))))
+
+       IF(@userID IS NULL)
+           select * from Person where person_id = 0
+       ELSE 
+           select * from Person where person_id = @userID
+    END
+    ELSE
+       select * from Person where person_id = 0
+END
+
+CREATE PROCEDURE QACoordinator_login
+    @coorUsername NVARCHAR(254),
+    @coorPassword NVARCHAR(50)
+AS
+BEGIN
+
+    SET NOCOUNT ON
+
+    DECLARE @userID INT
+
+    IF EXISTS (SELECT TOP 1 coordinator_id FROM QACoordinator WHERE username=@coorUsername)
+    BEGIN
+        SET @userID=(SELECT coordinator_id FROM QACoordinator WHERE username=@coorUsername AND password_hash=HASHBYTES('SHA2_512', @coorPassword+CAST(salt AS NVARCHAR(36))))
+
+       IF(@userID IS NULL)
+           select * from Person where person_id = 0
+       ELSE 
+           select * from Person where person_id = @userID
+    END
+    ELSE
+       select * from Person where person_id = 0
+
+END
+
 --------
 DECLARE @responseMessage NVARCHAR(250);
 Exec add_student 1,'username','password', @responseMessage output;
@@ -253,3 +350,4 @@ time_sent datetime
 select * from idea
 
 SELECT * FROM Idea  Where person_id = 1 ORDER BY post_date DESC
+
