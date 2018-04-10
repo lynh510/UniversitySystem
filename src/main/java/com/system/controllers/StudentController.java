@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ public class StudentController {
 
 	public StudentController() {
 		pm = new PersonManagement();
+		helper = new Helper();
 	}
 
 	// First run the java file in com.system then parse url below into your browser

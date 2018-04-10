@@ -63,6 +63,7 @@ go
 create table Tag(
 tag_id int primary key identity,
 tag_des varchar(50), --services, courses
+dept_id int foreign key references Department(dept_id)
 );
 go
 create table Idea(
