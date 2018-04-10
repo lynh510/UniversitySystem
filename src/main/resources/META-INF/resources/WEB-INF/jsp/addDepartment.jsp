@@ -18,7 +18,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
-<title>Add new category</title>
+<title>Add Department</title>
 <style type="text/css">
 	.container {
 		margin-top: 10%;
@@ -33,24 +33,6 @@
 		background-color: #fff;
 	}
 </style>
-<script type="text/javascript">
-var check = function() {
-	var title = document.getElementById('title');
-	var splChars = "*|,\":<>[]{}`\';()@&$#%";
-	for (var i = 0; i < title.value.length; i++) {
-		if (splChars.indexOf(title.value.charAt(i)) != -1) {
-			document.getElementById('msgCheck').innerHTML = "The category name mustn't have special character!";
-			title.focus();
-			return false;
-		}
-		if (splChars.indexOf(title.value.charAt(i)) == -1) {
-			document.getElementById('msgCheck').innerHTML = "";
-			title.focus();
-			return true;
-		}
-	}
-}
-</script>
 </head>
 <body>
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
@@ -68,14 +50,14 @@ var check = function() {
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
 						class="img-circle" id="userpicture"
 						src="${welcom.person_picture}" width="30" height="30"> <span
-						class="hidden-xs"><b id="username">QA Manager
+						class="hidden-xs"><b id="username">QA Coordinator
 						</b></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/tag/addCategory"><i
-							class="fa fa-fw fa-plus"></i> Add Tag</a></li>
-						<li><a href="/tag/listCategory"><i
-							class="fa fa-fw fa-suitcase"></i> Tag Manager</a></li>
+						<li><a href="/addDepartment.html"><i
+							class="fa fa-fw fa-plus"></i> Add Department</a></li>
+						<li><a href="/departments.html"><i
+							class="fa fa-fw fa-suitcase"></i> Department Manager</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 								Profile</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
@@ -91,26 +73,15 @@ var check = function() {
     	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form class="form-horizontal" action="/tag/add" method="post">
 			        <!-- Form Name -->
-			        <h3>Add new tag</h3>
+			        <h3>Add new department</h3>
 					<hr/>
 			        <!-- Text input-->
-			        <div class="form-group">
-			            <label class="col-md-4 control-label" for="title">Tag Name</label>
-			
-			            <div class="col-md-5">
-			                <input id="title" name="tag_name" type="text" placeholder="Category name" class="form-control input-md" required onkeyup='check();' >
-			                <h6 style="color: red; margin-left: 5%;" id="msgCheck"></h6>
-			            </div>
-			        </div>
 			        <div class="form-group">
 			            <label class="col-md-4 control-label" for="title">Department Name</label>
 			
 			            <div class="col-md-5">
-			                <select class="form-control" name="department" required>
-			                	<option selected="selected">Choose department</option>
-			                	<option value="Computing">Computing</option>
-			                	<option value="Business">Business</option>
-			                </select>
+			                <input id="title" name="department_name" type="text" placeholder="Department name" class="form-control input-md" required onkeyup='check();' >
+			                <h6 style="color: red; margin-left: 5%;" id="msgCheck"></h6>
 			            </div>
 			        </div>
 			

@@ -36,11 +36,34 @@ public class TestController {
 		return new ModelAndView("navbar");
 	}
 	
-	
+	@RequestMapping("/addDepartment.html")
+	public ModelAndView addDepartmentPage() {
+		return new ModelAndView("addDepartment");
+	}
 	
 	@RequestMapping("/departments.html")
 	public ModelAndView departmentPage() {
 		return new ModelAndView("departments");
+	}
+	
+	@RequestMapping("/statistics.html")
+	public ModelAndView statisticPage() {
+		return new ModelAndView("statistic");
+	}
+	
+	@RequestMapping("/admin.html")
+	public ModelAndView adminPage() {
+		return new ModelAndView("manageUser");
+	}
+	
+	@RequestMapping("/addTag.html")
+	public ModelAndView tagPage() {
+		return new ModelAndView("add_category");
+	}
+	
+	@RequestMapping("/listCategory")
+	public ModelAndView Page() {
+		return new ModelAndView("list_category");
 	}
 
 	@GetMapping("/image/{name:.+}")

@@ -12,7 +12,7 @@
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
 						class="img-circle" id="userpicture"
 						src="${welcom.person_picture}" width="30" height="30"> <span
-						class="hidden-xs"><b id="username">Username
+						class="hidden-xs"><b id="username">${welcom.person_name}
 						</b></span>
 				</a>
 					<ul class="dropdown-menu">

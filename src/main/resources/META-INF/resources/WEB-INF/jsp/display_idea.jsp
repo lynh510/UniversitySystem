@@ -211,6 +211,7 @@
 								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea id="commentText${idea.id}" rows="4"></textarea>
+								<input type="checkbox" name="mode" value="0"/><span style="font-style: italic;">Comment as an Anonymous user</span>
 								<button type="submit" onclick="onComment(${idea.id})"
 									class="[ btn btn-success disabled ]">Post comment</button>
 								<button type="reset" class="[ btn btn-default ]">Cancel</button>

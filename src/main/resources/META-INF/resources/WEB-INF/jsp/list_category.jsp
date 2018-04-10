@@ -29,7 +29,6 @@
 <style type="text/css">
 .container {
 	margin-top: 5%;
-	margin-left: 20%;
 }
 
 .single {
@@ -111,11 +110,13 @@
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
 						class="img-circle" id="userpicture" src="${welcom.person_picture}"
 						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">${welcom.person_name} </b></span>
+							id="username"><%-- ${welcom.person_name} --%>QA Manager </b></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/tag/addCategory"><i
 								class="fa fa-fw fa-plus"></i> Add new tag</a></li>
+						<li><a href="/tag/listCategory"><i
+								class="fa fa-fw fa-suitcase"></i> Tag management</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 								Profile</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
@@ -129,11 +130,11 @@
 	</div>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10">
+			<div class="col-sm-12">
 				<!-- Category -->
 				<div class="single category">
-					<h3 class="side-title">Category</h3>
-					<ul class="list-unstyled">
+					<h3 class="side-title">Tags</h3>
+					<%-- <ul class="list-unstyled">
 						<c:forEach items="${tags}" var="t">
 							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
 								scope="page" />
@@ -143,6 +144,28 @@
 
 							</li>
 						</c:forEach>
+
+					</ul> --%>
+					<ul class="list-unstyled">
+						<%-- <c:forEach items="${tags}" var="t">
+							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
+								scope="page" /> --%>
+							<li>Service<span class="count">Mentioned <c:out
+										value="5" /> time(s)
+							</span><a href="/tag/delete/${t.id}">Delete</a>
+
+							</li>
+							<li>Course<span class="count">Mentioned <c:out
+										value="2" /> time(s)
+							</span><a href="/tag/delete/${t.id}">Delete</a>
+
+							</li>
+							<li>IT<span class="count">Mentioned <c:out
+										value="10" /> time(s)
+							</span><a href="/tag/delete/${t.id}">Delete</a>
+
+							</li>
+						<%-- </c:forEach> --%>
 
 					</ul>
 				</div>
