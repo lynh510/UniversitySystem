@@ -26,7 +26,7 @@ $(document).ready(function() {
 				url : "/student/login",
 				data : $("#login_form").serialize(),
 				success : function(response) {
-					window.location.href = "/student/submit_idea";
+					window.location.href = "/idea/page/1";
 				},
 				error : function(xhr, response, error) {
 					$('#myModal h4').text('Message');

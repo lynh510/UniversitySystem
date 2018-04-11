@@ -1,25 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="/css/form_login.css" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/javascript/login.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id"
 	content="273733011923-n5lqfqjb265s8s8k5mka9drdkr2t78e8.apps.googleusercontent.com">
 <title>Login - Register</title>
 <script type="text/javascript">
-$(document).ready(function() {
-	 $("#login-form").submit(function(e){
-		 e.preventDefault();
+	$(document).ready(function() {
+		$("#login-form").submit(function(e) {
+			e.preventDefault();
 			$.ajax({
 				type : "Post",
-				url : "/qa/authorization",
+				url : "/${role}/authorization",
 				data : $("#login-form").serialize(),
 				success : function(response) {
 					window.location.href = response.message;
@@ -33,38 +37,38 @@ $(document).ready(function() {
 				}
 			});
 			return false;
-	 });
-});
+		});
+	});
 </script>
 </head>
 <body>
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"></h4>
-      </div>
-      <div class="modal-body">
-        <p id="message"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p id="message"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 
-  </div>
-</div>
+		</div>
+	</div>
 	<div class="container">
-    	<div class="row">
+		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 				<div class="panel panel-login">
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-12">
-								<a href="#" class="active" id="login-form-link">Login</a>
+								<a href="#" class="active" id="login-form-link">${displayName} Login</a>
 							</div>
 							<!-- <div class="col-xs-6">
 								<a href="#" id="register-form-link">Register</a>
@@ -75,14 +79,19 @@ $(document).ready(function() {
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<form id="login-form" action="/qa/authorization" method="post" role="form" style="display: block;">
+								<form id="login-form" action="/${role}/authorization"
+									method="post" role="form" style="display: block;">
 									<div class="form-group">
-										<label for="username">Username</label>
-										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required maxlength="10">
+										<label for="username">Username</label> <input type="text"
+											name="username" id="username" tabindex="1"
+											class="form-control" placeholder="Username" value="" required
+											maxlength="10">
 									</div>
 									<div class="form-group">
-										<label for="password">Password</label>
-										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required maxlength="20">
+										<label for="password">Password</label> <input type="password"
+											name="password" id="password" tabindex="2"
+											class="form-control" placeholder="Password" required
+											maxlength="20">
 									</div>
 									<h5 style="color: red" id="errors"></h5>
 									<div class="form-group">
@@ -92,7 +101,9 @@ $(document).ready(function() {
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
-												<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
+												<input type="submit" name="login-submit" id="login-submit"
+													tabindex="4" class="form-control btn btn-login"
+													value="Log In">
 											</div>
 										</div>
 									</div>
