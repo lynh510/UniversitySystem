@@ -26,15 +26,17 @@ import com.system.models.AuthorizationManagement;
 @RequestMapping("/admin")
 public class AdminController {
 	private AuthorizationManagement am;
+
 	public AdminController() {
 		am = new AuthorizationManagement();
 	}
+
 	@GetMapping("/")
 	public ModelAndView get() {
 		ModelAndView model = new ModelAndView("student_registration_form");
 		return model;
 	}
-	
+
 	@GetMapping("/login")
 	public ModelAndView admin_login() {
 		ModelAndView model = new ModelAndView("login");
@@ -42,6 +44,7 @@ public class AdminController {
 		model.addObject("displayName", "Admin");
 		return model;
 	}
+
 	@PostMapping("/authorization")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> check_login(@RequestParam("username") String user_name,
@@ -56,18 +59,29 @@ public class AdminController {
 			HttpSession session = request.getSession(true);
 			p.setPerson_picture("/image/" + p.getPerson_picture());
 			session.setAttribute("Admin", p);
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "/admin.html");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "/admin/dashboard");
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
 		}
 	}
 
+	@GetMapping("/dashboard")
+	public ModelAndView adminPage() {
+		try {
+			getAdminSession();
+			return new ModelAndView("manageUser");
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+
+	}
+
 	@GetMapping("/addStudents")
 	public ModelAndView registration() {
 		ModelAndView model = new ModelAndView("student_registration_form");
-		List<Integer> months = new ArrayList();
-		List<Integer> days = new ArrayList();
-		List<Integer> years = new ArrayList();
+		List<Integer> months = new ArrayList<Integer>();
+		List<Integer> days = new ArrayList<Integer>();
+		List<Integer> years = new ArrayList<Integer>();
 		for (int month = 1; month < 13; month++) {
 			months.add(month);
 		}
@@ -81,5 +95,17 @@ public class AdminController {
 		model.addObject("months", months);
 		model.addObject("years", years);
 		return model;
+	}
+
+	private Person getAdminSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("Admin") == null) {
+			throw new NullPointerException("Have to login first");
+		} else {
+			return (Person) session.getAttribute("user");
+		}
+
 	}
 }

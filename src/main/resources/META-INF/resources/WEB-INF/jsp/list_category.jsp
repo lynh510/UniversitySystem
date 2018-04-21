@@ -134,39 +134,15 @@
 				<!-- Category -->
 				<div class="single category">
 					<h3 class="side-title">Tags</h3>
-					<%-- <ul class="list-unstyled">
+					<ul class="list-unstyled">
 						<c:forEach items="${tags}" var="t">
 							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
 								scope="page" />
 							<li>${t.description}<span class="count">Mentioned <c:out
 										value="${count}" /> time(s)
 							</span><a href="/tag/delete/${t.id}">Delete</a>
-
 							</li>
 						</c:forEach>
-
-					</ul> --%>
-					<ul class="list-unstyled">
-						<%-- <c:forEach items="${tags}" var="t">
-							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
-								scope="page" /> --%>
-							<li>Service<span class="count">Mentioned <c:out
-										value="5" /> time(s)
-							</span><a href="/tag/delete/${t.id}">Delete</a>
-
-							</li>
-							<li>Course<span class="count">Mentioned <c:out
-										value="2" /> time(s)
-							</span><a href="/tag/delete/${t.id}">Delete</a>
-
-							</li>
-							<li>IT<span class="count">Mentioned <c:out
-										value="10" /> time(s)
-							</span><a href="/tag/delete/${t.id}">Delete</a>
-
-							</li>
-						<%-- </c:forEach> --%>
-
 					</ul>
 				</div>
 				<h2>${message}</h2>
@@ -176,7 +152,7 @@
 	
 	<div id="chart"></div>
 	<script type="text/javascript">
-		$( "#chart" ).load( "/chart.html" );
+		$( "#chart" ).load( "/qamanager/chart" );
 	</script>
 </body>
 </html>

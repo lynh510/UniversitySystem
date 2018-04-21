@@ -102,7 +102,8 @@ public class IdeaController {
 		try {
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
-			Idea idea = new Idea(0, title, content, pm.getUserSession(), null, new Date(), mode, 0, 0);
+			Person p = pm.getUserSession();
+			Idea idea = new Idea(0, title, content, p , null, new Date(), mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
 			insert_tags(tags, idea);
@@ -113,9 +114,10 @@ public class IdeaController {
 			} else {
 				insert_attachfiles(files, idea);
 			}
-			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "Idea submission",
-					"<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
-							+ "\n This is an automatic mail, Please do not reply");
+			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "New Idea submission from " + p.getPerson_name(),
+					"A new idea is submitted"+
+					"\n<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
+							+ "\n This is an automatic email, Please do not reply");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

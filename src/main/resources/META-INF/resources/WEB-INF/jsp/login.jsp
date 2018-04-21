@@ -68,7 +68,8 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-12">
-								<a href="#" class="active" id="login-form-link">${displayName} Login</a>
+								<a href="#" class="active" id="login-form-link">${displayName}
+									Login</a>
 							</div>
 							<!-- <div class="col-xs-6">
 								<a href="#" id="register-form-link">Register</a>
@@ -107,6 +108,7 @@
 											</div>
 										</div>
 									</div>
+
 									<!-- <div class="form-group">
 										<div class="row">
 											<div class="col-lg-12">
@@ -118,6 +120,39 @@
 									</div> -->
 
 								</form>
+								<form id="external_login" action="/${role}/external_login"
+									method="post">
+									<input type="hidden" id="email" name="email" value="">
+								</form>
+								<script type="text/javascript">
+									function onSignIn(googleUser) {
+										var profile = googleUser
+												.getBasicProfile();
+										var imagurl = profile.getImageUrl();
+										var name = profile.getName();
+										var email = profile.getEmail();
+										document.getElementById("email").value = email;
+										$.ajax({
+													type : "Post",
+													url : "/${role}/external_login",
+													data : $("#external_login")
+															.serialize(),
+													success : function(response) {
+														window.location.href = response.message;
+													},
+													error : function(xhr,
+															response, error) {
+														var err = JSON
+																.parse(xhr.responseText);
+														document
+																.getElementById("errors").innerHTML = err.message;
+													}
+												});
+										gapi.auth2.getAuthInstance()
+												.disconnect();
+
+									}
+								</script>
 								<!-- <form id="register-form" action="https://phpoll.com/register/process" method="post" role="form" style="display: none;">
 									<div class="form-group">
 										<label class="required" for="form-username">Username</label>

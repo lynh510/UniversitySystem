@@ -28,6 +28,7 @@ public class AuthorizationManagement {
 		}
 		return p;
 	}
+
 	public Person StaffLogin(String username, String password) {
 		String sqlQuery = "exec staff_login ?, ?";
 		Person p = new Person();
@@ -48,6 +49,7 @@ public class AuthorizationManagement {
 		}
 		return p;
 	}
+
 	public Person AdminLogin(String username, String password) {
 		String sqlQuery = "exec admin_login ?, ?";
 		Person p = new Person();
@@ -68,6 +70,7 @@ public class AuthorizationManagement {
 		}
 		return p;
 	}
+
 	public Person QACoordinatorLogin(String username, String password) {
 		String sqlQuery = "exec QACoordinator_login ?, ?";
 		Person p = new Person();

@@ -29,7 +29,7 @@ public class TagController {
 			qmm.getQAManagerSession();
 			model.addObject("tags", tm.getTags());
 		} catch (NullPointerException e) {
-			model = new ModelAndView("redirect:/qa/login");
+			model = new ModelAndView("redirect:/qamanager/login");
 		}
 		return model;
 	}
@@ -41,7 +41,7 @@ public class TagController {
 			qmm.getQAManagerSession();
 			model.addObject("tags", tm.getTags());
 		} catch (NullPointerException e) {
-			model = new ModelAndView("redirect:/qa/login");
+			model = new ModelAndView("redirect:/qamanager/login");
 		}
 		return model;
 	}

@@ -10,7 +10,7 @@ import com.system.entity.*;
 
 public class DepartmentManagement {
 	public List<Department> getDepartments() {
-		List<Department> departments = new ArrayList();
+		List<Department> departments = new ArrayList<Department>();
 		String sqlQuery = "Select * from Department";
 		try {
 			Connection connection = DataProcess.getConnection();

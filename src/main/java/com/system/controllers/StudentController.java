@@ -199,11 +199,16 @@ public class StudentController {
 		ExternalLoginManagement elm = new ExternalLoginManagement();
 		Person p = elm.isExist(email);
 		if (p.getId() != 0) {
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
-			HttpSession session = request.getSession(true);
-			session.setAttribute("user", p);
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "Login successfully");
+			if (p.getPerson_role() != 0) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"Your account doesn't exist, contact administrator for more technical supports");
+			} else {
+				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+						.getRequest();
+				HttpSession session = request.getSession(true);
+				session.setAttribute("user", p);
+				return new ApiResponse().send(HttpStatus.ACCEPTED, "Login successfully");
+			}
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Your account doesn't exist, contact administrator for more technical supports");

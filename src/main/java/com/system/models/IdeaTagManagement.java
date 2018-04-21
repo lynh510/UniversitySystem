@@ -16,7 +16,7 @@ public class IdeaTagManagement {
 	}
 
 	public List<Idea_Tag> get_idea_tags(int idea_id) {
-		List<Idea_Tag> list_idea_tag = new ArrayList();
+		List<Idea_Tag> list_idea_tag = new ArrayList<>();
 		try {
 			String sqlQuery = "select * from Idea_tag where idea_id = " + idea_id;
 			Connection connection = DataProcess.getConnection();

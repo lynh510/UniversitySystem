@@ -41,43 +41,8 @@
 	        {
 	            "name": "Ideas",
 	            "colorByPoint": true,
-	            "data": [
-	                {
-	                    "name": "Computing",
-	                    "y": 20,
-	                    "drilldown": "Computing"
-	                },
-	                {
-	                    "name": "Business",
-	                    "y": 10,
-	                    "drilldown": "Business"
-	                },
-	                {
-	                    "name": "Graphic Design",
-	                    "y": 15,
-	                    "drilldown": "Graphic Design"
-	                },
-	                {
-	                    "name": "Language",
-	                    "y": 5,
-	                    "drilldown": "Language"
-	                },
-	                {
-	                    "name": "Financial",
-	                    "y": 8,
-	                    "drilldown": "Financial"
-	                }
-	                /* {
-	                    "name": "Opera",
-	                    "y": 1.92,
-	                    "drilldown": "Opera"
-	                },
-	                {
-	                    "name": "Other",
-	                    "y": 7.62,
-	                    "drilldown": null
-	                } */
-	            ]
+	            
+	            "data": ${numberOfIdeas}
 	        }
 	    ]
 	});
@@ -111,27 +76,7 @@
 	    series: [{
 	        name: 'Percentage of ideas',
 	        colorByPoint: true,
-	        data: [{
-	            name: 'Computing',
-	            y: 34.48,
-	            sliced: true,
-	            selected: true
-	        }, {
-	            name: 'Business',
-	            y: 17.24
-	        }, {
-	            name: 'Graphic Design',
-	            y: 25.86
-	        }, {
-	            name: 'Language',
-	            y: 8.62
-	        }, {
-	            name: 'Financial',
-	            y: 13.79
-	        }/* , {
-	            name: 'Other',
-	            y: 7.05
-	        } */]
+	        data: ${percentageOfIdeas}
 	    }]
 	});
 	</script>
@@ -179,43 +124,7 @@
 	        {
 	            "name": "Contributors",
 	            "colorByPoint": true,
-	            "data": [
-	                {
-	                    "name": "Computing",
-	                    "y": 30,
-	                    "drilldown": "Computing"
-	                },
-	                {
-	                    "name": "Business",
-	                    "y": 40,
-	                    "drilldown": "Business"
-	                },
-	                {
-	                    "name": "Graphic Design",
-	                    "y": 45,
-	                    "drilldown": "Graphic Design"
-	                },
-	                {
-	                    "name": "Language",
-	                    "y": 15,
-	                    "drilldown": "Language"
-	                },
-	                {
-	                    "name": "Financial",
-	                    "y": 28,
-	                    "drilldown": "Financial"
-	                }
-	                /* {
-	                    "name": "Opera",
-	                    "y": 1.92,
-	                    "drilldown": "Opera"
-	                },
-	                {
-	                    "name": "Other",
-	                    "y": 7.62,
-	                    "drilldown": null
-	                } */
-	            ]
+	            "data": ${numberOfContributor}
 	        }
 	    ]
 	});
@@ -264,43 +173,7 @@
 	        {
 	            "name": "Ideas",
 	            "colorByPoint": true,
-	            "data": [
-	                {
-	                    "name": "Computing",
-	                    "y": 2,
-	                    "drilldown": "Computing"
-	                },
-	                {
-	                    "name": "Business",
-	                    "y": 1,
-	                    "drilldown": "Business"
-	                },
-	                {
-	                    "name": "Graphic Design",
-	                    "y": 5,
-	                    "drilldown": "Graphic Design"
-	                },
-	                {
-	                    "name": "Language",
-	                    "y": 3,
-	                    "drilldown": "Language"
-	                },
-	                {
-	                    "name": "Financial",
-	                    "y": 1,
-	                    "drilldown": "Financial"
-	                }
-	                /* {
-	                    "name": "Opera",
-	                    "y": 1.92,
-	                    "drilldown": "Opera"
-	                },
-	                {
-	                    "name": "Other",
-	                    "y": 7.62,
-	                    "drilldown": null
-	                } */
-	            ]
+	            "data": ${ideasWithoutComment}
 	        }
 	    ]
 	});

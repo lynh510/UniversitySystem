@@ -11,7 +11,7 @@ import com.system.entity.Tag;
 public class TagManagement {
 
 	public List<Tag> getTags() {
-		List<Tag> tags = new ArrayList();
+		List<Tag> tags = new ArrayList<Tag>();
 		String sqlQuery = "select * from Tag";
 		try {
 			Connection connection = DataProcess.getConnection();
