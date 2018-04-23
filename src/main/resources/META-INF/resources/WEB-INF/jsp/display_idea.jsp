@@ -71,11 +71,15 @@
 		<input type="hidden" name="idea_id" id="idea_id" value=""> <input
 			type="hidden" name="text" id="commentText" value="">
 	</form>
+	<div>
+	<a class="button">Most viewed</a>
+	</div>
 	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
-					<div class="[ panel panel-default ] panel-google-plus">
+					<div class="[ panel panel-default ] panel-google-plus"
+						id="scroll-to-${idea.id}">
 						<div class="dropdown">
 							<c:choose>
 								<c:when
@@ -108,8 +112,10 @@
 								src="${idea.person.person_picture}" alt="Mouse0270" />
 							<h3>${idea.person.person_name }</h3>
 							<h5>
-								<span>Shared publicly</span> - <span>${idea.post_date }</span>
+								<span>Shared publicly</span> - <span>${idea.post_date }</span> <input
+									type="hidden" value="unseen" id="seen-${idea.id}" />
 							</h5>
+							<h6>${idea.views} view(s)</h6>
 						</div>
 						<div class="panel-body">
 							<div class="ideaInfo">
@@ -211,7 +217,8 @@
 								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<textarea id="commentText${idea.id}" rows="4"></textarea>
-								<input type="checkbox" name="mode" value="0"/><span style="font-style: italic;">Comment as an Anonymous user</span>
+								<input type="checkbox" name="mode" value="0" /><span
+									style="font-style: italic;">Comment as an Anonymous user</span>
 								<button type="submit" onclick="onComment(${idea.id})"
 									class="[ btn btn-success disabled ]">Post comment</button>
 								<button type="reset" class="[ btn btn-default ]">Cancel</button>
@@ -219,6 +226,23 @@
 							<div class="clearfix"></div>
 						</div>
 					</div>
+					<script type="text/javascript">
+					$(window).scroll(function() {
+						   var hT = $('#scroll-to-${idea.id}').offset().top,
+						       hH = $('#scroll-to-${idea.id}').outerHeight(),
+						       wH = $(window).height(),
+						       wS = $(this).scrollTop();
+						   if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){     
+						     var seen = document.getElementById("seen-${idea.id}").value;
+						     if(seen == "unseen"){
+						    	 document.getElementById("seen-${idea.id}").value = "seen";
+						    	 onView(${idea.id});
+						     }
+						   } else {
+							   
+						   }
+						});
+				</script>
 				</div>
 			</div>
 		</c:forEach>

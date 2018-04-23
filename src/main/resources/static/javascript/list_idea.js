@@ -224,3 +224,16 @@ function onLoadMoreComments(idea_id) {
 		moreComments.style = "";
 	}
 }
+function onView(idea_id){
+	$.ajax({
+		type : "get",
+		url : "/idea/onview/" + idea_id,  
+		data : null,
+		success : function(response) {
+
+		},
+		error : function(xhr, response, error) {
+
+		}
+	});
+}

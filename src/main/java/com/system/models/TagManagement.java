@@ -29,6 +29,25 @@ public class TagManagement {
 		return tags;
 	}
 
+	public List<Tag> getTagsByDepartment(int dept_id) {
+		List<Tag> tags = new ArrayList<Tag>();
+		String sqlQuery = "select * from Tag where dept_id = " + dept_id;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Tag tag = new Tag();
+				tag.setId(rs.getInt("tag_id"));
+				tag.setDescription(rs.getString("tag_des"));
+				tags.add(tag);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tags;
+	}
+
 	public Tag getTag(int id) {
 		Tag tag = new Tag();
 		String sqlQuery = "select * from Tag where tag_id = " + id;

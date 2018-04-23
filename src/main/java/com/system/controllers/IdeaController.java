@@ -11,25 +11,17 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.system.ApiResponse;
 import com.system.MailApi;
 import com.system.entity.*;
@@ -49,30 +41,80 @@ public class IdeaController {
 	// http://localhost:8080/idea/page/1
 	@GetMapping("/page/{numberOfPage}")
 	public ModelAndView getPage(@PathVariable("numberOfPage") String page) {
-		im = new IdeaManagement();
-		ModelAndView model = new ModelAndView("display_idea");
-		int currentPage = Integer.parseInt(page);
-		int recordsPerPage = 5;
-		int noOfRecords = im.noOfRecords(0);
-		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-		List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
-		for (Idea idea : listIdea) {
-			if (idea.getMode() == 0) {
-				idea.getPerson().setPerson_name("Anonymous");
-				idea.getPerson().setPerson_picture("/uploads/default_avatar.png");
-			}
-		}
 		try {
-			model.addObject("welcom", pm.getUserSession());
-		} catch (NullPointerException e) {
-			Person p = new Person();
-			p.setPerson_picture("/uploads/default_avatar.png");
-			model.addObject("welcom", p);
+			ModelAndView model = new ModelAndView("display_idea");
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords(0);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
+			try {
+				model.addObject("welcom", pm.getUserSession());
+			} catch (NullPointerException e) {
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				model.addObject("welcom", p);
+			}
+			model.addObject("ideas", listIdea);
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
+			return model;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("redirect:/idea/page/1");
 		}
-		model.addObject("ideas", listIdea);
-		model.addObject("noOfPages", noOfPages);
-		model.addObject("currentPage", currentPage);
-		return model;
+
+	}
+
+	@GetMapping("mostviewed/page/{numberOfPage}")
+	public ModelAndView mostViewedIdeas(@PathVariable("numberOfPage") String page) {
+		try {
+			ModelAndView model = new ModelAndView("display_idea");
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords(0);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			List<Idea> listIdea = im.MostViewedIdeas(currentPage, recordsPerPage);
+			try {
+				model.addObject("welcom", pm.getUserSession());
+			} catch (NullPointerException e) {
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				model.addObject("welcom", p);
+			}
+			model.addObject("ideas", listIdea);
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
+			return model;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("redirect:/idea/page/1");
+		}
+
+	}
+
+	@GetMapping("mostliked/page/{numberOfPage}")
+	public ModelAndView mostLikedIdeas(@PathVariable("numberOfPage") String page) {
+		try {
+			ModelAndView model = new ModelAndView("display_idea");
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords(0);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			List<Idea> listIdea = im.MostLikedIdeas(currentPage, recordsPerPage);
+			try {
+				model.addObject("welcom", pm.getUserSession());
+			} catch (NullPointerException e) {
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				model.addObject("welcom", p);
+			}
+			model.addObject("ideas", listIdea);
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
+			return model;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("redirect:/idea/page/1");
+		}
+
 	}
 
 	@GetMapping("/")
@@ -85,7 +127,7 @@ public class IdeaController {
 	public ModelAndView getIdea(@PathVariable("idea_id") Integer idea_id) {
 		im = new IdeaManagement();
 		ModelAndView model = new ModelAndView("display_idea");
-		List<Idea> listIdea = new ArrayList();
+		List<Idea> listIdea = new ArrayList<Idea>();
 		listIdea.add(im.get_Idea(idea_id));
 		model.addObject("ideas", listIdea);
 		model.addObject("noOfPages", 1);
@@ -103,7 +145,7 @@ public class IdeaController {
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
 			Person p = pm.getUserSession();
-			Idea idea = new Idea(0, title, content, p , null, new Date(), mode, 0, 0);
+			Idea idea = new Idea(0, title, content, p, null, new Date(), mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
 			insert_tags(tags, idea);
@@ -115,9 +157,8 @@ public class IdeaController {
 				insert_attachfiles(files, idea);
 			}
 			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "New Idea submission from " + p.getPerson_name(),
-					"A new idea is submitted"+
-					"\n<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
-							+ "\n This is an automatic email, Please do not reply");
+					"A new idea is submitted" + "\n<a href=\"" + baseUrl + "/idea/" + idea_id
+							+ "\">Click here to see</a>\"" + "\n This is an automatic email, Please do not reply");
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -194,6 +235,12 @@ public class IdeaController {
 		ModelAndView model = new ModelAndView("redirect:/idea/page/1");
 		im.delete_idea(id);
 		return model;
+	}
+
+	@GetMapping("/onview/{idea_id}")
+	public ResponseEntity<ApiResponse> onView(@PathVariable(value = "idea_id") int idea_id) {
+		im.updateView(idea_id);
+		return new ApiResponse().send(HttpStatus.ACCEPTED, "");
 	}
 
 }

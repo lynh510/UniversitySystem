@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 
 import com.system.entity.*;
 
@@ -20,7 +20,7 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 0 ORDER BY post_date DESC OFFSET " + offset
+		String sqlQuery = "SELECT * FROM Idea Where _status = 1 ORDER BY post_date DESC OFFSET " + offset
 				+ " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -31,12 +31,20 @@ public class IdeaManagement {
 				idea.setId(rs.getInt("idea_id"));
 				idea.setTitle(rs.getString("idea_title"));
 				idea.setContent(rs.getString("idea_content"));
-				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				idea.setStatus(rs.getInt("_status"));
+				idea.setMode(rs.getInt("mode"));
+				if (rs.getInt("mode") == 0) {
+					Person p = new Person();
+					p.setPerson_name("Anonymous");
+					p.setPerson_picture("/uploads/default_avatar.png");
+					idea.setPerson(p);
+				} else {
+					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				}
 				idea.setPost_date(rs.getDate("post_date"));
 				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
-				idea.setStatus(rs.getInt("_status"));
-				idea.setMode(rs.getInt("mode"));
+
 				ideaList.add(idea);
 			}
 		} catch (Exception e) {
@@ -48,9 +56,8 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage, int person_id) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where person_id = ? and _status = 0 ORDER BY post_date DESC OFFSET "
-				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
-		;
+		String sqlQuery = "SELECT * FROM Idea Where person_id = ? ORDER BY post_date DESC OFFSET " + offset
+				+ " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -207,4 +214,168 @@ public class IdeaManagement {
 			e.printStackTrace();
 		}
 	}
+
+	public List<Idea> getIdeasByTag(int tag_id) {
+		String sqlQuery = "select it.idea_id,i._status from Idea_tag it join Idea i on it.idea_id = i.idea_id where _status = 0 and tag_id = "
+				+ tag_id;
+		List<Idea> ideaList = new ArrayList<>();
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = get_Idea(rs.getInt("idea_id"));
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+
+	public List<Idea> getIdeasByStatus(int status) {
+		String sqlQuery = "select * from Idea where _status = " + status;
+		List<Idea> ideaList = new ArrayList<>();
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = new Idea(rs.getInt(1), rs.getString("idea_title"), rs.getString("idea_content"),
+						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"),
+						rs.getTimestamp("close_date"), rs.getInt("idea_views"), rs.getInt("mode"),
+						rs.getInt("_status"));
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+
+	public void approve_idea(int idea_id, Date close_date) {
+		String sqlQuery = "Update Idea set _status = 1, close_date = ? where idea_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setDate(1, new java.sql.Date(close_date.getTime()));
+			statement.setInt(2, idea_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void denied_idea(int idea_id) {
+		String sqlQuery = "Update Idea set _status = 2 where idea_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, idea_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateView(int idea_id) {
+		String sqlQuery = "Update Idea set idea_views = ? where idea_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, getViewsCount(idea_id) + 1);
+			statement.setInt(2, idea_id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private int getViewsCount(int idea_id) {
+		String sqlQuery = "Select idea_views from Idea where idea_id = ?";
+		int count = 0;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, idea_id);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public List<Idea> MostLikedIdeas(int currentPage, int itemPerPage) {
+		List<Idea> ideaList = new ArrayList<>();
+		int offset = itemPerPage * (currentPage - 1);
+		String sqlQuery = "select *, (select count(*) from Idea_emoji where idea_id = i.idea_id and emo_id = 1) as likecount from Idea i ORDER BY likecount DESC OFFSET "
+				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = new Idea();
+				idea.setId(rs.getInt("idea_id"));
+				idea.setTitle(rs.getString("idea_title"));
+				idea.setContent(rs.getString("idea_content"));
+				idea.setStatus(rs.getInt("_status"));
+				idea.setMode(rs.getInt("mode"));
+				if (rs.getInt("mode") == 0) {
+					Person p = new Person();
+					p.setPerson_name("Anonymous");
+					p.setPerson_picture("/uploads/default_avatar.png");
+					idea.setPerson(p);
+				} else {
+					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				}
+				idea.setPost_date(rs.getDate("post_date"));
+				idea.setClose_date(rs.getDate("close_date"));
+				idea.setViews(rs.getInt("idea_views"));
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+
+	public List<Idea> MostViewedIdeas(int currentPage, int itemPerPage) {
+		List<Idea> ideaList = new ArrayList<>();
+		int offset = itemPerPage * (currentPage - 1);
+		String sqlQuery = "select * from Idea order by idea_views desc OFFSET " + offset + " ROWS FETCH NEXT "
+				+ itemPerPage + " ROWS ONLY";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = new Idea();
+				idea.setId(rs.getInt("idea_id"));
+				idea.setTitle(rs.getString("idea_title"));
+				idea.setContent(rs.getString("idea_content"));
+				idea.setStatus(rs.getInt("_status"));
+				idea.setMode(rs.getInt("mode"));
+				if (rs.getInt("mode") == 0) {
+					Person p = new Person();
+					p.setPerson_name("Anonymous");
+					p.setPerson_picture("/uploads/default_avatar.png");
+					idea.setPerson(p);
+				} else {
+					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				}
+				idea.setPost_date(rs.getDate("post_date"));
+				idea.setClose_date(rs.getDate("close_date"));
+				idea.setViews(rs.getInt("idea_views"));
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+
 }

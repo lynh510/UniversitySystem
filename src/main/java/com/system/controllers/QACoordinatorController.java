@@ -1,8 +1,10 @@
 package com.system.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,19 +19,36 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.ApiResponse;
+import com.system.MailApi;
+import com.system.entity.Idea;
 import com.system.entity.Person;
 import com.system.models.AuthorizationManagement;
+import com.system.models.DepartmentManagement;
 import com.system.models.ExternalLoginManagement;
+import com.system.models.IdeaManagement;
 
 @Controller
 @RequestMapping("/qacoordinator")
 public class QACoordinatorController {
 	private AuthorizationManagement am;
 	private ExternalLoginManagement elm;
+	private DepartmentManagement dm;
+	private IdeaManagement im;
+	private MailApi mail;
 
 	public QACoordinatorController() {
 		am = new AuthorizationManagement();
 		elm = new ExternalLoginManagement();
+		dm = new DepartmentManagement();
+		im = new IdeaManagement();
+		mail = new MailApi();
+	}
+
+	@RequestMapping("/dashboard")
+	public ModelAndView departmentPage() {
+		ModelAndView model = new ModelAndView("departments");
+		model.addObject("ideas", im.getIdeasByStatus(0));
+		return model;
 	}
 
 	@GetMapping("/login")
@@ -38,6 +57,42 @@ public class QACoordinatorController {
 		model.addObject("role", "qacoordinator");
 		model.addObject("displayName", "QA Coordinator");
 		return model;
+	}
+
+	@PostMapping("/approve")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> approve_idea(@RequestParam("idea_id") int idea_id,
+			@RequestParam("close_date") String close_date, @RequestParam("action") int action,
+			HttpServletRequest request) {
+		try {
+			if (action == 1) {
+				Date d = new SimpleDateFormat("dd-MM-yyyy").parse(close_date);
+				im.approve_idea(idea_id, d);
+				String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+						request.getServerPort());
+				Idea i = im.get_Idea(idea_id);
+				mail.sendHtmlEmail(i.getPerson().getEmail(), "Idea approval",
+						"Your idea has been approved. Please enjoy your time." + "\n<a href=\"" + baseUrl + "/idea/"
+								+ idea_id + "\">Click here to see your idea</a>\""
+								+ "\n This is an automatic email, Please do not reply");
+				return new ApiResponse().send(HttpStatus.ACCEPTED, "The idea has been approved");
+			} else {
+				im.denied_idea(idea_id);
+				Idea i = im.get_Idea(idea_id);
+				String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+						request.getServerPort());
+				mail.sendHtmlEmail(i.getPerson().getEmail(), "Idea denial",
+						"Your idea has been denied for some reasons below.\n"
+								+ " - Inappropriate content.\n - Unrelarted to the topic\n" + "\n<a href=\"" + baseUrl
+								+ "/idea/" + idea_id + "\">Click here to see your idea</a>\""
+								+ "\n This is an automatic email, Please do not reply");
+				return new ApiResponse().send(HttpStatus.ACCEPTED, "The idea has been denided");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error");
+		}
 	}
 
 	@PostMapping("/authorization")
@@ -54,7 +109,7 @@ public class QACoordinatorController {
 			HttpSession session = request.getSession(true);
 			p.setPerson_picture("/image/" + p.getPerson_picture());
 			session.setAttribute("QACoordinator", p);
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "/departments.html");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "/qacoordinator/dashboard");
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
 		}
@@ -74,7 +129,7 @@ public class QACoordinatorController {
 						.getRequest();
 				HttpSession session = request.getSession(true);
 				session.setAttribute("QACoordinator", p);
-				return new ApiResponse().send(HttpStatus.ACCEPTED, "/departments.html");
+				return new ApiResponse().send(HttpStatus.ACCEPTED, "/qacoordinator/dashboard");
 			}
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
