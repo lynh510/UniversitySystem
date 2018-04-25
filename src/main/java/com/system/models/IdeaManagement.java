@@ -42,7 +42,6 @@ public class IdeaManagement {
 					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				}
 				idea.setPost_date(rs.getDate("post_date"));
-				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
 
 				ideaList.add(idea);
@@ -70,7 +69,6 @@ public class IdeaManagement {
 				idea.setContent(rs.getString("idea_content"));
 				idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				idea.setPost_date(rs.getDate("post_date"));
-				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
 				idea.setStatus(rs.getInt("_status"));
 				ideaList.add(idea);
@@ -102,7 +100,7 @@ public class IdeaManagement {
 	}
 
 	public int insert_idea(Idea idea) {
-		String sqlQuery = "Insert into Idea values(?,?,?,getdate(),?,?,?,?); SELECT SCOPE_IDENTITY()";
+		String sqlQuery = "Insert into Idea values(?,?,?,getdate(),?,?,?); SELECT SCOPE_IDENTITY()";
 		int id = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -110,10 +108,9 @@ public class IdeaManagement {
 			statement.setString(1, idea.getTitle());
 			statement.setString(2, idea.getContent());
 			statement.setInt(3, idea.getPerson().getId());
-			statement.setDate(4, new java.sql.Date(idea.getClose_date().getTime()));
-			statement.setInt(5, idea.getViews());
-			statement.setInt(6, idea.getMode());
-			statement.setInt(7, idea.getStatus());
+			statement.setInt(4, idea.getViews());
+			statement.setInt(5, idea.getMode());
+			statement.setInt(6, idea.getStatus());
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {
@@ -165,9 +162,8 @@ public class IdeaManagement {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				idea = new Idea(rs.getInt(1), rs.getString("idea_title"), rs.getString("idea_content"),
-						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"),
-						rs.getTimestamp("close_date"), rs.getInt("idea_views"), rs.getInt("mode"),
-						rs.getInt("_status"));
+						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"), rs.getInt("idea_views"),
+						rs.getInt("mode"), rs.getInt("_status"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -242,9 +238,8 @@ public class IdeaManagement {
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				Idea idea = new Idea(rs.getInt(1), rs.getString("idea_title"), rs.getString("idea_content"),
-						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"),
-						rs.getTimestamp("close_date"), rs.getInt("idea_views"), rs.getInt("mode"),
-						rs.getInt("_status"));
+						pm.getPerson(rs.getInt("person_id")), rs.getTimestamp("post_date"), rs.getInt("idea_views"),
+						rs.getInt("mode"), rs.getInt("_status"));
 				ideaList.add(idea);
 			}
 		} catch (Exception e) {
@@ -253,13 +248,12 @@ public class IdeaManagement {
 		return ideaList;
 	}
 
-	public void approve_idea(int idea_id, Date close_date) {
-		String sqlQuery = "Update Idea set _status = 1, close_date = ? where idea_id = ?";
+	public void approve_idea(int idea_id) {
+		String sqlQuery = "Update Idea set _status = 1 where idea_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
-			statement.setDate(1, new java.sql.Date(close_date.getTime()));
-			statement.setInt(2, idea_id);
+			statement.setInt(1, idea_id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -333,7 +327,6 @@ public class IdeaManagement {
 					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				}
 				idea.setPost_date(rs.getDate("post_date"));
-				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
 				ideaList.add(idea);
 			}
@@ -368,7 +361,6 @@ public class IdeaManagement {
 					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
 				}
 				idea.setPost_date(rs.getDate("post_date"));
-				idea.setClose_date(rs.getDate("close_date"));
 				idea.setViews(rs.getInt("idea_views"));
 				ideaList.add(idea);
 			}

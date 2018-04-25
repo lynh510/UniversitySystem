@@ -13,10 +13,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 	crossorigin="anonymous"></script>
-	
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
@@ -110,7 +111,9 @@
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
 						class="img-circle" id="userpicture" src="${welcom.person_picture}"
 						width="30" height="30"> <span class="hidden-xs"><b
-							id="username"><%-- ${welcom.person_name} --%>QA Manager </b></span>
+							id="username">
+								<%-- ${welcom.person_name} --%>QA Manager
+						</b></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/tag/addCategory"><i
@@ -132,14 +135,16 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<!-- Category -->
+				
 				<div class="single category">
-					<h3 class="side-title">Tags</h3>
+					<h3 class="side-title">Tags</h3><a href="/tag/addCategory">Add new category</a>
 					<ul class="list-unstyled">
 						<c:forEach items="${tags}" var="t">
 							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
 								scope="page" />
-							<li>${t.description}<span class="count">Mentioned <c:out
-										value="${count}" /> time(s)
+							<li>${t.description} (Department:${t.department.dept_name})<span
+								class="count">Mentioned <c:out value="${count}" />
+									time(s)
 							</span><a href="/tag/delete/${t.id}">Delete</a>
 							</li>
 						</c:forEach>
@@ -149,10 +154,10 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="chart"></div>
 	<script type="text/javascript">
-		$( "#chart" ).load( "/qamanager/chart" );
+		$("#chart").load("/qamanager/chart");
 	</script>
 </body>
 </html>

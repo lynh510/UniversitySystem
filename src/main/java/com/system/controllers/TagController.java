@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.system.entity.Department;
 import com.system.entity.Tag;
 import com.system.models.*;
 
@@ -16,10 +17,12 @@ import com.system.models.*;
 public class TagController {
 	private TagManagement tm;
 	private QAManagerManagement qmm;
+	private DepartmentManagement dm;
 
 	public TagController() {
 		tm = new TagManagement();
 		qmm = new QAManagerManagement();
+		dm = new DepartmentManagement();
 	}
 
 	@RequestMapping("/listCategory")
@@ -39,7 +42,7 @@ public class TagController {
 		ModelAndView model = new ModelAndView("add_category");
 		try {
 			qmm.getQAManagerSession();
-			model.addObject("tags", tm.getTags());
+			model.addObject("departments", dm.getDepartments());
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/qamanager/login");
 		}
@@ -47,10 +50,10 @@ public class TagController {
 	}
 
 	@PostMapping("/add")
-	public ModelAndView add_tag(@RequestParam("tag_name") String tag_name) {
+	public ModelAndView add_tag(@RequestParam("tag_name") String tag_name, @RequestParam("dept_id") int dept_id) {
 		ModelAndView model = new ModelAndView("redirect:/tag/listCategory");
 		if (!tm.chec_exist(tag_name)) {
-			Tag t = new Tag(tag_name);
+			Tag t = new Tag(tag_name,new Department(dept_id, null),0);
 			tm.insert_tag(t);
 		} else {
 			model.addObject("error", "Tag is existed");

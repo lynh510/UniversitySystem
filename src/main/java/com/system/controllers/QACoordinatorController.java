@@ -1,7 +1,5 @@
 package com.system.controllers;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -62,12 +60,10 @@ public class QACoordinatorController {
 	@PostMapping("/approve")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> approve_idea(@RequestParam("idea_id") int idea_id,
-			@RequestParam("close_date") String close_date, @RequestParam("action") int action,
-			HttpServletRequest request) {
+			@RequestParam("action") int action, HttpServletRequest request) {
 		try {
 			if (action == 1) {
-				Date d = new SimpleDateFormat("dd-MM-yyyy").parse(close_date);
-				im.approve_idea(idea_id, d);
+				im.approve_idea(idea_id);
 				String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 						request.getServerPort());
 				Idea i = im.get_Idea(idea_id);

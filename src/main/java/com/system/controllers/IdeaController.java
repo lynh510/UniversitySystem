@@ -145,7 +145,7 @@ public class IdeaController {
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
 			Person p = pm.getUserSession();
-			Idea idea = new Idea(0, title, content, p, null, new Date(), mode, 0, 0);
+			Idea idea = new Idea(0, title, content, p, null, mode, 0, 0);
 			int idea_id = im.insert_idea(idea);
 			idea.setId(idea_id);
 			insert_tags(tags, idea);

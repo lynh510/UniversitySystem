@@ -16,6 +16,7 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id"
 	content="273733011923-n5lqfqjb265s8s8k5mka9drdkr2t78e8.apps.googleusercontent.com">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login - Register</title>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -132,7 +133,8 @@
 										var name = profile.getName();
 										var email = profile.getEmail();
 										document.getElementById("email").value = email;
-										$.ajax({
+										$
+												.ajax({
 													type : "Post",
 													url : "/${role}/external_login",
 													data : $("#external_login")

@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,7 +24,7 @@ public class CommentManagement {
 	}
 
 	public List<Comment> getCommentByIdea(int idea_id) {
-		List<Comment> comments = new ArrayList();
+		List<Comment> comments = new ArrayList<Comment>();
 		String sqlQuery = "Select * from Comment where idea_id = " + idea_id;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -40,6 +36,7 @@ public class CommentManagement {
 				c.setPerson(pm.getPerson(rs.getInt("person_id")));
 				c.setComment_time(rs.getTimestamp("comment_time"));
 				c.setComment_text(rs.getString("comment_text"));
+				c.setMode(rs.getInt("mode"));
 				comments.add(c);
 			}
 		} catch (Exception e) {
@@ -49,7 +46,7 @@ public class CommentManagement {
 	}
 
 	public List<Comment> getComments(int idea_id, int position, int role) {
-		List<Comment> comments = new ArrayList();
+		List<Comment> comments = new ArrayList<Comment>();
 		int offset = 5 * (position - 1);
 		long timespan = getTimeSpan();
 		String sqlQuery = "";
@@ -70,6 +67,7 @@ public class CommentManagement {
 				c.setPerson(pm.getPerson(rs.getInt("person_id")));
 				c.setComment_time(new Date(rs.getTimestamp("comment_time").getTime() + timespan));
 				c.setComment_text(rs.getString("comment_text"));
+				c.setMode(rs.getInt("mode"));
 				comments.add(c);
 			}
 		} catch (Exception e) {
@@ -79,13 +77,14 @@ public class CommentManagement {
 	}
 
 	public int insertComment(Comment c) {
-		String sqlQuery = "Insert into Comment values (?,?,?,getdate()); SELECT SCOPE_IDENTITY()";
+		String sqlQuery = "Insert into Comment values (?,?,?,getdate(),?); SELECT SCOPE_IDENTITY()";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, c.getIdea().getId());
 			statement.setInt(2, c.getPerson().getId());
 			statement.setString(3, c.getComment_text());
+			statement.setInt(4, c.getMode());
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {
@@ -183,35 +182,4 @@ public class CommentManagement {
 		}
 	}
 
-	public static final List<Long> times = Arrays.asList(TimeUnit.DAYS.toMillis(365), TimeUnit.DAYS.toMillis(30),
-			TimeUnit.DAYS.toMillis(1), TimeUnit.HOURS.toMillis(1), TimeUnit.MINUTES.toMillis(1),
-			TimeUnit.SECONDS.toMillis(1));
-	public static final List<String> timesString = Arrays.asList("year", "month", "day", "hour", "minute", "second");
-
-	private String toDuration(long duration) {
-
-		StringBuffer res = new StringBuffer();
-		for (int i = 0; i < times.size(); i++) {
-			Long current = times.get(i);
-			long temp = duration / current;
-			if (temp > 0) {
-				res.append(temp).append(" ").append(timesString.get(i)).append(temp != 1 ? "s" : "").append(" ago");
-				break;
-			}
-		}
-		if ("".equals(res.toString()))
-			return "0 seconds ago";
-		else
-			return res.toString();
-	}
-
-	public String toRelative(Date start) {
-		Date now = new Date();
-		return toDuration(now.getTime() - start.getTime());
-	}
-
-	public String toRelative2(long start) {
-		Date now = new Date();
-		return toDuration(now.getTime() - start);
-	}
 }

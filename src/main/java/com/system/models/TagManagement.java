@@ -9,6 +9,11 @@ import java.util.List;
 import com.system.entity.Tag;
 
 public class TagManagement {
+	private DepartmentManagement dm;
+
+	public TagManagement() {
+		dm = new DepartmentManagement();
+	}
 
 	public List<Tag> getTags() {
 		List<Tag> tags = new ArrayList<Tag>();
@@ -21,6 +26,8 @@ public class TagManagement {
 				Tag tag = new Tag();
 				tag.setId(rs.getInt("tag_id"));
 				tag.setDescription(rs.getString("tag_des"));
+				tag.setDepartment(dm.getDepartment(rs.getInt("dept_id")));
+				tag.setStatus(rs.getInt("tag_status"));
 				tags.add(tag);
 			}
 		} catch (Exception e) {
@@ -40,6 +47,7 @@ public class TagManagement {
 				Tag tag = new Tag();
 				tag.setId(rs.getInt("tag_id"));
 				tag.setDescription(rs.getString("tag_des"));
+				tag.setStatus(rs.getInt("tag_status"));
 				tags.add(tag);
 			}
 		} catch (Exception e) {
@@ -96,11 +104,12 @@ public class TagManagement {
 	}
 
 	public void insert_tag(Tag t) {
-		String sqlQuery = "insert into Tag values(?)";
+		String sqlQuery = "insert into Tag values(?,?,0)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, t.getDescription());
+			statement.setInt(2, t.getDepartment().getId());
 			statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();

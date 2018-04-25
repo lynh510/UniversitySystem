@@ -37,6 +37,8 @@ public class CommentController {
 		try {
 			if(im.get_Idea(idea_id).getStatus() == 3) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,"The idea has been closed");
+			}else if(comment_text.equals("")) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,"Please fill-in something");
 			}
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());

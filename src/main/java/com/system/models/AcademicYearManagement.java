@@ -1,0 +1,71 @@
+package com.system.models;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.system.entity.*;
+
+public class AcademicYearManagement {
+
+	public List<AcademicYear> getAcademicYear() {
+		List<AcademicYear> academicYear = new ArrayList<AcademicYear>();
+		String sqlQuery = "Select * from AcademicYear";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				AcademicYear ay = new AcademicYear();
+				ay.setId(rs.getInt("academic_year_id"));
+				ay.setStart_date(rs.getDate("academic_year_start_date"));
+				ay.setEnd_date(rs.getDate("academic_year_end_date"));
+				ay.setFinal_date(rs.getDate("academic_year_final_date"));
+				ay.setYear(rs.getInt("academic_year"));
+				ay.setSeason(rs.getString("season"));
+				academicYear.add(ay);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return academicYear;
+	}
+
+	public void addAcademicYear(AcademicYear ay) {
+		String sqlQuery = "insert into AcademicYear values (?,?,?,?)";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setDate(1, new java.sql.Date(ay.getStart_date().getTime()));
+			statement.setDate(2, new java.sql.Date(ay.getEnd_date().getTime()));
+			statement.setDate(3, new java.sql.Date(ay.getFinal_date().getTime()));
+			statement.setInt(4, ay.getYear());
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public AcademicYear get(int id) {
+		AcademicYear ay = new AcademicYear();
+		String sqlQuery = "select * from AcademicYear";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				ay.setId(rs.getInt("academic_year_id"));
+				ay.setStart_date(rs.getDate("academic_year_start_date"));
+				ay.setEnd_date(rs.getDate("academic_year_end_date"));
+				ay.setFinal_date(rs.getDate("academic_year_final_date"));
+				ay.setYear(rs.getInt("academic_year"));
+				ay.setSeason(rs.getString("season"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ay;
+	}
+}

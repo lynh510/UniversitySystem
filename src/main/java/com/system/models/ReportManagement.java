@@ -5,26 +5,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 import com.system.entity.*;
 
 public class ReportManagement {
 	private DepartmentManagement dm;
+	private List<Department> listDept;
 
 	public ReportManagement() {
 		dm = new DepartmentManagement();
+		listDept = dm.getDepartments();
 	}
 
 	private int countIdeaEachDepartment(int dept_id) {
 		int count = 0;
-		String sqlQuery = "select distinct i.idea_id,t.dept_id,d.dept_id from Idea_tag i join Tag t on i.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id where t.dept_id = ?";
+		String sqlQuery = "select count(*) from (select distinct i.idea_id, d.dept_id from Idea_tag i join Tag t on i.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id where d.dept_id = ?) as _counter";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, dept_id);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				count += 1;
+			if (rs.next()) {
+				count = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -34,7 +37,7 @@ public class ReportManagement {
 
 	public HashMap<Department, Integer> NumberOfIdeas() {
 		HashMap<Department, Integer> numberOfIdea = new HashMap<>();
-		for (Department d : dm.getDepartments()) {
+		for (Department d : listDept) {
 			numberOfIdea.put(d, countIdeaEachDepartment(d.getId()));
 		}
 		return numberOfIdea;
@@ -56,28 +59,27 @@ public class ReportManagement {
 		return count;
 	}
 
-	private int CountIdeaWithout(int dept_id) {
+	private int CountIdeaWithoutComment(int dept_id) {
 		int count = 0;
-		String sqlQuery = "select i.idea_id,d.dept_id,(select count(*) from Comment where idea_id = i.idea_id) as CommentCount from Idea_tag i join Tag t on i.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id where t.dept_id = ?";
+		String sqlQuery = "select count(*) from (select distinct i.idea_id,d.dept_id,(select count(*) from Comment where idea_id = i.idea_id) as CommentCount from Idea_tag i join Tag t on i.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id where t.dept_id = ?) as _counter";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, dept_id);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				if (rs.getInt(3) == 0) {
-					count += 1;
-				}
+			if (rs.next()) {
+				count = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return count;
 	}
+
 	public HashMap<Department, Integer> ideaWithoutComment() {
 		HashMap<Department, Integer> ideaWithoutComment = new HashMap<>();
-		for (Department d : dm.getDepartments()) {
-			ideaWithoutComment.put(d, CountIdeaWithout(d.getId()));
+		for (Department d : dm.getDepartmentsByAcademicYear(1)) {
+			ideaWithoutComment.put(d, CountIdeaWithoutComment(d.getId()));
 		}
 		return ideaWithoutComment;
 	}
@@ -85,7 +87,7 @@ public class ReportManagement {
 	public HashMap<Department, Float> PercentageOfIdeas() {
 		HashMap<Department, Float> percentageOfIdeas = new HashMap<>();
 		int totalOfIdea = countIdeas();
-		for (Department d : dm.getDepartments()) {
+		for (Department d : listDept) {
 			int numberOfIdea = countIdeaEachDepartment(d.getId());
 			float percent = numberOfIdea * 100f / totalOfIdea;
 			percentageOfIdeas.put(d, percent);
@@ -95,15 +97,58 @@ public class ReportManagement {
 
 	public HashMap<Department, Integer> numberOfContributer() {
 		HashMap<Department, Integer> NumberOfContributer = new HashMap<>();
-		for (Department d : dm.getDepartments()) {
+		for (Department d : listDept) {
 			NumberOfContributer.put(d, numberOfContributiors(d.getId()));
 		}
 		return NumberOfContributer;
 	}
 
+	public HashMap<Department, Integer[]> numberOfAnonymousIdeaAndComment() {
+		HashMap<Department, Integer[]> NumberOfAnonymousIdeaAndComment = new HashMap<>();
+		for (Department d : listDept) {
+			NumberOfAnonymousIdeaAndComment.put(d,
+					new Integer[] { numberOfAnonymousIdeas(d.getId()), numberOfAnonymousComments(d.getId()) });
+		}
+		return NumberOfAnonymousIdeaAndComment;
+	}
+
 	private int numberOfContributiors(int dept_id) {
 		int count = 0;
-		String sqlQuery = "select count(distinct p.person_id)   from Idea_tag it join Tag t on it.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = ?";
+		String sqlQuery = "select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id join Department d on t.dept_id = d.dept_id join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, dept_id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private int numberOfAnonymousIdeas(int dept_id) {
+		int count = 0;
+		String sqlQuery = "select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, dept_id);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private int numberOfAnonymousComments(int dept_id) {
+		int count = 0;
+		String sqlQuery = "select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 0 and p.dept_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

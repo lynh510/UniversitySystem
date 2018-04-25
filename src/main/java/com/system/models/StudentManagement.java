@@ -106,9 +106,9 @@ public class StudentManagement {
 				p.setPerson_picture(rs.getString("person_picture"));
 				p.setPerson_name(rs.getString("person_name"));
 				p.setPerson_role(rs.getInt("person_role"));
+				p.setDepartment(new Department(rs.getInt("dept_id"), ""));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return p;

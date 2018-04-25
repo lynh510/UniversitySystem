@@ -51,9 +51,9 @@ public class StaffController {
 		} else if (p.getId() != 0) {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
-			HttpSession session = request.getSession(true);
+			HttpSession session = request.getSession(true);			
 			p.setPerson_picture("/image/" + p.getPerson_picture());
-			session.setAttribute("Staff", p);
+			session.setAttribute("user", p);
 			return new ApiResponse().send(HttpStatus.ACCEPTED, "/idea/page/1");
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
@@ -73,7 +73,7 @@ public class StaffController {
 				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 						.getRequest();
 				HttpSession session = request.getSession(true);
-				session.setAttribute("Staff", p);
+				session.setAttribute("user", p);
 				return new ApiResponse().send(HttpStatus.ACCEPTED, "/idea/page/1");
 			}
 

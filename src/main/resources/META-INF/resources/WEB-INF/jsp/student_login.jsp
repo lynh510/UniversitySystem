@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="/css/regis_form.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Student Login</title>
 <style type="text/css">
 .form-control {
@@ -92,10 +93,6 @@ $(document).ready(function() {
 					<div class="g-signin2" data-onsuccess="onSignIn" id="myP"></div>
 
 					<p style="margin-top: 5%;">
-						<strong>You haven't had an account?</strong><br> <a
-							href="/student/registration" id="flip-btn"
-							class="signup signup_link login-link">Sign up for a new
-							account</a>
 					</p>
 				</form>
 				<form id="external_login" action="/student/external_login"

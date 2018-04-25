@@ -40,35 +40,15 @@ import com.system.models.*;
 @RequestMapping("/student")
 public class StudentController {
 	private PersonManagement pm;
+	private TagManagement tm;
 	private Helper helper;
 
 	public StudentController() {
 		pm = new PersonManagement();
+		tm = new TagManagement();
 		helper = new Helper();
 	}
 
-	// First run the java file in com.system then parse url below into your browser
-	// http://localhost:8080/student/registration
-	@GetMapping("/registration")
-	public ModelAndView registration() {
-		ModelAndView model = new ModelAndView("student_registration_form");
-		List<Integer> months = new ArrayList();
-		List<Integer> days = new ArrayList();
-		List<Integer> years = new ArrayList();
-		for (int month = 1; month < 13; month++) {
-			months.add(month);
-		}
-		for (int day = 1; day < 32; day++) {
-			days.add(day);
-		}
-		for (int year = 1990; year < 2007; year++) {
-			years.add(year);
-		}
-		model.addObject("days", days);
-		model.addObject("months", months);
-		model.addObject("years", years);
-		return model;
-	}
 
 	// http://localhost:8080/student/login
 	@GetMapping("/login")
@@ -149,13 +129,17 @@ public class StudentController {
 	// http://localhost:8080/student/submit_idea
 	@GetMapping("/submit_idea")
 	public ModelAndView submit_idea(RedirectAttributes redirectAttributes) {
-		ModelAndView mnv = new ModelAndView("student_submit_idea");
+		ModelAndView mnv = new ModelAndView();
 		try {
-			TagManagement tm = new TagManagement();
-			mnv.addObject("tags", tm.getTags());
 			Person p = (Person) pm.getUserSession();
-			mnv.addObject("user_id", helper.encryptID(p.getId() + ""));
-			mnv.addObject("welcom", p);
+			if (p.getPerson_role() != 0) {
+				mnv = new ModelAndView("redirect:/idea/page/1");
+			} else {
+				mnv = new ModelAndView("student_submit_idea");
+				mnv.addObject("tags", tm.getTagsByDepartment(p.getDepartment().getId()));
+				mnv.addObject("user_id", helper.encryptID(p.getId() + ""));
+				mnv.addObject("welcom", p);
+			}
 		} catch (NullPointerException e) {
 			mnv = new ModelAndView("redirect:/student/login");
 		}
@@ -185,11 +169,10 @@ public class StudentController {
 			HttpSession session = request.getSession(true);
 			p.setPerson_picture("/image/" + p.getPerson_picture());
 			session.setAttribute("user", p);
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "Thank for your contribution");
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Login successfully");
 		} else {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid username and password!");
 		}
-
 	}
 
 	@PostMapping("/external_login")

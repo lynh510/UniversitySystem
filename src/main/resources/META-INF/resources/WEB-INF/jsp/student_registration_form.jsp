@@ -8,8 +8,10 @@
 <link rel="stylesheet" href="/css/regis_form.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <style type="text/css">
 .form-control {
@@ -100,29 +102,28 @@ $(document).ready(function() {
 <title>Registration</title>
 </head>
 <body class="main">
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"></h4>
-      </div>
-      <div class="modal-body">
-        <p id="message"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p id="message"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 
-  </div>
-</div>
+		</div>
+	</div>
 	<div class="login-screen">
 		<div class="container">
-			<div
-				class="col-xs-12 col-sm-12 col-md-6 col-md-offset-5">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-5">
 				<form role="form" id="registration_form" name="registration-form"
 					action="" method="post" enctype="multipart/form-data"
 					class="registration-form">
@@ -189,7 +190,8 @@ $(document).ready(function() {
 						</div>
 						<div class="date-col">
 							<select class="form-control blur" required name="day">
-								<option value="" selected="" disabled="disabled" hidden>-- Day --</option>
+								<option value="" selected="" disabled="disabled" hidden>--
+									Day --</option>
 								<c:forEach items="${days}" var="day">
 									<option value="${day}">${day}</option>
 								</c:forEach>
@@ -197,7 +199,8 @@ $(document).ready(function() {
 						</div>
 						<div class="date-col">
 							<select name="month" required class="form-control datebox blur">
-								<option value="" selected="" disabled="disabled" hidden>-- Month --</option>
+								<option value="" selected="" disabled="disabled" hidden>--
+									Month --</option>
 								<c:forEach items="${months}" var="month">
 									<option value="${month}">${month}</option>
 								</c:forEach>
@@ -206,7 +209,8 @@ $(document).ready(function() {
 						<div class="date-col">
 							<select name="year" value="" required
 								class="form-control datebox blur">
-								<option selected="" disabled="disabled" hidden>-- Year --</option>
+								<option selected="" disabled="disabled" hidden>-- Year
+									--</option>
 								<c:forEach items="${years}" var="year">
 									<option value="${year}">${year}</option>
 								</c:forEach>
@@ -223,8 +227,7 @@ $(document).ready(function() {
 									id="female" tabindex="2" placeholder="Gender" value="2"
 									title="Female"> Female <input type="radio"
 									name="gender" class="gender" id="unknown" tabindex="2"
-									placeholder="Gender" value="3" title="Unknown">
-								Unknown
+									placeholder="Gender" value="3" title="Unknown"> Unknown
 							</div>
 						</div>
 					</div>
@@ -277,7 +280,21 @@ $(document).ready(function() {
 						</div>
 						<div class="role">
 							<select class="form-control blur" required name="userrole">
-								<option value="" selected="" disabled="disabled" hidden>-- Role --</option>
+								<option value="" selected="" disabled="disabled" hidden>--
+									Role --</option>
+								<option value="staff">Staff</option>
+								<option value="student">Student</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<label class="labeltxt required">Departments</label>
+						</div>
+						<div class="role">
+							<select class="form-control blur" required name="userrole">
+								<option value="" selected="" disabled="disabled" hidden>--
+									Department --</option>
 								<option value="staff">Staff</option>
 								<option value="student">Student</option>
 							</select>
@@ -293,10 +310,6 @@ $(document).ready(function() {
 					<%-- <h6 style="color: red" id="errors">${errors}</h6> --%>
 
 					<button type="submit" class="btn btn-reg">Sign up</button>
-					<h5 style="margin-top: 5%;">
-						You have already account. <a href="/student/login"
-							id="unflip-btn" class="login-link">Log in now!</a>
-					</h5>
 				</form>
 			</div>
 		</div>

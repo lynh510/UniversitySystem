@@ -8,6 +8,15 @@ public class Comment {
 	private Person person;
 	private Date comment_time;
 	private String comment_text;
+	private int mode;
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
 
 	public Comment() {
 		super();

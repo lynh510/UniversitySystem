@@ -194,21 +194,6 @@
 	    credits: {
 	        enabled: false
 	    },
-	    series: [{
-	        name: 'Computing',
-	        data: [5, 3]
-	    }, {
-	        name: 'Business',
-	        data: [2, 2]
-	    }, {
-	        name: 'Graphic Design',
-	        data: [3, 4]
-	    }, {
-	        name: 'Language',
-	        data: [1, 3]
-	    }, {
-	        name: 'Financial',
-	        data: [1, 5]
-	    }]
+	    series: ${anonymousIdeaAndComment}
 	});
 	</script>

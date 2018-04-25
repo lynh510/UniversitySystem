@@ -8,10 +8,21 @@ public class Idea {
 	private String content;
 	private Person person;
 	private Date post_date;
-	private Date close_date;
 	private int mode;
 	private int views;
 	private int status;
+
+	public Idea(int id, String title, String content, Person person, Date post_date, int mode, int views, int status) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.person = person;
+		this.post_date = post_date;
+		this.mode = mode;
+		this.views = views;
+		this.status = status;
+	}
 
 	public Idea() {
 		super();
@@ -22,19 +33,6 @@ public class Idea {
 		this.id = id;
 	}
 
-	public Idea(int id, String title, String content, Person person, Date post_date, Date close_date, int mode,
-			int views, int status) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.content = content;
-		this.person = person;
-		this.post_date = post_date;
-		this.close_date = close_date;
-		this.mode = mode;
-		this.views = views;
-		this.status = status;
-	}
 
 	
 	
@@ -91,14 +89,6 @@ public class Idea {
 
 	public void setPost_date(Date post_date) {
 		this.post_date = post_date;
-	}
-
-	public Date getClose_date() {
-		return close_date;
-	}
-
-	public void setClose_date(Date close_date) {
-		this.close_date = close_date;
 	}
 
 	public int getViews() {

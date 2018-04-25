@@ -2,7 +2,13 @@ create database UniversitySystem
 go
 use UniversitySystem
 go
-
+create table AcademicYear(
+academic_year_id int identity(1,1) primary key,
+academic_year_start_date date,
+academic_year_end_date date,
+academic_year_final_date date,
+academic_year int
+)
 create table Person(
 person_id int identity(1,1) primary key,
 person_picture varchar(500),
@@ -16,12 +22,15 @@ phone_number varchar(14),
 enroll_date datetime,
 _address varchar(500),
 email varchar(50),
-_description varchar(500)
+_description varchar(500),
+dept_id int foreign key references Department(dept_id)
 );
 go
 create table Department(
 dept_id int primary key identity,
 dept_name varchar(100),
+academic_year_id int foreign key references AcademicYear(academic_year_id),
+dept_status int
 );
 go
 create table Student(
@@ -72,7 +81,6 @@ idea_title varchar(500),
 idea_content varchar(2000),
 person_id int foreign key references Person(person_id),
 post_date datetime,
-close_date datetime,
 idea_views int,
 mode tinyint, --1 for publish, 0 for anonymous
 _status tinyint -- 0 for pending, 1 for opening, 2 for closed
@@ -110,8 +118,9 @@ comment_id int primary key identity,
 idea_id int foreign key references Idea(idea_id),
 person_id int foreign key references Person(person_id),
 comment_text varchar(500),
-comment_time datetime
-); 
+comment_time datetime,
+mode int --0 anonimously 1 public
+);
 go
 create table UserExternalLogin(
 userid int foreign key references Person(person_id),

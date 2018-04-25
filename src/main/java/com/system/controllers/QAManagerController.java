@@ -69,6 +69,7 @@ public class QAManagerController {
 		mv.addObject("numberOfContributor", NummberOfContributor());
 		mv.addObject("percentageOfIdeas", PercentageOfIdeas());
 		mv.addObject("ideasWithoutComment", IdeasWithoutComment());
+		mv.addObject("anonymousIdeaAndComment",anonymousIdeaAndComment());
 		return mv;
 	}
 
@@ -104,6 +105,7 @@ public class QAManagerController {
 		}
 		return value + "]";
 	}
+
 	private String IdeasWithoutComment() {
 		String value = "[";
 		for (Entry<Department, Integer> entry : rm.ideaWithoutComment().entrySet()) {
@@ -111,6 +113,17 @@ public class QAManagerController {
 			Integer i = entry.getValue();
 			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
 					+ "\"},";
+		}
+		return value + "]";
+	}
+
+	private String anonymousIdeaAndComment() {
+		String value = "[";
+		for (Entry<Department, Integer[]> entry : rm.numberOfAnonymousIdeaAndComment().entrySet()) {
+			Department d = entry.getKey();
+			Integer ideas = entry.getValue()[0];
+			Integer comments = entry.getValue()[1];
+			value += "{name: '" + d.getDept_name() + "',data: [" + ideas + ", " + comments + "]},";
 		}
 		return value + "]";
 	}

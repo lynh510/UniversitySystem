@@ -15,13 +15,20 @@ public class Person {
 	private String address;
 	private String email;
 	private String description;
+	private Department department;
 
 	public Person() {
 		super();
 	}
 
-	
-	
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
 	public Person(int id, String person_picture, String person_name, int person_role, Date birthdate, int gender,
 			int status, String phone, Date enroll_date, String address, String email, String description) {
 		super();
@@ -39,10 +46,8 @@ public class Person {
 		this.description = description;
 	}
 
-
-
-	public Person(String person_picture, String person_name, int person_role, Date birthdate, int gender,
-			int status, String phone, String address, String email, String description) {
+	public Person(String person_picture, String person_name, int person_role, Date birthdate, int gender, int status,
+			String phone, String address, String email, String description) {
 		super();
 		this.person_picture = person_picture;
 		this.person_name = person_name;

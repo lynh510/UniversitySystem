@@ -18,8 +18,9 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>Department Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style type="text/css">
 .container {
 	margin-top: 10%;
@@ -68,37 +69,6 @@ table {
 	overflow-x: auto;
 }
 </style>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#acceptform").submit(function(e) {
-			e.preventDefault();
-			$.ajax({
-				type : "Post",
-				url : "/qacoordinator/approve",
-				data : $("#acceptform").serialize(),
-				success : function(response) {
-					alert(response.message);
-					$('#acceptModal').modal('hide');
-					jQuery('#ideas' ).load(' #ideas');				
-				},
-				error : function(xhr, response, error) {
-
-				}
-			});
-			return false;
-		});
-	});
-	function onAccept(idea_id){
-		document.getElementById("idea_id").value = idea_id;
-		document.getElementById("message").innerHTML = "Are you sure want to approve ?";
-		document.getElementById("action").value = 1;
-	};
-	function onDenied(idea_id){
-		document.getElementById("idea_id").value = idea_id;
-		document.getElementById("message").innerHTML = "Are you sure want to denied ?";
-		document.getElementById("action").value = 2;
-	}
-</script>
 </head>
 <body>
 	<div id="navbar"
@@ -143,10 +113,11 @@ table {
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<a href="/admin/add_academic_year">Add new academic year</a>
 				<div class="list-group product-bread-a">
 					<p href="#" class="list-group-item product-bread-a"
 						style="background: #dededd">
-						New Ideas
+						Academic Year
 						<button class="btn" style="float: right;">
 							<i class="fa fa-trash-o"></i>
 						</button>
@@ -156,22 +127,24 @@ table {
 					<table class="table table-striped">
 						<thead>
 							<tr>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th>Final Closure</th>
+								<th>Year</th>
+								<th>Season</th>
 								<th></th>
 							</tr>
 						</thead>
-						<c:forEach items="${ideas}" var="idea">
+						<c:forEach items="${academicYear}" var="a">
 							<tbody>
 								<tr>
-									<td><strong>Student</strong><br />${idea.person.person_name}</td>
-									<td><strong>Title</strong><br />${idea.title}</td>
-									<td><strong>Content</strong><br />...</td>
-									<td><strong>Post time</strong><br />${idea.post_date}</td>
-									<td><strong>Review</strong><br /> <a
-										href="/idea/${idea.id}">View</a></td>
-									<td><strong>Accept</strong><br /> <a data-toggle="modal"
-										data-target="#acceptModal" onclick="onAccept(${idea.id})">Accept</a></td>
-									<td><strong>Denied</strong><br /> <a data-toggle="modal"
-										data-target="#acceptModal" onclick="onDenied(${idea.id})">Denied</a></td>
+									<td>${a.start_date}</td>
+									<td>${a.end_date}</td>
+									<td>${a.final_date}</td>
+									<td>${a.year}</td>
+									<td>${a.season}</td>
+									<td><a href="/admin/view_department/${helper.encryptID(a.id)}">View
+											Departments</a></td>
 								</tr>
 							</tbody>
 						</c:forEach>
@@ -179,30 +152,6 @@ table {
 					</table>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div id="acceptModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Confirmation</h4>
-				</div>
-				<div class="modal-body">
-					<p id="message">Are you sure?</p>
-					<form id="acceptform" action="" method="post">
-						<input type="hidden" id="idea_id" name="idea_id" value="" /> <input
-							type="hidden" id="action" name="action" value=""> <input
-							type="submit" value="Yes" />
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
 		</div>
 	</div>
 </body>
