@@ -41,6 +41,11 @@
 		});
 	});
 </script>
+<style type="text/css">
+	.abcRioButtonLightBlue {
+	    width: -webkit-fill-available !important;
+	}
+</style>
 </head>
 <body>
 	<div id="myModal" class="modal fade" role="dialog">

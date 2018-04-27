@@ -19,7 +19,6 @@
     height: 40px;
     width: 131px;
     text-indent:-999px;
-    background-image:url('https://upload.wikimedia.org/wikipedia/en/7/79/Veeco_company_logo.png');
     background-repeat:no-repeat;
     background-position:0px; 
     background-size:100px;
@@ -34,7 +33,6 @@
     float: left;
 }
 .top-nav > li > a {
-    color: #fff;
     font-size: 13px;
     line-height: 20px;
     padding-bottom: 12px;
@@ -163,10 +161,6 @@ button {
 	width: 30%;
 }
 
-select option {
-	color: #fff;
-}
-
 .panel {
 	z-index: auto; 
 	position: relative; 
@@ -185,12 +179,12 @@ select option {
 	background: transparent !important;
 }
 
-.form-control {
-	    color: #fff !important;
-	}
-
 .panel-primary>.panel-heading+.panel-collapse>.panel-body {
 	border-top-color: #fff;
+}
+
+.panel-primary>.panel-heading {
+	color: #000;
 }
 
 .well-primary {
@@ -232,7 +226,6 @@ select option {
 }
 
 .screen {
-    background-image: url(/images/submit_idea_sketch_2.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -244,38 +237,10 @@ select option {
     bottom: 0;
     right: 0;
     left: 0;
-    color: white;
    	overflow-y: auto;
-}
-
-.screen:before {
-    content: "";
-    background: rgba(0,0,0, 0.1);
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
-
-.form-control {
-	border: 1px solid #fff;		
-}
-
-.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #fff;
-    opacity: 1; /* Firefox */
 }
 
 .main {
 	position: relative;
 }
 
-.blur {
-	z-index: auto; 
-	position: relative; 
-	line-height: 30px; 
-	font-size: 16px; 
-	transition: none; 
-	background: transparent !important;
-}

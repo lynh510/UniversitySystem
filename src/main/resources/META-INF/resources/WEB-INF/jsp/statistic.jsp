@@ -46,7 +46,10 @@ body {
 }
 
 .chart {
-	margin: 5%;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-bottom: 5%;
+	margin-top: 10%;
 }
 </style>
 </head>

@@ -122,7 +122,7 @@
 								<p>
 									<b>${idea.title}</b>
 								</p>
-								<p>${idea.content}</p>
+								<p style="min-height: 10%; word-wrap: break-word;">${idea.content}</p>
 							</div>
 							<form id="edit_idea_form" method="post" action="/student/edit">
 								<div class="editIdeaInfo">

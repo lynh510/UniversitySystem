@@ -181,7 +181,7 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-12">
 												<div class="form-group">
 													<label for="tags" class="required">Tags</label> <select
 														multiple="multiple" class="form-control blur" id="tag"
@@ -193,7 +193,7 @@
 													</select>
 												</div>
 											</div>
-											<div class="col-md-6">
+											<div class="col-md-12">
 												<label for="attachment">Attachment</label>
 												<div class="input-group image-preview">
 													<input type="text"
@@ -220,7 +220,7 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-12">
 												<div class="form-group">
 													<label for="modes" class="required">Modes</label> <select
 														class="form-control blur" name="mode" required>

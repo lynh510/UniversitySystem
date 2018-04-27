@@ -1,4 +1,4 @@
-<div class="col-xs-12 col-sm-12 col-md-4" id="highchart1" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart1" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
 	<script type="text/javascript">
 	Highcharts.chart('highchart1', {
 	    chart: {
@@ -48,7 +48,7 @@
 	});
 	</script>
 	
-	<div class="col-xs-12 col-sm-12 col-md-4" id="piechart" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+	<div class="col-xs-12 col-sm-12 col-md-12" id="piechart" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
 	<script type="text/javascript">
 	Highcharts.chart('piechart', {
 	    chart: {
@@ -81,7 +81,7 @@
 	});
 	</script>
 	
-	<div class="col-xs-12 col-sm-12 col-md-4" id="highchart2" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+	<div class="col-xs-12 col-sm-12 col-md-12" id="highchart2" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
 	<script type="text/javascript">
 	Highcharts.chart('highchart2', {
 	    chart: {
@@ -130,7 +130,7 @@
 	});
 	</script>
 
-<div class="col-xs-12 col-sm-12 col-md-4" id="highchart3" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart3" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
 	<script type="text/javascript">
 	Highcharts.chart('highchart3', {
 	    chart: {
@@ -179,7 +179,7 @@
 	});
 	</script>
 	
-	<div class="col-xs-12 col-sm-12 col-md-4" id="highchart4" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	<div class="col-xs-12 col-sm-12 col-md-12" id="highchart4" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 	<script type="text/javascript">
 	Highcharts.chart('highchart4', {
 	    chart: {
