@@ -44,39 +44,7 @@ body {
 </style>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">Admin </b></span>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/admin.html"><i class="fa fa-fw fa-suitcase"></i>
-								Manage User</a></li>
-						<li><a href="/statistics.html"><i
-								class="fa fa-fw fa-bar-chart-o"></i> System Statistics</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/student/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
+	<jsp:include page="admin_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="col-md-12">
 			<legend>Manage users</legend>

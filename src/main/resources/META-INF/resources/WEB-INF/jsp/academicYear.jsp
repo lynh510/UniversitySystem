@@ -19,7 +19,7 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <jsp:useBean id="helper" class="com.system.Helper" scope="page" />
-<title>Department Manager</title>
+<title>Academic Year</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style type="text/css">
 .container {
@@ -69,61 +69,35 @@ table {
 	overflow-x: auto;
 }
 </style>
+<script type="text/javascript">
+	function onDelete(id) {
+			$.ajax({
+				type : "Post",
+				url : "/admin/removeAcademicYear",
+				data : $("#delete-form-" + id ).serialize(),
+				success : function(response) {
+					jQuery('#academic' ).load(' #academic');		
+					alert(response.message);
+				},
+				error : function(xhr, response, error) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+			});
+	}
+</script>
 </head>
 <body>
-	<div id="navbar"
-		class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username"> <%-- ${welcom.person_name} --%>QA Coordinator
-						</b></span>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/addDepartment.html"><i
-								class="fa fa-fw fa-plus"></i> Add Department</a></li>
-						<li><a href="/departments.html"><i
-								class="fa fa-fw fa-suitcase"></i> Department Manager</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/student/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
-	<!-- <script type="text/javascript">
-	$( "#navbar" ).load( "/navbar.html" );
-</script> -->
-
+	<jsp:include page="admin_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<a href="/admin/add_academic_year">Add new academic year</a>
 				<div class="list-group product-bread-a">
 					<p href="#" class="list-group-item product-bread-a"
-						style="background: #dededd">
-						Academic Year
-						<button class="btn" style="float: right;">
-							<i class="fa fa-trash-o"></i>
-						</button>
-					</p>
+						style="background: #dededd">Academic Year</p>
 				</div>
-				<div id="ideas" style="overflow-x: auto;">
+				<div id="academic" style="overflow-x: auto;">
 					<table class="table table-striped">
 						<thead>
 							<tr>
@@ -143,8 +117,20 @@ table {
 									<td>${a.final_date}</td>
 									<td>${a.year}</td>
 									<td>${a.season}</td>
-									<td><a href="/admin/view_department/${helper.encryptID(a.id)}">View
+									<td><a
+										href="/admin/view_department/${helper.encryptID(a.id)}">View
 											Departments</a></td>
+									<td><a
+										href="/admin/edit_academic_year/${helper.encryptID(a.id)}">Edit</a>
+									</td>
+
+									<td>
+										<form id="delete-form-${a.id}"
+											action="/admin/removeAcademicYear" method="post">
+											<input type="hidden" name="id"
+												value="${helper.encryptID(a.id)}">
+										</form> <a onclick="onDelete(${a.id})">Delete</a>
+									</td>
 								</tr>
 							</tbody>
 						</c:forEach>

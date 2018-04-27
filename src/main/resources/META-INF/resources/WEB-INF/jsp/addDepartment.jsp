@@ -28,6 +28,7 @@
 				url : "/admin/addDepartment",
 				data : $("#add_department_form").serialize(),
 				success : function(response) {
+					jQuery('#lstDepartments').load(' #lstDepartments');
 					alert(response.message);
 				},
 				error : function(xhr, response, error) {
@@ -38,6 +39,21 @@
 			return false;
 		});
 	});
+	function onDelete(id) {
+		$.ajax({
+			type : "Post",
+			url : "/admin/removeDepartment",
+			data : $("#delete_dept_form_" + id).serialize(),
+			success : function(response) {
+				jQuery('#lstDepartments').load(' #lstDepartments');
+				alert(response.message);
+			},
+			error : function(xhr, response, error) {
+				var err = JSON.parse(xhr.responseText);
+				alert(err.message);
+			}
+		});
+	}
 </script>
 <title>Add Department</title>
 <style type="text/css">
@@ -59,39 +75,7 @@ body {
 </style>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">QA Coordinator </b></span>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/addDepartment.html"><i
-								class="fa fa-fw fa-plus"></i> Add Department</a></li>
-						<li><a href="/departments.html"><i
-								class="fa fa-fw fa-suitcase"></i> Department Manager</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/student/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
+	<jsp:include page="admin_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<a href="/admin/academic_year">Back to Academic Year</a>
@@ -130,7 +114,8 @@ body {
 		</div>
 	</div>
 	<div class="container">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div id="lstDepartments"
+			class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form class="form-horizontal" action="/admin/addDepartment"
 				method="post">
 				<!-- Form Name -->
@@ -152,7 +137,11 @@ body {
 								<td>${d.dept_name}</td>
 								<td>${d.academic_year.year}</td>
 								<td>${d.academic_year.season}</td>
-								<td><a href="${helper.encryptID(d.id)}">Remove</a></td>
+								<td><form id="delete_dept_form_${d.id}" method="post"
+										action="">
+										<input type="hidden" name="dept_id"
+											value="${helper.encryptID(d.id)}">
+									</form> <a onclick="onDelete(${d.id})">Remove</a></td>
 							</tr>
 						</tbody>
 					</c:forEach>

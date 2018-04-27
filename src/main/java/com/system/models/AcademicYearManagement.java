@@ -34,7 +34,7 @@ public class AcademicYearManagement {
 	}
 
 	public void addAcademicYear(AcademicYear ay) {
-		String sqlQuery = "insert into AcademicYear values (?,?,?,?)";
+		String sqlQuery = "insert into AcademicYear values (?,?,?,?,?)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -42,6 +42,7 @@ public class AcademicYearManagement {
 			statement.setDate(2, new java.sql.Date(ay.getEnd_date().getTime()));
 			statement.setDate(3, new java.sql.Date(ay.getFinal_date().getTime()));
 			statement.setInt(4, ay.getYear());
+			statement.setString(5, ay.getSeason());
 			statement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,5 +68,36 @@ public class AcademicYearManagement {
 			e.printStackTrace();
 		}
 		return ay;
+	}
+
+	public boolean deleteAcademicYear(int academic_year) {
+		String sqlQuery = "delete from AcademicYear where academic_year_id = " + academic_year;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public void updateAcademicYear(AcademicYear ay) {
+		String sqlQuery = "update AcademicYear set academic_year_start_date = ? , "
+				+ "academic_year_end_date = ? , " + "academic_year_final_date = ? , "
+				+ "academic_year = ? , season = ? " + "where academic_year_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setDate(1, new java.sql.Date(ay.getStart_date().getTime()));
+			statement.setDate(2, new java.sql.Date(ay.getEnd_date().getTime()));
+			statement.setDate(3, new java.sql.Date(ay.getFinal_date().getTime()));
+			statement.setInt(4, ay.getYear());
+			statement.setString(5, ay.getSeason());
+			statement.setInt(6, ay.getId());
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

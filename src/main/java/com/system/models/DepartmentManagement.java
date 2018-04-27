@@ -88,6 +88,24 @@ public class DepartmentManagement {
 		return d;
 	}
 
+	public boolean check_duplicate_department(Department d) {
+		String sqlQuery = "select * from Department where dept_name = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, d.getDept_name());
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return true;
+		}
+	}
+
 	public void remove_department(int dept_id) {
 		String sqlQuery = "delete from Department where dept_id = ?";
 		try {

@@ -1,7 +1,5 @@
 package com.system.controllers;
 
-import java.util.Map.Entry;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -65,67 +63,12 @@ public class QAManagerController {
 	@RequestMapping("/chart")
 	public ModelAndView chartPage() {
 		ModelAndView mv = new ModelAndView("chart");
-		mv.addObject("numberOfIdeas", NummberOfIdeas());
-		mv.addObject("numberOfContributor", NummberOfContributor());
-		mv.addObject("percentageOfIdeas", PercentageOfIdeas());
-		mv.addObject("ideasWithoutComment", IdeasWithoutComment());
-		mv.addObject("anonymousIdeaAndComment",anonymousIdeaAndComment());
+		mv.addObject("numberOfIdeas", rm.NummberOfIdeas());
+		mv.addObject("numberOfContributor", rm.NummberOfContributor());
+		mv.addObject("percentageOfIdeas", rm.PercentageOfIdeas());
+		mv.addObject("ideasWithoutComment", rm.IdeasWithoutComment());
+		mv.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment());
 		return mv;
-	}
-
-	private String NummberOfIdeas() {
-		String value = "[";
-		for (Entry<Department, Integer> entry : rm.NumberOfIdeas().entrySet()) {
-			Department d = entry.getKey();
-			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
-					+ "\"},";
-		}
-		return value + "]";
-	}
-
-	private String NummberOfContributor() {
-		String value = "[";
-		for (Entry<Department, Integer> entry : rm.numberOfContributer().entrySet()) {
-			Department d = entry.getKey();
-			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
-					+ "\"},";
-		}
-		return value + "]";
-	}
-
-	private String PercentageOfIdeas() {
-		String value = "[";
-		for (Entry<Department, Float> entry : rm.PercentageOfIdeas().entrySet()) {
-			Department d = entry.getKey();
-			Float i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
-					+ "\"},";
-		}
-		return value + "]";
-	}
-
-	private String IdeasWithoutComment() {
-		String value = "[";
-		for (Entry<Department, Integer> entry : rm.ideaWithoutComment().entrySet()) {
-			Department d = entry.getKey();
-			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
-					+ "\"},";
-		}
-		return value + "]";
-	}
-
-	private String anonymousIdeaAndComment() {
-		String value = "[";
-		for (Entry<Department, Integer[]> entry : rm.numberOfAnonymousIdeaAndComment().entrySet()) {
-			Department d = entry.getKey();
-			Integer ideas = entry.getValue()[0];
-			Integer comments = entry.getValue()[1];
-			value += "{name: '" + d.getDept_name() + "',data: [" + ideas + ", " + comments + "]},";
-		}
-		return value + "]";
 	}
 
 	@PostMapping("/external_login")
