@@ -19,7 +19,8 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Department Manager</title>
+<jsp:useBean id="helper" class="com.system.Helper" scope="page" />
+<title>Idea Management</title>
 <style type="text/css">
 .container {
 	margin-top: 10%;
@@ -115,42 +116,31 @@ table {
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username"> <%-- ${welcom.person_name} --%>QA Coordinator
-						</b></span>
+						class="img-circle" id="userpicture"
+						src="${qaCoordinator.person_picture}" width="30" height="30">
+						<span class="hidden-xs"></span><b id="username">${qaCoordinator.person_name}>
+					</b>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/addDepartment.html"><i
-								class="fa fa-fw fa-plus"></i> Add Department</a></li>
-						<li><a href="/departments.html"><i
-								class="fa fa-fw fa-suitcase"></i> Department Manager</a></li>
+						<li><a href="/qacoordinator/dashboard"><i
+								class="fa fa-fw fa-plus"></i> Dash board</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
 								Profile</a></li>
 						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
 								Password</a></li>
 						<li class="divider"></li>
-						<li><a href="/student/logout"><i
+						<li><a href="/qacoordinator/logout"><i
 								class="fa fa-fw fa-power-off"></i> Logout</a></li>
 					</ul></li>
 			</ul>
 		</div>
 	</div>
-	<!-- <script type="text/javascript">
-	$( "#navbar" ).load( "/navbar.html" );
-</script> -->
-
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="list-group product-bread-a">
 					<p href="#" class="list-group-item product-bread-a"
-						style="background: #dededd">
-						New Ideas
-						<button class="btn" style="float: right;">
-							<i class="fa fa-trash-o"></i>
-						</button>
-					</p>
+						style="background: #dededd">New Ideas</p>
 				</div>
 				<div id="ideas" style="overflow-x: auto;">
 					<table class="table table-striped">
@@ -167,7 +157,7 @@ table {
 									<td><strong>Content</strong><br />...</td>
 									<td><strong>Post time</strong><br />${idea.post_date}</td>
 									<td><strong>Review</strong><br /> <a
-										href="/idea/${idea.id}">View</a></td>
+										href="/idea/${helper.encryptID(idea.id)}">View</a></td>
 									<td><strong>Accept</strong><br /> <a data-toggle="modal"
 										data-target="#acceptModal" onclick="onAccept(${idea.id})">Accept</a></td>
 									<td><strong>Denied</strong><br /> <a data-toggle="modal"

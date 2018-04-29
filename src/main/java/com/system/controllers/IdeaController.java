@@ -49,11 +49,12 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcom", pm.getUserSession());
+				model.addObject("welcome", pm.getUserSession());
 			} catch (NullPointerException e) {
-				Person p = new Person();
-				p.setPerson_picture("/uploads/default_avatar.png");
-				model.addObject("welcom", p);
+//				Person p = new Person();
+//				p.setPerson_picture("/uploads/default_avatar.png");
+//				p.setPerson_name("");
+//				model.addObject("welcom", p);
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);
@@ -75,11 +76,11 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.MostViewedIdeas(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcom", pm.getUserSession());
+				model.addObject("welcome", pm.getUserSession());
 			} catch (NullPointerException e) {
-				Person p = new Person();
-				p.setPerson_picture("/uploads/default_avatar.png");
-				model.addObject("welcom", p);
+//				Person p = new Person();
+//				p.setPerson_picture("/uploads/default_avatar.png");
+//				model.addObject("welcom", p);
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);
@@ -101,11 +102,11 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.MostLikedIdeas(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcom", pm.getUserSession());
+				model.addObject("welcome", pm.getUserSession());
 			} catch (NullPointerException e) {
-				Person p = new Person();
-				p.setPerson_picture("/uploads/default_avatar.png");
-				model.addObject("welcom", p);
+//				Person p = new Person();
+//				p.setPerson_picture("/uploads/default_avatar.png");
+//				model.addObject("welcom", p);
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);

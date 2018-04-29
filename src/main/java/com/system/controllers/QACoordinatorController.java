@@ -1,6 +1,5 @@
 package com.system.controllers;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import com.system.MailApi;
 import com.system.entity.Idea;
 import com.system.entity.Person;
 import com.system.models.AuthorizationManagement;
-import com.system.models.DepartmentManagement;
 import com.system.models.ExternalLoginManagement;
 import com.system.models.IdeaManagement;
 
@@ -30,23 +28,27 @@ import com.system.models.IdeaManagement;
 public class QACoordinatorController {
 	private AuthorizationManagement am;
 	private ExternalLoginManagement elm;
-	private DepartmentManagement dm;
 	private IdeaManagement im;
 	private MailApi mail;
 
 	public QACoordinatorController() {
 		am = new AuthorizationManagement();
 		elm = new ExternalLoginManagement();
-		dm = new DepartmentManagement();
 		im = new IdeaManagement();
 		mail = new MailApi();
 	}
 
 	@RequestMapping("/dashboard")
 	public ModelAndView departmentPage() {
-		ModelAndView model = new ModelAndView("departments");
-		model.addObject("ideas", im.getIdeasByStatus(0));
-		return model;
+		try {
+			ModelAndView model = new ModelAndView("departments");
+			Person qa_coordinator = getQACoordinatorSession();
+			model.addObject("ideas", im.getIdeasByStatus(0));
+			model.addObject("qaCoordinator", qa_coordinator);
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qacoordinator/login");
+		}
 	}
 
 	@GetMapping("/login")
@@ -131,5 +133,30 @@ public class QACoordinatorController {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Your QA Coordinator account doesn't exist, contact administrator for more technical supports");
 		}
+	}
+
+	private Person getQACoordinatorSession() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		HttpSession session = request.getSession(false);
+		if (session.getAttribute("QACoordinator") == null) {
+			throw new NullPointerException("Have to login first");
+		} else {
+			return (Person) session.getAttribute("QACoordinator");
+		}
+	}
+
+	@GetMapping("/logout")
+	public ModelAndView logout(RedirectAttributes redirectAttributes) {
+		ModelAndView model = new ModelAndView("redirect:/qacoordinator/login");
+		try {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			session.removeAttribute("QACoordinator");
+		} catch (Exception e) {
+			return model;
+		}
+		return model;
 	}
 }

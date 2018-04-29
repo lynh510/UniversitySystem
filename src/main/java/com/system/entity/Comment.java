@@ -22,20 +22,22 @@ public class Comment {
 		super();
 	}
 
-	public Comment(Idea idea, Person person, String comment_text) {
+	public Comment(Idea idea, Person person, String comment_text,int mode) {
 		super();
 		this.idea = idea;
 		this.person = person;
 		this.comment_text = comment_text;
+		this.mode = mode;
 	}
 
-	public Comment(int comment_id, Idea idea, Person person, Date comment_time, String comment_text) {
+	public Comment(int comment_id, Idea idea, Person person, Date comment_time, String comment_text, int mode) {
 		super();
 		this.comment_id = comment_id;
 		this.idea = idea;
 		this.person = person;
 		this.comment_time = comment_time;
 		this.comment_text = comment_text;
+		this.mode = mode;
 	}
 
 	public int getComment_id() {

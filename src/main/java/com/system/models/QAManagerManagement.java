@@ -19,6 +19,5 @@ public class QAManagerManagement {
 		} else {
 			return (Person) session.getAttribute("QAManager");
 		}
-
 	}
 }

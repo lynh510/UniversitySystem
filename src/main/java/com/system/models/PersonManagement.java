@@ -87,4 +87,16 @@ public class PersonManagement {
 		}
 		return users;
 	}
+	public void manageUser(int status, int user_id) {
+		String sql = "update Person set _status = ? where person_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, status);
+			statement.setInt(2, user_id);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

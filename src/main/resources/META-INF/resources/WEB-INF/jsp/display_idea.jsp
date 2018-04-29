@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
 	rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/list_idea.css">
-
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
@@ -28,51 +27,19 @@
 	scope="page" />
 <jsp:useBean id="ideaManager" class="com.system.models.IdeaManagement"
 	scope="page" />
-<title>Activity Log</title>
+
+<title>Main Page</title>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#navbar-ex-collapse">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-			</div>
-			<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" id="userpicture"
-							src="${welcom.person_picture}" width="30" height="30"> <span
-							class="hidden-xs"><b id="username">${welcom.person_name}
-							</b></span>
-					</a>
-						<ul class="dropdown-menu">
-							<li><a href="/student/activities/${welcom.id}/1"><i
-									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
-							<li><a href="/student/submit_idea"><i
-									class="fa fa-fw fa-plus"></i> Add idea</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-									Profile</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-									Password</a></li>
-							<li class="divider"></li>
-							<li><a href="/student/logout"><i
-									class="fa fa-fw fa-power-off"></i> Logout</a></li>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<form action="/comment/submit" id="comment_form" method="post">
-		<input type="hidden" name="idea_id" id="idea_id" value=""> <input
-			type="hidden" name="text" id="commentText" value="">
-	</form>
-	<div>
-	<a class="button">Most viewed</a>
+	<jsp:include page="student_navbar.jsp"></jsp:include>
+	<div style="margin: auto; margin-top: 10%; width: 70%">
+		<select class="form-control" name="forma" onchange="location = this.value;">
+			<option selected="selected" disabled="disabled">Select an
+				option</option>
+			<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
+			<option value="/idea/mostliked/page/1">Most Popular ideas</option>
+			<option value="/idea/page/1">Latest ideas</option>
+		</select>
 	</div>
 	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
@@ -112,17 +79,21 @@
 								src="${idea.person.person_picture}" alt="Mouse0270" />
 							<h3>${idea.person.person_name }</h3>
 							<h5>
-								<span>Shared publicly</span> - <span>${idea.post_date }</span> <input
-									type="hidden" value="unseen" id="seen-${idea.id}" />
+								<span>Shared<c:choose>
+										<c:when test="${idea.mode == 0}"> privately</c:when>
+										<c:otherwise> publicly</c:otherwise>
+									</c:choose></span> - <span>${idea.post_date }</span> <input type="hidden"
+									value="unseen" id="seen-${idea.id}" />
 							</h5>
-							<h6>${idea.views} view(s)</h6>
+							<h6>${idea.views}&ensp;view(s)</h6>
 						</div>
 						<div class="panel-body">
 							<div class="ideaInfo">
 								<p>
 									<b>${idea.title}</b>
 								</p>
-								<p style="min-height: 10%; word-wrap: break-word;">${idea.content}</p>
+								<p
+									style="min-height: 10%; word-wrap: break-word; white-space: pre-line;">${idea.content}</p>
 							</div>
 							<form id="edit_idea_form" method="post" action="/student/edit">
 								<div class="editIdeaInfo">
@@ -216,15 +187,21 @@
 							<img class="img-circle" src="${welcom.person_picture}" width="50"
 								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
-								<textarea id="commentText${idea.id}" rows="4"></textarea>
-								<input type="checkbox" name="mode" value="0" /><span
-									style="font-style: italic;">Comment as an Anonymous user</span>
-								<button type="submit" onclick="onComment(${idea.id})"
-									class="[ btn btn-success disabled ]">Post comment</button>
-								<button type="reset" class="[ btn btn-default ]">Cancel</button>
+								<form id="comment_form_${idea.id}" action="#" method="post">
+									<input type="hidden" name="idea_id" id="idea_id"
+										value="${idea.id}">
+									<textarea style="width: 100%" name="text" id="commentText"
+										rows="4"></textarea>
+									<input type="checkbox" name="mode" value="anonymous" /><span
+										style="font-style: italic;">Comment as an Anonymous
+										user</span> <a onclick="onComment(${idea.id})"
+										class="btn btn-success">Post comment</a>
+									<button type="reset" class="[ btn btn-default ]">Cancel</button>
+								</form>
 							</div>
 							<div class="clearfix"></div>
 						</div>
+
 					</div>
 					<script type="text/javascript">
 					$(window).scroll(function() {

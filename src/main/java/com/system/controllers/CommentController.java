@@ -33,18 +33,27 @@ public class CommentController {
 	@PostMapping("/submit")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> submit_comment(@RequestParam("idea_id") int idea_id,
-			@RequestParam("text") String comment_text, HttpServletRequest request) {
+			@RequestParam("text") String comment_text, @RequestParam(value = "mode", required = false) String mode,
+			HttpServletRequest request) {
 		try {
-			if(im.get_Idea(idea_id).getStatus() == 3) {
-				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,"The idea has been closed");
-			}else if(comment_text.equals("")) {
-				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,"Please fill-in something");
+			if (im.get_Idea(idea_id).getStatus() == 3) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "The idea has been closed");
+			} else if (comment_text.equals("")) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Please fill-in something");
 			}
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
-			Comment comment = new Comment(
-					cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text)), null,
-					pm.getUserSession(), null, comment_text);
+			Comment comment = new Comment();
+
+			if (mode == null) {
+				comment = new Comment(
+						cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text, 0)), null,
+						pm.getUserSession(), null, comment_text, 0);
+			} else {
+				comment = new Comment(
+						cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text, 1)), null,
+						pm.getUserSession(), null, comment_text, 1);
+			}
 			Idea idea = im.get_Idea(idea_id);
 			MailApi mail = new MailApi();
 			if (pm.getUserSession().getId() != idea.getPerson().getId() && pm.getUserSession().getPerson_role() == 0) {

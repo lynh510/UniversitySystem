@@ -11,7 +11,12 @@
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/list_idea.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+	crossorigin="anonymous"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <title>Add new category</title>
 <style type="text/css">
@@ -51,39 +56,7 @@ body {
 </script>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">QA Manager </b></span>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/tag/addCategory"><i
-								class="fa fa-fw fa-plus"></i> Add Tag</a></li>
-						<li><a href="/tag/listCategory"><i
-								class="fa fa-fw fa-suitcase"></i> Tag Manager</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/student/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
+	<jsp:include page="qamanager_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form id="new_tag_form" class="form-horizontal" action="/tag/add" method="post">

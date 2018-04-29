@@ -96,53 +96,20 @@
 </style>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture" src="${welcom.person_picture}"
-						width="30" height="30"> <span class="hidden-xs"><b
-							id="username">
-								<%-- ${welcom.person_name} --%>QA Manager
-						</b></span>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/tag/addCategory"><i
-								class="fa fa-fw fa-plus"></i> Add new tag</a></li>
-						<li><a href="/tag/listCategory"><i
-								class="fa fa-fw fa-suitcase"></i> Tag management</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/student/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
+	<jsp:include page="qamanager_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
 				<!-- Category -->
-				
+
 				<div class="single category">
-					<h3 class="side-title">Tags</h3><a href="/tag/addCategory">Add new category</a>
+					<h3 class="side-title">Tags</h3>
+					<a href="/tag/addCategory">Add new category</a>
 					<ul class="list-unstyled">
 						<c:forEach items="${tags}" var="t">
 							<c:set var="count" value="${tag.count_tag_being_used(t.id) }"
 								scope="page" />
-							<li>${t.description} (Department:${t.department.dept_name})<span
+							<li>${t.description}(Department:${t.department.dept_name})<span
 								class="count">Mentioned <c:out value="${count}" />
 									time(s)
 							</span><a href="/tag/delete/${t.id}">Delete</a>

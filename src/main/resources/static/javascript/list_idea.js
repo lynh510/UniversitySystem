@@ -110,14 +110,11 @@ function onThumbUp(idea_id, like) {
 			});
 }
 function onComment(idea_id) {
-	document.getElementById("idea_id").value = idea_id;
-	var commentText = document.getElementById("commentText" + idea_id).value;
-	document.getElementById("commentText").value = commentText;
 	$
 			.ajax({
 				type : "Post",
 				url : "/comment/submit",
-				data : $("#comment_form").serialize(),
+				data : $("#comment_form_" + idea_id).serialize(),
 				success : function(response) {
 					var boxComments = document.getElementById("box_comments"
 							+ idea_id);
@@ -138,9 +135,9 @@ function onComment(idea_id) {
 											+ '</p></div></div>');
 
 					$('#commentText' + idea_id).val('');
-					$('#comment-count-' + idea_id).load(' #comment-count-' + idea_id);
-					// $('#more-comment-box-' + idea_id).load(
-					// ' #more-comment-box-' + idea_id);
+					$('#comment-count-' + idea_id).load(
+							' #comment-count-' + idea_id);
+
 				},
 				error : function(xhr, response, error) {
 					var err = JSON.parse(xhr.responseText);
@@ -153,7 +150,7 @@ function onViewComments(idea_id) {
 	var moreComments = document.getElementById("moreComments" + idea_id);
 	var btnViewComments = document.getElementById("btnViewComments" + idea_id);
 	var boxComments = document.getElementById("box_comments" + idea_id);
-	btnViewComments.setAttribute("disabled","disabled");
+	btnViewComments.setAttribute("disabled", "disabled");
 	if (noOfComments.value > 0) {
 		$
 				.ajax({
@@ -177,8 +174,7 @@ function onViewComments(idea_id) {
 						alert(err.message);
 					}
 				});
-		
-		
+
 	}
 }
 function showComments(data, idea_id) {
@@ -186,13 +182,24 @@ function showComments(data, idea_id) {
 	var list = "";
 	for (i = 0; i < data.length; i++) {
 		var date = new Date(data[i].comment_time);
-		list += '<div class="comment"><img src="'
+		if(data[i].mode == 0){
+			list += '<div class="comment"><img src="'
 				+ data[i].person.person_picture + '" alt="" /> '
 				+ '<div class="content">' + '<h3><a href="">'
 				+ data[i].person.person_name + '</a><span> <time>'
 				+ moment(date).fromNow()
 				+ '</time><a href="#"> Like</a></span></h3><p>'
 				+ data[i].comment_text + '</p></div></div>';
+		}else{
+			list += '<div class="comment"><img src="'
+				+ data[i].person.person_picture + '" alt="" /> '
+				+ '<div class="content">' + '<h3>'
+				+ data[i].person.person_name + '<span> <time>'
+				+ moment(date).fromNow()
+				+ '</time><a href="#"> Like</a></span></h3><p>'
+				+ data[i].comment_text + '</p></div></div>';
+		}
+	
 	}
 	boxComments.insertAdjacentHTML('afterbegin', list);
 
@@ -224,10 +231,10 @@ function onLoadMoreComments(idea_id) {
 		moreComments.style = "";
 	}
 }
-function onView(idea_id){
+function onView(idea_id) {
 	$.ajax({
 		type : "get",
-		url : "/idea/onview/" + idea_id,  
+		url : "/idea/onview/" + idea_id,
 		data : null,
 		success : function(response) {
 

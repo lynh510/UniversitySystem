@@ -51,11 +51,12 @@ public class CommentManagement {
 		long timespan = getTimeSpan();
 		String sqlQuery = "";
 		if (role == 0) {
-			sqlQuery = "select c.comment_id,c.idea_id,c.comment_text,c.comment_time,c.person_id from Comment c join Person p on p.person_id = c.person_id where c.idea_id = ? and p.person_role = 0 ORDER BY c.comment_time OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
+			sqlQuery = "select c.comment_id,c.idea_id,c.comment_text,c.comment_time,c.person_id,c.mode from Comment c join Person p on p.person_id = c.person_id where c.idea_id = ? and p.person_role = 0 ORDER BY c.comment_time OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
 		} else {
 			sqlQuery = "SELECT * FROM Comment where idea_id = ? ORDER BY comment_time OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
 		}
 		try {
+			Person user = pm.getUserSession();
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setInt(1, idea_id);
@@ -64,11 +65,48 @@ public class CommentManagement {
 			while (rs.next()) {
 				Comment c = new Comment();
 				c.setComment_id(rs.getInt("comment_id"));
-				c.setPerson(pm.getPerson(rs.getInt("person_id")));
+				if (rs.getInt("mode") == 1) {
+					if (user.getId() == rs.getInt("person_id")) {
+						c.setPerson(pm.getPerson(rs.getInt("person_id")));
+					} else {
+						Person p = new Person();
+						p.setPerson_name("Anonymous");
+						p.setPerson_picture("/image/default_avatar.png");
+						c.setPerson(p);
+					}
+				} else {
+					c.setPerson(pm.getPerson(rs.getInt("person_id")));
+				}
 				c.setComment_time(new Date(rs.getTimestamp("comment_time").getTime() + timespan));
 				c.setComment_text(rs.getString("comment_text"));
 				c.setMode(rs.getInt("mode"));
 				comments.add(c);
+			}
+		} catch (NullPointerException e) {
+			try {
+				Connection connection = DataProcess.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sqlQuery);
+				statement.setInt(1, idea_id);
+				statement.setInt(2, offset);
+				ResultSet rs = statement.executeQuery();
+				while (rs.next()) {
+					Comment c = new Comment();
+					c.setComment_id(rs.getInt("comment_id"));
+					if (rs.getInt("mode") == 1) {
+						Person p = new Person();
+						p.setPerson_name("Anonymous");
+						p.setPerson_picture("/image/default_avatar.png");
+						c.setPerson(p);
+					} else {
+						c.setPerson(pm.getPerson(rs.getInt("person_id")));
+					}
+					c.setComment_time(new Date(rs.getTimestamp("comment_time").getTime() + timespan));
+					c.setComment_text(rs.getString("comment_text"));
+					c.setMode(rs.getInt("mode"));
+					comments.add(c);
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

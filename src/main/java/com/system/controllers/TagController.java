@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.entity.Department;
+import com.system.entity.Person;
 import com.system.entity.Tag;
 import com.system.models.*;
 
@@ -29,8 +30,9 @@ public class TagController {
 	public ModelAndView listTag() {
 		ModelAndView model = new ModelAndView("list_category");
 		try {
-			qmm.getQAManagerSession();
+			Person qamanager =  qmm.getQAManagerSession();
 			model.addObject("tags", tm.getTags());
+			model.addObject("qaManager", qamanager);
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/qamanager/login");
 		}
@@ -41,8 +43,9 @@ public class TagController {
 	public ModelAndView addCategory() {
 		ModelAndView model = new ModelAndView("add_category");
 		try {
-			qmm.getQAManagerSession();
+			Person qamanager =  qmm.getQAManagerSession();
 			model.addObject("departments", dm.getDepartments());
+			model.addObject("qaManager", qamanager);
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/qamanager/login");
 		}
