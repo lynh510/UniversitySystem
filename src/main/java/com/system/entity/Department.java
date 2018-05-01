@@ -25,6 +25,13 @@ public class Department {
 		this.academic_year = academic_year;
 	}
 
+	
+	
+	public Department(int id) {
+		super();
+		this.id = id;
+	}
+
 	public AcademicYear getAcademic_year() {
 		return academic_year;
 	}

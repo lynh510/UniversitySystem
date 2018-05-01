@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,81 +49,11 @@ public class StudentController {
 		helper = new Helper();
 	}
 
-
 	// http://localhost:8080/student/login
 	@GetMapping("/login")
 	public ModelAndView login() {
-		return new ModelAndView("student_login");
-	}
-
-	// for submitting data to backend
-	@PostMapping("/registration")
-	@ResponseBody
-	public ResponseEntity<ApiResponse> student_registration(@RequestParam("first_name") String first_name,
-			@RequestParam("last_name") String last_name, @RequestParam("user_name") String user_name,
-			@RequestParam("email") String email, @RequestParam("password") String password,
-			@RequestParam("day") String day, @RequestParam("month") String month, @RequestParam("year") String year,
-			@RequestParam("gender") int gender, @RequestParam("profilepic") MultipartFile profilepic,
-			@RequestParam("phone") String phone, @RequestParam("address") String address, Model model) {
-		StudentManagement sm = new StudentManagement();
-		if (!sm.isUserNameExisted(user_name)) {
-			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Username is already existed!");
-		} else if (!sm.isEmailExist(email)) {
-			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Email address is existed!");
-		} else {
-			String full_name = first_name + " " + last_name;
-			// get birthday
-			try {
-				String format_date = year + "-" + month + "-" + day;
-				Calendar c = Calendar.getInstance();
-				c.setTime(new Date());
-				SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
-				java.util.Date date = simple_date.parse(format_date);
-				java.sql.Date birthday = new java.sql.Date(date.getTime());
-				Person p = new Person("", full_name, 0, birthday, gender, 0, phone, address, email, "");
-				if (profilepic.isEmpty()) {
-					p.setPerson_picture("default_avatar.png");
-				} else {
-					p.setPerson_picture(c.getTimeInMillis() + ".png");
-				}
-				Student s = new Student(p, user_name, password);
-				if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
-					if (!profilepic.isEmpty()) {
-						save_image(profilepic, p.getPerson_picture());
-					}
-					return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
-
-				} else {
-					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error in system");
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-			}
-		}
-	}
-
-	private void save_image(MultipartFile profilepic, String filename) {
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		try {
-			inputStream = profilepic.getInputStream();
-			File newFile = new File("file/" + filename);
-			if (!newFile.exists()) {
-				newFile.createNewFile();
-			}
-			outputStream = new FileOutputStream(newFile);
-			int read = 0;
-			byte[] bytes = new byte[1024];
-			while ((read = inputStream.read(bytes)) != -1) {
-				outputStream.write(bytes, 0, read);
-			}
-			inputStream.close();
-			outputStream.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ModelAndView model = new ModelAndView("student_login");
+		return model;
 	}
 
 	// http://localhost:8080/student/submit_idea
@@ -153,7 +85,7 @@ public class StudentController {
 	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> check_login(@RequestParam("user_name") String user_name,
-			@RequestParam("password") String password) {
+			@RequestParam("password") String password,ModelAndView model) {
 		StudentManagement sm = new StudentManagement();
 		Student s = new Student();
 		s.setUsername(user_name);
@@ -260,4 +192,47 @@ public class StudentController {
 		return model;
 	}
 
+	// http://localhost:8080/student/edit_account
+	@GetMapping("/edit_account")
+	public ModelAndView edit_account() {
+		ModelAndView model = new ModelAndView("edit_account");
+		try {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+					.getRequest();
+			HttpSession session = request.getSession(false);
+			if (session.getAttribute("user") != null) {
+				Person p = (Person) session.getAttribute("user");
+				Person p2 = pm.getPerson(p.getId());
+				List<Integer> months = new ArrayList<Integer>();
+				List<Integer> days = new ArrayList<Integer>();
+				List<Integer> years = new ArrayList<Integer>();
+				for (int month = 1; month < 13; month++) {
+					months.add(month);
+				}
+				for (int day = 1; day < 32; day++) {
+					days.add(day);
+				}
+				for (int year = 1990; year < 2007; year++) {
+					years.add(year);
+				}
+				String[] str = String.valueOf(p2.getBirthdate().toString()).split("-");
+				model.addObject("year_of_user", str[0]);
+				model.addObject("month_of_user", str[1]);
+				model.addObject("day_of_user", str[2]);
+				model.addObject("gender", p.getGender());
+				model.addObject("days", days);
+				model.addObject("months", months);
+				model.addObject("years", years);
+				model.addObject("user_id", helper.encryptID(p.getId() + ""));
+				model.addObject("welcom", p2);
+			} else {
+				model = new ModelAndView("redirect:/student/login");
+			} 
+		} catch (NullPointerException e) {
+			model = new ModelAndView("redirect:/student/login");
+		}
+		return model;
+	}
+
+	
 }

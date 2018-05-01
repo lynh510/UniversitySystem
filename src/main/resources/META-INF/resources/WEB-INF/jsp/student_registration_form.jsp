@@ -24,7 +24,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		$.ajax({
 			type : "Post",
-			url : "/student/registration",
+			url : "/admin/registration",
 			enctype : 'multipart/form-data',
 			processData : false,
 			contentType : false,
@@ -282,8 +282,8 @@ $(document).ready(function() {
 							<select class="form-control blur" required name="userrole">
 								<option value="" selected="" disabled="disabled" hidden>--
 									Role --</option>
-								<option value="staff">Staff</option>
-								<option value="student">Student</option>
+								<option value="1">Staff</option>
+								<option value="0">Student</option>
 							</select>
 						</div>
 					</div>
@@ -292,11 +292,12 @@ $(document).ready(function() {
 							<label class="labeltxt required">Departments</label>
 						</div>
 						<div class="role">
-							<select class="form-control blur" required name="userrole">
+							<select class="form-control blur" required name="deparment">
 								<option value="" selected="" disabled="disabled" hidden>--
 									Department --</option>
-								<option value="staff">Staff</option>
-								<option value="student">Student</option>
+									<c:forEach items="${deparments}" var="deparment">
+								<option value="${deparment.id}">${deparment.dept_name}</option>
+								</c:forEach>
 							</select>
 						</div>
 					</div>

@@ -47,7 +47,7 @@ public class Person {
 	}
 
 	public Person(String person_picture, String person_name, int person_role, Date birthdate, int gender, int status,
-			String phone, String address, String email, String description) {
+			String phone, String address, String email, String description, Department department) {
 		super();
 		this.person_picture = person_picture;
 		this.person_name = person_name;
@@ -59,6 +59,21 @@ public class Person {
 		this.address = address;
 		this.email = email;
 		this.description = description;
+		this.department = department;
+	}
+	
+	
+
+	public Person(int id, String person_picture, String person_name, Date birthdate, int gender, String phone,
+			String address) {
+		super();
+		this.id = id;
+		this.person_picture = person_picture;
+		this.person_name = person_name;
+		this.birthdate = birthdate;
+		this.gender = gender;
+		this.phone = phone;
+		this.address = address;
 	}
 
 	public String getAddress() {
@@ -157,4 +172,5 @@ public class Person {
 		this.description = description;
 	}
 
+	
 }

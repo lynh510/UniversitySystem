@@ -53,7 +53,7 @@
 									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="/student/submit_idea"><i
 									class="fa fa-fw fa-plus"></i> Add idea</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
+							<li><a href="/student/edit_account"><i class="fa fa-fw fa-user"></i> Edit
 									Profile</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
 									Password</a></li>

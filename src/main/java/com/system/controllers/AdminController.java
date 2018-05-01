@@ -1,7 +1,14 @@
 package com.system.controllers;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,16 +27,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.system.ApiResponse;
 import com.system.Helper;
+import com.system.MailApi;
 import com.system.entity.*;
 import com.system.models.AcademicYearManagement;
 import com.system.models.AuthorizationManagement;
 import com.system.models.DepartmentManagement;
 import com.system.models.PersonManagement;
 import com.system.models.ReportManagement;
+import com.system.models.StaffManagement;
+import com.system.models.StudentManagement;
 
 @Controller
 @RequestMapping("/admin")
@@ -283,13 +295,16 @@ public class AdminController {
 
 	}
 
-	@GetMapping("/addStudents")
+	@GetMapping("/addAccounts")
 	public ModelAndView registration() {
+		DepartmentManagement dm = new DepartmentManagement();
 		try {
+			Person admin = getAdminSession();
 			ModelAndView model = new ModelAndView("student_registration_form");
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();
 			List<Integer> years = new ArrayList<Integer>();
+			List<Department> listDeparment = dm.getDepartments();
 			for (int month = 1; month < 13; month++) {
 				months.add(month);
 			}
@@ -302,11 +317,132 @@ public class AdminController {
 			model.addObject("days", days);
 			model.addObject("months", months);
 			model.addObject("years", years);
+			model.addObject("deparments", listDeparment);
+			//model.addObject("admin", admin);
 			return model;
 		} catch (NullPointerException e) {
 			return new ModelAndView("redirect:/admin/login");
 		}
+	}
 
+	// for submitting data to backend
+	@PostMapping("/registration")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> student_registration(@RequestParam("first_name") String first_name,
+			@RequestParam("last_name") String last_name, @RequestParam("user_name") String user_name,
+			@RequestParam("email") String email, @RequestParam("password") String password,
+			@RequestParam("day") String day, @RequestParam("month") String month, @RequestParam("year") String year,
+			@RequestParam("gender") int gender, @RequestParam("profilepic") MultipartFile profilepic,
+			@RequestParam("phone") String phone, @RequestParam("userrole") int userrole,
+			@RequestParam("address") String address, @RequestParam("deparment") int deparment_id, Model model) {
+		try {
+			StudentManagement sm = new StudentManagement();
+			StaffManagement staff_m = new StaffManagement();
+			if (userrole == 0) {
+				if (!sm.isUserNameExisted(user_name)) {
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Username is already existed!");
+				} else if (!sm.isEmailExist(email)) {
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Email address is existed!");
+				} else {
+					String full_name = first_name + " " + last_name;
+					// get birthday
+
+					String format_date = year + "-" + month + "-" + day;
+					Calendar c = Calendar.getInstance();
+					c.setTime(new Date());
+					SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date date = simple_date.parse(format_date);
+					java.sql.Date birthday = new java.sql.Date(date.getTime());
+					Person p = null;
+					Department dp = new Department(deparment_id);
+					p = new Person("", full_name, userrole, birthday, gender, 0, phone, address, email, "", dp);
+					if (profilepic.isEmpty()) {
+						p.setPerson_picture("default_avatar.png");
+					} else {
+						p.setPerson_picture(c.getTimeInMillis() + ".png");
+					}
+					Student s = new Student(p, user_name, password);
+					if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
+						if (!profilepic.isEmpty()) {
+							save_image(profilepic, p.getPerson_picture());
+						}
+						MailApi m = new MailApi();
+						m.sendHtmlEmail(email, "Your account",
+								"Your account to use the system: \n Username:" + "<b>" + user_name + "</b>"
+										+ "\n Password: " + "<b>" + password + "</b>"
+										+ "\n This is an automatic email, Please do not reply");
+						return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
+					} else {
+						return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error in system");
+					}
+				}
+			} else if (userrole == 1) {
+				if (!staff_m.isUserNameExisted(user_name)) {
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Username is already existed!");
+				} else if (!sm.isEmailExist(email)) {
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Email address is existed!");
+				} else {
+					String full_name = first_name + " " + last_name;
+					// get birthday
+
+					String format_date = year + "-" + month + "-" + day;
+					Calendar c = Calendar.getInstance();
+					c.setTime(new Date());
+					SimpleDateFormat simple_date = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date date = simple_date.parse(format_date);
+					java.sql.Date birthday = new java.sql.Date(date.getTime());
+					Person p = null;
+					p = new Person("", full_name, userrole, birthday, gender, 0, phone, address, email, "", null);
+					if (profilepic.isEmpty()) {
+						p.setPerson_picture("default_avatar.png");
+					} else {
+						p.setPerson_picture(c.getTimeInMillis() + ".png");
+					}
+					Staff s = new Staff(p, user_name, password);
+					if (staff_m.staffRegistration(s).equalsIgnoreCase("Success")) {
+						if (!profilepic.isEmpty()) {
+							save_image(profilepic, p.getPerson_picture());
+						}
+						MailApi m = new MailApi();
+						m.sendHtmlEmail(email, "Your account",
+								"Your account to use the system: \n Username:" + "<b>" + user_name + "</b>"
+										+ "\n Password: " + "<b>" + password + "</b>"
+										+ "\n This is an automatic email, Please do not reply");
+						return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
+					} else {
+						return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error in system");
+					}
+
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+		return null;
+	}
+
+	private void save_image(MultipartFile profilepic, String filename) {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		try {
+			inputStream = profilepic.getInputStream();
+			File newFile = new File("file/" + filename);
+			if (!newFile.exists()) {
+				newFile.createNewFile();
+			}
+			outputStream = new FileOutputStream(newFile);
+			int read = 0;
+			byte[] bytes = new byte[1024];
+			while ((read = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+			inputStream.close();
+			outputStream.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Person getAdminSession() {

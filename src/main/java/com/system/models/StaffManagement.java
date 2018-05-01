@@ -3,35 +3,37 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import com.system.entity.*;
+import com.system.entity.ExternalUser;
+import com.system.entity.Person;
+import com.system.entity.Staff;
 
-public class StudentManagement {
+public class StaffManagement {
 	private ExternalLoginManagement elm;
+	
 
-	public StudentManagement() {
+	public StaffManagement() {
 		elm = new ExternalLoginManagement();
 	}
-
+	
 	// returns string message from database,
-	public String studentRegistration(Student s) {
+	public String staffRegistration(Staff s) {
 		String insertSQuery = "DECLARE @responseMessage NVARCHAR(250);\r\n"
-				+ "Exec add_student ?,?,?, @responseMessage output;\r\n"
+				+ "Exec add_staff ?,?,?, @responseMessage output;\r\n"
 				+ "select @responseMessage as N'@responseMessage'";
 		String message = "";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(insertSQuery);
-			int person_id = insert_person(s.getStudent_id());
+			int person_id = insert_person(s.getStaff_id());
 			statement.setInt(1, person_id);
 			statement.setString(2, s.getUsername());
-			statement.setString(3, s.getStudent_password());
+			statement.setString(3, s.getStaff_password());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				message = resultSet.getString(1);
 			}
-			ExternalUser eu = new ExternalUser(person_id, s.getStudent_id().getEmail());
+			ExternalUser eu = new ExternalUser(person_id, s.getStaff_id().getEmail());
 			elm.insert_external_user(eu);
 			return message;
 		} catch (Exception e) {
@@ -39,9 +41,9 @@ public class StudentManagement {
 			return message;
 		}
 	}
-
+	
 	public int insert_person(Person p) {
-		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,?);" + " SELECT SCOPE_IDENTITY()";
+		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,null);" + " SELECT SCOPE_IDENTITY()";
 		int pid = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -56,7 +58,6 @@ public class StudentManagement {
 			statement.setString(8, p.getAddress());
 			statement.setString(9, p.getEmail());
 			statement.setString(10, p.getDescription());
-			statement.setInt(11, p.getDepartment().getId());
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {
@@ -69,13 +70,13 @@ public class StudentManagement {
 	}
 
 	public boolean isUserNameExisted(String username) {
-		return checkExisten(username, "Student", "username");
+		return checkExisten(username, "Staff", "username");
 	}
 
 	public boolean isEmailExist(String email) {
 		return checkExisten(email, "Person", "email");
 	}
-
+	
 	private boolean checkExisten(String param, String entity, String condition) {
 		boolean flag = false;
 		try {
@@ -92,27 +93,4 @@ public class StudentManagement {
 		}
 		return flag;
 	}
-
-	public Person check_login(Student s) {
-		String sqlQuery = "Exec student_login ?,?";
-		Person p = new Person();
-		try {
-			Connection connection = DataProcess.getConnection();
-			PreparedStatement statement = connection.prepareStatement(sqlQuery);
-			statement.setString(1, s.getUsername());
-			statement.setString(2, s.getStudent_password());
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				p.setId(rs.getInt("person_id"));
-				p.setPerson_picture(rs.getString("person_picture"));
-				p.setPerson_name(rs.getString("person_name"));
-				p.setPerson_role(rs.getInt("person_role"));
-				p.setDepartment(new Department(rs.getInt("dept_id"), ""));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return p;
-	}
-	
 }

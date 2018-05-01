@@ -39,6 +39,7 @@ public class PersonManagement {
 				p.setPhone(rs.getString("phone_number"));
 				p.setEnroll_date(rs.getDate("enroll_date"));
 				p.setEmail(rs.getString("email"));
+				p.setAddress(rs.getString("_address"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,5 +99,28 @@ public class PersonManagement {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean edit_account(Person p) {
+		String sqlQuery = "Update person set person_picture = ?, person_name =?, birthdate =?, gender =?, phone_number =?, _address =? where person_id=?";
+		boolean flag = false;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, p.getPerson_picture());
+			statement.setString(2, p.getPerson_name());
+			statement.setDate(3, p.getBirthdate());
+			statement.setInt(4, p.getGender());
+			statement.setString(5, p.getPhone());
+			statement.setString(6, p.getAddress());
+			statement.setInt(7, p.getId());
+			ResultSet rs = statement.executeQuery();
+			if (!rs.next()) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return flag;
 	}
 }
