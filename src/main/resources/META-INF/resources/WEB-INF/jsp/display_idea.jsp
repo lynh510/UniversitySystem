@@ -42,8 +42,10 @@
 			<option value="/idea/page/1">Latest ideas</option>
 		</select>
 	</div> -->
-	<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]" style="margin-top: 10%; margin-bottom: 10%;">
-		<select class="form-control" name="forma" onchange="location = this.value;">
+	<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]"
+		style="margin-top: 10%; margin-bottom: 10%;">
+		<select class="form-control" name="forma"
+			onchange="location = this.value;">
 			<option selected="selected" disabled="disabled">Select an
 				option</option>
 			<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
@@ -154,7 +156,8 @@
 											});
 								});
 							</script>
-							<form id="edit_idea_form" method="post" action="/student/edit">
+							<form id="edit_idea_form${idea.id}" method="post" style="display: none;"
+								action="/student/edit">
 								<div class="editIdeaInfo${idea.id}">
 									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
 										type="hidden" name="person_id" value="${welcome.id}" /><input
@@ -162,7 +165,7 @@
 									<input class="form-control" name="title" required
 										value="${idea.title}" /> <input type="hidden" name="action"
 										value="1">
-									<textarea name="content" rows="4" required>${idea.content}</textarea>
+									<textarea name="content" style="width: 100%" rows="4" required>${idea.content}</textarea>
 									<button type="submit" class="[ btn btn-success disabled ]">Edit
 										post</button>
 									<button type="reset" class="[ btn btn-default ]">Cancel</button>
@@ -245,8 +248,8 @@
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle" src="${welcome.person_picture}" width="50"
-								height="50" alt="User Image" />
+							<img class="img-circle" src="${welcome.person_picture}"
+								width="50" height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<form id="comment_form_${idea.id}" action="#" method="post">
 									<input type="hidden" name="idea_id" id="idea_id"

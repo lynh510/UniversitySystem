@@ -37,7 +37,7 @@ public class TestController {
 			int recordsPerPage = 5;
 			int noOfRecords = im.noOfRecords(0);
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-			List<Idea> listIdea = im.MostViewedIdeas(1, recordsPerPage);
+			List<Idea> listIdea = im.getIdeasPerPage(1, recordsPerPage);
 			try {
 				Person p = pm.getUserSession();
 				model.addObject("welcome", p);

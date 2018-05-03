@@ -1,6 +1,9 @@
 function editIdea(id) {
-	$('.ideaInfo'+id).hide();
-	$('.editIdeaInfo'+id).show();
+	$('.ideaInfo' + id).hide();
+	$('.editIdeaInfo' + id).show();
+	$('#edit_idea_form' + id).css({
+		'display' : 'block'
+	});
 }
 
 function onThumbUp(idea_id, like) {

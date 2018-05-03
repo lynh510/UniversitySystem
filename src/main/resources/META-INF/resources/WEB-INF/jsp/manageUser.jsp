@@ -57,6 +57,7 @@ body {
 			<table class="table table-responsive table-hover table-bordered ">
 				<thead>
 					<tr class="info">
+						<th>Profile Picture</th>
 						<th>Status</th>
 						<th>Action</th>
 						<th>E-Mail</th>
@@ -68,11 +69,14 @@ body {
 						<th>Address</th>
 						<th>Phone number</th>
 						<th>Department</th>
+
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${persons}" var="p">
 						<tr>
+							<td><img alt="${p.person_name}" width="50px" height="50px"
+								src="${p.person_picture}"></td>
 							<c:choose>
 								<c:when test="${p.status == 0}">
 									<td class="success">Active</td>
@@ -95,9 +99,13 @@ body {
 										<c:choose>
 											<c:when test="${p.status == 0}">
 												<li><a
+													href="/admin/edit_account/${helper.encryptID(p.id)}">Edit</a></li>
+												<li><a
 													href="/admin/delete/${p.person_role}/${helper.encryptID(p.id)}">Delete</a></li>
 											</c:when>
 											<c:when test="${p.status == 1}">
+												<li><a
+													href="/admin/delete/${p.person_role}/${helper.encryptID(p.id)}">Delete</a></li>
 												<li><a
 													href="/admin/active/${p.person_role}/${helper.encryptID(p.id)}">Activate</a></li>
 												<li><a

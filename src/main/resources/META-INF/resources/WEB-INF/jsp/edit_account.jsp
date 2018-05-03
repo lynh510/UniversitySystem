@@ -20,6 +20,7 @@
 .form-control {
 	border: 1px solid black;
 }
+
 .navbar>.container {
 	margin-top: 0 !important;
 }
@@ -175,7 +176,8 @@
 											<input type="file" class="form-control blur" accept="image/*"
 												name="profilepic" onchange="showMyImage(this)">
 											<div class="profile-pic">
-												<img id="thumbnail" height="100%" width="100%" />
+												<img id="thumbnail" src="${welcome.person_picture}"
+													height="100px" width="100px" />
 											</div>
 											<script>
 												function showMyImage(fileInput) {
@@ -209,28 +211,32 @@
 												required placeholder="Phone number..."
 												class="form-control blur" id="form-phone" maxlength="12"
 												onkeypress="phonenumber(this)">
-												<script type="text/javascript">
-													function phonenumber(inputtxt) {
-														var phoneno = /^[0-9]+/;
-														if(!inputtxt.value.match(phoneno)) {
-															document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
-															return false;
-														}
-														if(inputtxt.value == "") {
-															document.getElementById('msgPhone').innerHTML = "";
-															return false;
-														}
-														if(inputtxt.value.length < 10) {
-															document.getElementById('msgPhone').innerHTML = "Phone number must be at least 10 character!";
-															return false;
-														}
-														else {
-															document.getElementById('msgPhone').innerHTML = "";
-														    return true;
-														}
-														
+											<script type="text/javascript">
+												function phonenumber(inputtxt) {
+													var phoneno = /^[0-9]+/;
+													if (!inputtxt.value
+															.match(phoneno)) {
+														document
+																.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
+														return false;
 													}
-												</script>
+													if (inputtxt.value == "") {
+														document
+																.getElementById('msgPhone').innerHTML = "";
+														return false;
+													}
+													if (inputtxt.value.length < 10) {
+														document
+																.getElementById('msgPhone').innerHTML = "Phone number must be at least 10 character!";
+														return false;
+													} else {
+														document
+																.getElementById('msgPhone').innerHTML = "";
+														return true;
+													}
+
+												}
+											</script>
 											<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 										</div>
 										<div class="form-group">

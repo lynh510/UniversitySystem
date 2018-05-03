@@ -611,4 +611,40 @@ public class AdminController {
 		}
 
 	}
+
+	@GetMapping("/edit_account/{user_id}")
+	public ModelAndView edit_account(@PathVariable(value = "user_id") String person_id) {
+		ModelAndView model = new ModelAndView("edit_account");
+		try {
+			model.addObject("admin", getAdminSession());
+			Person p2 = pm.getPerson(helper.decodeID(person_id));
+			List<Integer> months = new ArrayList<Integer>();
+			List<Integer> days = new ArrayList<Integer>();
+			List<Integer> years = new ArrayList<Integer>();
+			for (int month = 1; month < 13; month++) {
+				months.add(month);
+			}
+			for (int day = 1; day < 32; day++) {
+				days.add(day);
+			}
+			for (int year = 1990; year < 2007; year++) {
+				years.add(year);
+			}
+			String[] str = String.valueOf(p2.getBirthdate().toString()).split("-");
+			model.addObject("year_of_user", str[0]);
+			model.addObject("month_of_user", str[1]);
+			model.addObject("day_of_user", str[2]);
+			model.addObject("gender", p2.getGender());
+			model.addObject("days", days);
+			model.addObject("months", months);
+			model.addObject("years", years);
+			model.addObject("user_id", helper.encryptID(p2.getId() + ""));
+			model.addObject("navbar", "admin_navbar.jsp");
+			model.addObject("welcome", p2);
+
+		} catch (NullPointerException e) {
+			model = new ModelAndView("redirect:/student/login");
+		}
+		return model;
+	}
 }
