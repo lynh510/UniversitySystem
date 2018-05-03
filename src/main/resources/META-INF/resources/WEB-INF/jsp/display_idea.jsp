@@ -42,18 +42,18 @@
 			<option value="/idea/page/1">Latest ideas</option>
 		</select>
 	</div> -->
+	<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]" style="margin-top: 10%; margin-bottom: 10%;">
+		<select class="form-control" name="forma" onchange="location = this.value;">
+			<option selected="selected" disabled="disabled">Select an
+				option</option>
+			<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
+			<option value="/idea/mostliked/page/1">Most Popular ideas</option>
+			<option value="/idea/page/1">Latest ideas</option>
+		</select>
+	</div>
 	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
-				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]" style="margin-top: 10%; margin-bottom: 10%;">
-					<select class="form-control" name="forma" onchange="location = this.value;">
-						<option selected="selected" disabled="disabled">Select an
-							option</option>
-						<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
-						<option value="/idea/mostliked/page/1">Most Popular ideas</option>
-						<option value="/idea/page/1">Latest ideas</option>
-					</select>
-				</div>
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
 					<div class="[ panel panel-default ] panel-google-plus"
 						id="scroll-to-${idea.id}">
@@ -67,7 +67,7 @@
 									</span>
 									<ul class="dropdown-menu" role="menu">
 										<li role="presentation"><a role="menuitem" tabindex="-1"
-											class="editIdea" onclick="return editIdea();">Edit</a></li>
+											class="editIdea" onclick="return editIdea(${idea.id});">Edit</a></li>
 										<li role="presentation"><a role="menuitem" tabindex="-1"
 											href="/student/delete/1/${helper.encryptID(welcome.id)}/${helper.encryptID(idea.id)}/${currentPage}">Delete</a></li>
 										<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
@@ -98,15 +98,64 @@
 							<h6>${idea.views}&ensp;view(s)</h6>
 						</div>
 						<div class="panel-body">
-							<div class="ideaInfo">
+							<div class="ideaInfo${idea.id}">
 								<p>
 									<b>${idea.title}</b>
 								</p>
 								<p
 									style="min-height: 10%; word-wrap: break-word; white-space: pre-line;">${idea.content}</p>
 							</div>
+							<script type="text/javascript">
+								$(function() {
+									$('.editIdeaInfo'+${idea.id}).hide();
+									$(
+											'.panel-google-plus > .panel-footer > .input-placeholder, .panel-google-plus > .panel-google-plus-comment > .panel-google-plus-textarea > button[type="reset"]')
+											.on('click', function(event) {
+												var $panel = $(this).closest('.panel-google-plus');
+												$comment = $panel.find('.panel-google-plus-comment');
+	
+												$comment.find('.btn:first-child').addClass('disabled');
+												$comment.find('textarea').val('');
+	
+												$panel.toggleClass('panel-google-plus-show-comment');
+	
+												if ($panel.hasClass('panel-google-plus-show-comment')) {
+													$comment.find('textarea').focus();
+												}
+											});
+									$('.panel-google-plus-comment > .panel-google-plus-textarea > textarea')
+											.on(
+													'keyup',
+													function(event) {
+														var $comment = $(this).closest(
+																'.panel-google-plus-comment');
+	
+														$comment.find('button[type="submit"]').addClass(
+																'disabled');
+														if ($(this).val().length >= 1) {
+															$comment.find('button[type="submit"]').removeClass(
+																	'disabled');
+														}
+													});
+									$('.editIdeaInfo'+${idea.id}+' > button[type="reset"]').on('click', function(event) {
+										$('.editIdeaInfo'+${idea.id}).hide();
+										$('.ideaInfo'+${idea.id}).show();
+									});
+									$('.editIdeaInfo'+${idea.id}+' > input, .editIdeaInfo'+${idea.id}+' > textarea').on(
+											'focus',
+											function(event) {
+												var $comment = $(this).closest('.editIdeaInfo'+${idea.id});
+	
+												$comment.find('button[type="submit"]').addClass('disabled');
+												if ($(this).val().length >= 1) {
+													$comment.find('button[type="submit"]').removeClass(
+															'disabled');
+												}
+											});
+								});
+							</script>
 							<form id="edit_idea_form" method="post" action="/student/edit">
-								<div class="editIdeaInfo">
+								<div class="editIdeaInfo${idea.id}">
 									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
 										type="hidden" name="person_id" value="${welcome.id}" /><input
 										type="hidden" name="current_page" value="${currentPage}">

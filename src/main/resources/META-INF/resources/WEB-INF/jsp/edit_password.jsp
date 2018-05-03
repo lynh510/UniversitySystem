@@ -21,10 +21,6 @@
 <jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>${action}AcademicYear</title>
 <style type="text/css">
-.container {
-	margin-top: 10%;
-}
-
 .form-group {
 	margin-top: 3%;
 }
