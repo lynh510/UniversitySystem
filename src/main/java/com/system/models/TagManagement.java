@@ -17,7 +17,7 @@ public class TagManagement {
 
 	public List<Tag> getTags() {
 		List<Tag> tags = new ArrayList<Tag>();
-		String sqlQuery = "select * from Tag";
+		String sqlQuery = "select * from Tag where tag_status = 0";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

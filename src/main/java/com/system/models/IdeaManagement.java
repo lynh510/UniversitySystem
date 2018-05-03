@@ -51,6 +51,43 @@ public class IdeaManagement {
 		return ideaList;
 	}
 
+	public List<Idea> searchIdea(String search, int currentPage, int itemPerPage) {
+		List<Idea> ideaList = new ArrayList<>();
+		int offset = itemPerPage * (currentPage - 1);
+		String sqlQuery = "SELECT * FROM Idea Where _status = 1 and idea_title like ? or idea_content like ?  ORDER BY post_date DESC OFFSET "
+				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, "%" + search + "%");
+			statement.setString(2, "%" + search + "%");
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Idea idea = new Idea();
+				idea.setId(rs.getInt("idea_id"));
+				idea.setTitle(rs.getString("idea_title"));
+				idea.setContent(rs.getString("idea_content"));
+				idea.setStatus(rs.getInt("_status"));
+				idea.setMode(rs.getInt("mode"));
+				if (rs.getInt("mode") == 0) {
+					Person p = new Person();
+					p.setPerson_name("Anonymous");
+					p.setPerson_picture("/uploads/default_avatar.png");
+					idea.setPerson(p);
+				} else {
+					idea.setPerson(pm.getPerson(rs.getInt("person_id")));
+				}
+				idea.setPost_date(rs.getDate("post_date"));
+				idea.setViews(rs.getInt("idea_views"));
+
+				ideaList.add(idea);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ideaList;
+	}
+
 	public List<Idea> getIdeasPerPageByPersonal(int currentPage, int itemPerPage, int person_id) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
@@ -80,13 +117,32 @@ public class IdeaManagement {
 
 	public int noOfRecords(int user_id) {
 		int result = 0;
-		String sqlQuery = "select count(*) from Idea where _status = 0";
+		String sqlQuery = "select count(*) from Idea where _status = 1";
 		if (user_id != 0) {
-			sqlQuery = "select count(*) from Idea where _status = 0 and person_id = " + user_id;
+			sqlQuery = "select count(*) from Idea where _status = 1 and person_id = " + user_id;
 		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return result;
+		}
+	}
+
+	public int countSearch(String keywords) {
+		int result = 0;
+		String sqlQuery = "SELECT count(*) FROM Idea Where _status = 1 and idea_title like ? or idea_content like ? ";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, "%" + keywords + "%");
+			statement.setString(2, "%" + keywords + "%");
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				result = rs.getInt(1);
@@ -184,7 +240,7 @@ public class IdeaManagement {
 	}
 
 	public void eidt_idea(Idea idea) {
-		String sqlQuery = "Update Idea Set idea_tile = ?, idea_content = ? where idea_id = ?";
+		String sqlQuery = "Update Idea Set idea_title = ?, idea_content = ? where idea_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

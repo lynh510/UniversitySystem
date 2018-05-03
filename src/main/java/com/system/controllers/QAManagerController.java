@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -42,6 +43,7 @@ public class QAManagerController {
 	private QAManagerManagement qm;
 	private IdeaAttachFileManagement iafm;
 	private Helper helper;
+	private PersonManagement pm;
 
 	public QAManagerController() {
 		elm = new ExternalLoginManagement();
@@ -50,6 +52,7 @@ public class QAManagerController {
 		dm = new DepartmentManagement();
 		qm = new QAManagerManagement();
 		iafm = new IdeaAttachFileManagement();
+		pm = new PersonManagement();
 		helper = new Helper();
 	}
 
@@ -61,12 +64,84 @@ public class QAManagerController {
 		return model;
 	}
 
+	@RequestMapping("/change_password")
+	public ModelAndView changePassword() {
+		ModelAndView model = new ModelAndView("edit_password");
+		try {
+			Person qamanager = qm.getQAManagerSession();
+			model.addObject("role", "qamanager");
+			model.addObject("displayName", "QA Manager");
+			model.addObject("user", qamanager);
+			model.addObject("qaManager", qamanager);
+			model.addObject("navbar", "qamanager_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qamanager/login");
+		}
+	}
+
+	@GetMapping("/edit_account")
+	public ModelAndView edit_profile() {
+		try {
+			Person qaManager = qm.getQAManagerSession();
+			Person p = pm.getPerson(qaManager.getId());
+			ModelAndView model = new ModelAndView("edit_account");
+			List<Integer> months = new ArrayList<Integer>();
+			List<Integer> days = new ArrayList<Integer>();
+			List<Integer> years = new ArrayList<Integer>();
+			for (int month = 1; month < 13; month++) {
+				months.add(month);
+			}
+			for (int day = 1; day < 32; day++) {
+				days.add(day);
+			}
+			for (int year = 1990; year < 2007; year++) {
+				years.add(year);
+			}
+			String[] str = String.valueOf(p.getBirthdate().toString()).split("-");
+			model.addObject("year_of_user", str[0]);
+			model.addObject("month_of_user", str[1]);
+			model.addObject("day_of_user", str[2]);
+			model.addObject("days", days);
+			model.addObject("months", months);
+			model.addObject("years", years);
+			model.addObject("user_id", helper.encryptID(p.getId() + ""));
+			model.addObject("qaManager", qaManager);
+			model.addObject("welcome", p);
+			model.addObject("navbar", "qamanager_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qamanager/login");
+		}
+	}
+
+	@PostMapping("/change_password")
+	public ResponseEntity<ApiResponse> get_contributions(@RequestParam("old_password") String old_password,
+			@RequestParam("new_password") String new_password,
+			@RequestParam("confirm_password") String confirm_password, @RequestParam("id") String id) {
+		try {
+			if (old_password.equals(new_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"old password and new password can't be the same");
+			} else if (!new_password.equals(confirm_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"new password and confirm password don't match");
+			} else {
+				return new ApiResponse().send(HttpStatus.ACCEPTED,
+						qm.change_password(helper.decodeID(id), old_password, new_password));
+			}
+		} catch (Exception e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+
+	}
+
 	@RequestMapping("/contributions")
 	public ModelAndView get_contributions() {
 		try {
 			Person qamanager = qm.getQAManagerSession();
 			ModelAndView model = new ModelAndView("list_files");
-			model.addObject("departments", dm.getDepartments());
+			model.addObject("departments", dm.getDepartments(2));
 			model.addObject("qaManager", qamanager);
 			return model;
 		} catch (NullPointerException e) {
@@ -98,11 +173,11 @@ public class QAManagerController {
 	@RequestMapping("/chart")
 	public ModelAndView chartPage() {
 		ModelAndView mv = new ModelAndView("chart");
-		mv.addObject("numberOfIdeas", rm.NummberOfIdeas());
-		mv.addObject("numberOfContributor", rm.NummberOfContributor());
-		mv.addObject("percentageOfIdeas", rm.PercentageOfIdeas());
-		mv.addObject("ideasWithoutComment", rm.IdeasWithoutComment());
-		mv.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment());
+		mv.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
+		mv.addObject("numberOfContributor", rm.NummberOfContributor(0));
+		mv.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
+		mv.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
+		mv.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
 		return mv;
 	}
 

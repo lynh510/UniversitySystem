@@ -9,6 +9,7 @@ public class AcademicYear {
 	private Date final_date;
 	private int year;
 	private String season;
+	private int status;
 
 	public AcademicYear() {
 		super();
@@ -17,6 +18,25 @@ public class AcademicYear {
 	public AcademicYear(int id) {
 		super();
 		this.id = id;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public AcademicYear(int id, Date start_date, Date end_date, Date final_date, int year, String season, int status) {
+		super();
+		this.id = id;
+		this.start_date = start_date;
+		this.end_date = end_date;
+		this.final_date = final_date;
+		this.year = year;
+		this.season = season;
+		this.status = status;
 	}
 
 	public AcademicYear(int id, Date start_date, Date end_date, Date final_date, int year, String season) {

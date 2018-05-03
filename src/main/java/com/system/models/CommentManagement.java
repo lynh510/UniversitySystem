@@ -70,6 +70,7 @@ public class CommentManagement {
 						c.setPerson(pm.getPerson(rs.getInt("person_id")));
 					} else {
 						Person p = new Person();
+						p.setId(rs.getInt("person_id"));
 						p.setPerson_name("Anonymous");
 						p.setPerson_picture("/image/default_avatar.png");
 						c.setPerson(p);
@@ -94,6 +95,7 @@ public class CommentManagement {
 					c.setComment_id(rs.getInt("comment_id"));
 					if (rs.getInt("mode") == 1) {
 						Person p = new Person();
+						p.setId(rs.getInt("person_id"));
 						p.setPerson_name("Anonymous");
 						p.setPerson_picture("/image/default_avatar.png");
 						c.setPerson(p);
@@ -170,11 +172,6 @@ public class CommentManagement {
 		}
 	}
 
-	public int noOfComments(int idea_id) {
-		int noOfComments = (int) Math.ceil(countCommentsPerIdea(idea_id) * 1.0 / 5);
-		return noOfComments;
-	}
-
 	public Date getServerTime() throws SQLException {
 		Date d = null;
 		Connection connection = DataProcess.getConnection();
@@ -217,6 +214,35 @@ public class CommentManagement {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	public int noOfComments(int idea_id) {
+		int noOfComments = (int) Math.ceil(countCommentsPerIdea(idea_id) * 1.0 / 5);
+		return noOfComments;
+	}
+
+	public void edit_commnent(int comment_id, String comment_text) {
+		String sqlQuery = "update Comment set comment_text = ? where comment_id = ?";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setString(1, comment_text);
+			statement.setInt(2, comment_id);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void delete_comment(int comment_id) {
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement("delete from Comment where comment_id = ?");
+			statement.setInt(1, comment_id);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

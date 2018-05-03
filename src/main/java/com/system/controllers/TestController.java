@@ -2,14 +2,12 @@ package com.system.controllers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.util.List;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.system.entity.Idea;
+import com.system.entity.Person;
+import com.system.models.IdeaManagement;
+import com.system.models.PersonManagement;
 
 @Controller
 public class TestController {
@@ -25,45 +27,39 @@ public class TestController {
 	public ModelAndView firstPage() {
 		return new ModelAndView("redirect:/student/login");
 	}
-	
-	@RequestMapping("/chart.html")
+
+	@RequestMapping("/home")
 	public ModelAndView chartPage() {
-		return new ModelAndView("chart");
-	}
-	
-	@RequestMapping("/navbar.html")
-	public ModelAndView navbarPage() {
-		return new ModelAndView("navbar");
-	}
-	
-	@RequestMapping("/addDepartment.html")
-	public ModelAndView addDepartmentPage() {
-		return new ModelAndView("addDepartment");
-	}
-	
-	@RequestMapping("/departments.html")
-	public ModelAndView departmentPage() {
-		return new ModelAndView("departments");
-	}
-	
-	@RequestMapping("/statistics.html")
-	public ModelAndView statisticPage() {
-		return new ModelAndView("statistic");
-	}
-	
-	@RequestMapping("/admin.html")
-	public ModelAndView adminPage() {
-		return new ModelAndView("manageUser");
-	}
-	
-	@RequestMapping("/addTag.html")
-	public ModelAndView tagPage() {
-		return new ModelAndView("add_category");
-	}
-	
-	@RequestMapping("/listCategory")
-	public ModelAndView Page() {
-		return new ModelAndView("list_category");
+		try {
+			IdeaManagement im = new IdeaManagement();
+			PersonManagement pm = new PersonManagement();
+			ModelAndView model = new ModelAndView("display_idea");
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords(0);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			List<Idea> listIdea = im.MostViewedIdeas(1, recordsPerPage);
+			try {
+				Person p = pm.getUserSession();
+				model.addObject("welcome", p);
+				if (p.getPerson_role() == 1) {
+					model.addObject("navbar", "staff_navbar.jsp");
+				} else {
+					model.addObject("navbar", "student_navbar.jsp");
+				}
+			} catch (NullPointerException e) {
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				p.setPerson_name("Guest");
+				model.addObject("welcome", p);
+				model.addObject("navbar", "navbar.jsp");
+			}
+			model.addObject("ideas", listIdea);
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", 1);
+			return model;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("redirect:/idea/page/1");
+		}
 	}
 
 	@GetMapping("/image/{name:.+}")
@@ -87,23 +83,6 @@ public class TestController {
 			return ResponseEntity.ok().contentType(org.springframework.http.MediaType.IMAGE_JPEG).body(bytes);
 		}
 
-	}
-
-	@RequestMapping("/file/{name:.+}")
-	public ResponseEntity<byte[]> downloadFile(@PathVariable("name") String name) throws IOException {
-		String filename = "/file/" + name + ".jpg";
-		FileInputStream inputImage = new FileInputStream(filename);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		byte[] buffer = new byte[512];
-		int l = inputImage.read(buffer);
-		while (l >= 0) {
-			outputStream.write(buffer, 0, l);
-			l = inputImage.read(buffer);
-		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "image/jpeg");
-		headers.set("Content-Disposition", "attachment; filename=\"" + name + ".jpg\"");
-		return new ResponseEntity<byte[]>(outputStream.toByteArray(), headers, HttpStatus.OK);
 	}
 
 }

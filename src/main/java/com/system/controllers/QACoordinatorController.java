@@ -1,5 +1,8 @@
 package com.system.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -16,12 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.system.ApiResponse;
+import com.system.Helper;
 import com.system.MailApi;
 import com.system.entity.Idea;
 import com.system.entity.Person;
 import com.system.models.AuthorizationManagement;
 import com.system.models.ExternalLoginManagement;
 import com.system.models.IdeaManagement;
+import com.system.models.PersonManagement;
+import com.system.models.QACoordinatorManagement;
 
 @Controller
 @RequestMapping("/qacoordinator")
@@ -30,12 +36,19 @@ public class QACoordinatorController {
 	private ExternalLoginManagement elm;
 	private IdeaManagement im;
 	private MailApi mail;
+	private Helper helper;
+	private QACoordinatorManagement qacm;
+	private PersonManagement pm;
 
 	public QACoordinatorController() {
 		am = new AuthorizationManagement();
 		elm = new ExternalLoginManagement();
 		im = new IdeaManagement();
 		mail = new MailApi();
+		helper = new Helper();
+		qacm = new QACoordinatorManagement();
+		pm = new PersonManagement();
+
 	}
 
 	@RequestMapping("/dashboard")
@@ -57,6 +70,77 @@ public class QACoordinatorController {
 		model.addObject("role", "qacoordinator");
 		model.addObject("displayName", "QA Coordinator");
 		return model;
+	}
+
+	@GetMapping("/edit_account")
+	public ModelAndView edit_profile() {
+		try {
+			Person qaCoor = getQACoordinatorSession();
+			Person p = pm.getPerson(qaCoor.getId());
+			ModelAndView model = new ModelAndView("edit_account");
+			List<Integer> months = new ArrayList<Integer>();
+			List<Integer> days = new ArrayList<Integer>();
+			List<Integer> years = new ArrayList<Integer>();
+			for (int month = 1; month < 13; month++) {
+				months.add(month);
+			}
+			for (int day = 1; day < 32; day++) {
+				days.add(day);
+			}
+			for (int year = 1990; year < 2007; year++) {
+				years.add(year);
+			}
+			String[] str = String.valueOf(p.getBirthdate().toString()).split("-");
+			model.addObject("year_of_user", str[0]);
+			model.addObject("month_of_user", str[1]);
+			model.addObject("day_of_user", str[2]);
+			model.addObject("days", days);
+			model.addObject("months", months);
+			model.addObject("years", years);
+			model.addObject("user_id", helper.encryptID(p.getId() + ""));
+			model.addObject("qaCoordinator", qaCoor);
+			model.addObject("welcome", p);
+			model.addObject("navbar", "qacoordinator_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qacoordinator/login");
+		}
+	}
+
+	@RequestMapping("/change_password")
+	public ModelAndView changePassword() {
+		ModelAndView model = new ModelAndView("edit_password");
+		try {
+			Person qa_coordinator = getQACoordinatorSession();
+			model.addObject("role", "qacoordinator");
+			model.addObject("displayName", "QA Coordinator");
+			model.addObject("user", qa_coordinator);
+			model.addObject("qaCoordinator", qa_coordinator);
+			model.addObject("navbar", "qacoordinator_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qacoordinator/login");
+		}
+	}
+
+	@PostMapping("/change_password")
+	public ResponseEntity<ApiResponse> get_contributions(@RequestParam("old_password") String old_password,
+			@RequestParam("new_password") String new_password,
+			@RequestParam("confirm_password") String confirm_password, @RequestParam("id") String id) {
+		try {
+			if (old_password.equals(new_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"old password and new password can't be the same");
+			} else if (!new_password.equals(confirm_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"new password and confirm password don't match");
+			} else {
+				return new ApiResponse().send(HttpStatus.ACCEPTED,
+						qacm.change_password(helper.decodeID(id), old_password, new_password));
+			}
+		} catch (Exception e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 	}
 
 	@PostMapping("/approve")

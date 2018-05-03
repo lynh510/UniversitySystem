@@ -63,7 +63,7 @@ public class PersonManagement {
 	public List<Person> getPerson() {
 		List<Person> users = new ArrayList<>();
 		try {
-			String sqlQuery = "select * from Person";
+			String sqlQuery = "select * from Person where person_role != 3 and person_role != 4 and person_role != 5 order by person_role";
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			ResultSet rs = statement.executeQuery();
@@ -88,6 +88,7 @@ public class PersonManagement {
 		}
 		return users;
 	}
+
 	public void manageUser(int status, int user_id) {
 		String sql = "update Person set _status = ? where person_id = ?";
 		try {
@@ -100,7 +101,46 @@ public class PersonManagement {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void delete_user(int type, int id) {
+		String sql = "";
+		try {
+			if (type == 0) {
+				sql = "delete from Student where student_id = " + id;
+			} else if (type == 1) {
+				sql = "delete from Staff where staff_id = " + id;
+			}
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void delete_person(int p_id) {
+		String sql = "delete from Person where person_id = " + p_id;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			manageUser(3, p_id);
+		}
+	}
+
+	public void delete_external_login(int id) {
+		String sql = "delete from UserExternalLogin where userid = " + id;
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public boolean edit_account(Person p) {
 		String sqlQuery = "Update person set person_picture = ?, person_name =?, birthdate =?, gender =?, phone_number =?, _address =? where person_id=?";
 		boolean flag = false;
@@ -114,12 +154,11 @@ public class PersonManagement {
 			statement.setString(5, p.getPhone());
 			statement.setString(6, p.getAddress());
 			statement.setInt(7, p.getId());
-			ResultSet rs = statement.executeQuery();
-			if (!rs.next()) {
-				flag = true;
-			}
+			statement.executeUpdate();
+			flag = true;
+
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return flag;
 	}

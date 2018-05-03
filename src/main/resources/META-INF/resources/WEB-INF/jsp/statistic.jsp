@@ -23,6 +23,7 @@
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
+<jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>System Statistics</title>
 <style type="text/css">
 .container {
@@ -55,6 +56,18 @@ body {
 </head>
 <body>
 	<jsp:include page="admin_navbar.jsp"></jsp:include>
+	<div style="margin: auto; margin-top: 10%; width: 70%">
+		<h2>${message}</h2>
+		<select class="form-control" name="forma"
+			onchange="location = this.value;">
+			<option selected="selected" disabled="disabled">Select an
+				academic year</option>
+			<c:forEach items="${academicYear}" var="a">
+				<option value="/admin/statistic/${helper.encryptID(a.id)}">${a.year}-
+					${a.season}</option>
+			</c:forEach>
+		</select>
+	</div>
 	<div id="chart"></div>
 	<jsp:include page="chart.jsp"></jsp:include>
 </body>

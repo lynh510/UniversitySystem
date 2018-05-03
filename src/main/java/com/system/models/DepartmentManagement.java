@@ -36,9 +36,9 @@ public class DepartmentManagement {
 		return departments;
 	}
 
-	public List<Department> getDepartments() {
+	public List<Department> getDepartments(int status) {
 		List<Department> departments = new ArrayList<Department>();
-		String sqlQuery = "Select * from Department where dept_status = 0";
+		String sqlQuery = "Select * from Department where dept_status = " + status;
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -81,6 +81,7 @@ public class DepartmentManagement {
 				d.setId(rs.getInt("dept_id"));
 				d.setDept_name(rs.getString("dept_name"));
 				d.setAcademic_year(aym.get(rs.getInt("academic_year_id")));
+				d.setStatus(rs.getInt("dept_status"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,11 +90,12 @@ public class DepartmentManagement {
 	}
 
 	public boolean check_duplicate_department(Department d) {
-		String sqlQuery = "select * from Department where dept_name = ?";
+		String sqlQuery = "select * from Department where dept_name = ? and academic_year_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, d.getDept_name());
+			statement.setInt(2, d.getAcademic_year().getId());
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				return true;

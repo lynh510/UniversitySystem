@@ -104,6 +104,7 @@ table {
 								<th>Start Date</th>
 								<th>End Date</th>
 								<th>Final Closure</th>
+								<th>Status</th>
 								<th>Year</th>
 								<th>Season</th>
 								<th></th>
@@ -115,22 +116,33 @@ table {
 									<td>${a.start_date}</td>
 									<td>${a.end_date}</td>
 									<td>${a.final_date}</td>
+									<td><c:choose>
+											<c:when test="${a.status  == 0}">Opening</c:when>
+											<c:when test="${a.status  == 1}">Closing</c:when>
+											<c:when test="${a.status  == 2}">Closed</c:when>
+										</c:choose></td>
 									<td>${a.year}</td>
 									<td>${a.season}</td>
 									<td><a
 										href="/admin/view_department/${helper.encryptID(a.id)}">View
 											Departments</a></td>
-									<td><a
-										href="/admin/edit_academic_year/${helper.encryptID(a.id)}">Edit</a>
-									</td>
+									<td><c:choose>
+											<c:when test="${a.status  != 2}">
+												<a
+													href="/admin/edit_academic_year/${helper.encryptID(a.id)}">Edit</a>
+											</c:when>
+										</c:choose></td>
 
-									<td>
-										<form id="delete-form-${a.id}"
-											action="/admin/removeAcademicYear" method="post">
-											<input type="hidden" name="id"
-												value="${helper.encryptID(a.id)}">
-										</form> <a onclick="onDelete(${a.id})">Delete</a>
-									</td>
+									<td><c:choose>
+											<c:when test="${a.status  == 0}">
+												<form id="delete-form-${a.id}"
+													action="/admin/removeAcademicYear" method="post">
+													<input type="hidden" name="id"
+														value="${helper.encryptID(a.id)}">
+												</form>
+												<a onclick="onDelete(${a.id})">Delete</a>
+											</c:when>
+										</c:choose></td>
 								</tr>
 							</tbody>
 						</c:forEach>

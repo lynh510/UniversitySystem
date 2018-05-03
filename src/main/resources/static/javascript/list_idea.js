@@ -119,20 +119,34 @@ function onComment(idea_id) {
 					var boxComments = document.getElementById("box_comments"
 							+ idea_id);
 					var date = new Date();
+					var data = response.data;
 					boxComments
 							.insertAdjacentHTML(
 									'beforeend',
-									'<div class="comment"><img src="'
-											+ response.data.person.person_picture
+									'<div class="comment" id="comment_row_'
+											+ data.comment_id
+											+ '"><img src="'
+											+ data.person.person_picture
 											+ '" alt="" /> '
 											+ '<div class="content">'
-											+ '<h3><a href="">'
-											+ response.data.person.person_name
+											+ '<h3><a href="#">'
+											+ data.person.person_name
 											+ '</a><span> <time>'
-											+ moment.utc(date).fromNow()
-											+ '</time><a href="#"> Like</a></span></h3><p>'
-											+ response.data.comment_text
-											+ '</p></div></div>');
+											+ moment(date).fromNow()
+											+ '</time><a href="#"> Like</a></span></h3><p id = "comment_text_'
+											+ data.comment_id
+											+ '">'
+											+ data.comment_text
+											+ '</p><span style="float: right"><a onclick="edit('
+											+ idea_id
+											+ ','
+											+ data.comment_id
+											+ ')">Edit</a>'
+											+ '| <a onclick="onDelete('
+											+ data.comment_id
+											+ ','
+											+ idea_id
+											+ ')">Delete</a></span></div></div>');
 
 					$('#commentText' + idea_id).val('');
 					$('#comment-count-' + idea_id).load(
@@ -160,7 +174,7 @@ function onViewComments(idea_id) {
 					data : null,
 					success : function(response) {
 						boxComments.innerHTML = "";
-						showComments(response.data, idea_id);
+						showComments(response, idea_id);
 						if (noOfComments.value > 0) {
 							noOfComments.value = noOfComments.value - 1;
 							moreComments.style = "";
@@ -177,29 +191,68 @@ function onViewComments(idea_id) {
 
 	}
 }
-function showComments(data, idea_id) {
+function showComments(response, idea_id) {
 	var boxComments = document.getElementById("box_comments" + idea_id);
 	var list = "";
+	var data = response.data;
 	for (i = 0; i < data.length; i++) {
 		var date = new Date(data[i].comment_time);
-		if(data[i].mode == 0){
-			list += '<div class="comment"><img src="'
-				+ data[i].person.person_picture + '" alt="" /> '
-				+ '<div class="content">' + '<h3><a href="">'
-				+ data[i].person.person_name + '</a><span> <time>'
-				+ moment(date).fromNow()
-				+ '</time><a href="#"> Like</a></span></h3><p>'
-				+ data[i].comment_text + '</p></div></div>';
-		}else{
-			list += '<div class="comment"><img src="'
-				+ data[i].person.person_picture + '" alt="" /> '
-				+ '<div class="content">' + '<h3>'
-				+ data[i].person.person_name + '<span> <time>'
-				+ moment(date).fromNow()
-				+ '</time><a href="#"> Like</a></span></h3><p>'
-				+ data[i].comment_text + '</p></div></div>';
+		if (data[i].mode == 0) {
+			if (response.message == data[i].person.id) {
+				list += '<div class="comment" id="comment_row_'
+						+ data[i].comment_id
+						+ '"><img src="'
+						+ data[i].person.person_picture
+						+ '" alt="" /> '
+						+ '<div class="content">'
+						+ '<h3><a href="#">'
+						+ data[i].person.person_name
+						+ '</a><span> <time>'
+						+ moment(date).fromNow()
+						+ '</time><a href="#"> Like</a></span></h3><p id = "comment_text_'
+						+ data[i].comment_id + '">' + data[i].comment_text
+						+ '</p><span style="float: right"><a onclick="edit('
+						+ idea_id + ',' + data[i].comment_id + ')">Edit</a>'
+						+ '| <a onclick="onDelete(' + data[i].comment_id + ','
+						+ idea_id + ')">Delete</a></span></div></div>';
+			} else {
+				list += '<div class="comment"><img src="'
+						+ data[i].person.person_picture + '" alt="" /> '
+						+ '<div class="content">' + '<h3><a href="">'
+						+ data[i].person.person_name + '</a><span> <time>'
+						+ moment(date).fromNow()
+						+ '</time><a href="#"> Like</a></span></h3><p>'
+						+ data[i].comment_text + '</p></div></div>';
+			}
+		} else {
+			if (response.message == data[i].person.id) {
+				list += '<div class="comment" id="comment_row_'
+						+ data[i].comment_id
+						+ '"><img src="'
+						+ data[i].person.person_picture
+						+ '" alt="" /> '
+						+ '<div class="content">'
+						+ '<h3>'
+						+ data[i].person.person_name
+						+ '<span> <time>'
+						+ moment(date).fromNow()
+						+ '</time><a href="#"> Like</a></span></h3><p id = "comment_text_'
+						+ data[i].comment_id + '">' + data[i].comment_text
+						+ '</p><span style="float: right"><a onclick="edit('
+						+ idea_id + ',' + data[i].comment_id + ')">Edit</a>'
+						+ '| <a onclick="onDelete(' + data[i].comment_id + ','
+						+ idea_id + ')">Delete</a></span></div></div>';
+			} else {
+				list += '<div class="comment"><img src="'
+						+ data[i].person.person_picture + '" alt="" /> '
+						+ '<div class="content">' + '<h3>'
+						+ data[i].person.person_name + '<span> <time>'
+						+ moment(date).fromNow()
+						+ '</time><a href="#"> Like</a></span></h3><p>'
+						+ data[i].comment_text + '</p></div></div>';
+			}
 		}
-	
+
 	}
 	boxComments.insertAdjacentHTML('afterbegin', list);
 
@@ -231,6 +284,7 @@ function onLoadMoreComments(idea_id) {
 		moreComments.style = "";
 	}
 }
+
 function onView(idea_id) {
 	$.ajax({
 		type : "get",
@@ -243,4 +297,51 @@ function onView(idea_id) {
 
 		}
 	});
+}
+
+function onEdit(idea_id, comment_id) {
+	$.ajax({
+		type : "post",
+		url : "/comment/edit/",
+		data : $("#comment_form_" + idea_id).serialize(),
+		success : function(response) {
+			$('#comment_text_' + comment_id).text(
+					$("#comment_form_" + idea_id + " textarea[name=text]")
+							.val());
+		},
+		error : function(xhr, response, error) {
+
+		}
+	});
+}
+
+function onDelete(comment_id, idea_id) {
+	$.ajax({
+		type : "get",
+		url : "/comment/delete/" + comment_id,
+		data : null,
+		success : function(response) {
+			$("#comment_row_" + comment_id).remove();
+			$('#comment-count-' + idea_id).load(' #comment-count-' + idea_id);
+		},
+		error : function(xhr, response, error) {
+
+		}
+	});
+}
+
+function edit(idea_id, comment_id) {
+	$("#comment_form_" + idea_id + " textarea[name=text]").val(
+			$('#comment_text_' + comment_id).text());
+	$('a#post_comment_btn_' + idea_id).text('Edit comment');
+	$('a#post_comment_btn_' + idea_id).attr("onclick",
+			'onEdit(' + idea_id + ',' + comment_id + ')');
+	$('#hidden_comment_' + idea_id).val(comment_id);
+}
+
+function cancel(idea_id) {
+	$('a#post_comment_btn_' + idea_id).text('Post comment');
+	$('a#post_comment_btn_' + idea_id).attr("onclick",
+			'onComment(' + idea_id + ')');
+	$('#hidden_comment_' + idea_id).val(0);
 }

@@ -16,13 +16,7 @@ public class AuthorizationManagement {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, username);
 			statement.setString(2, password);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				p.setId(rs.getInt("person_id"));
-				p.setPerson_picture(rs.getString("person_picture"));
-				p.setPerson_name(rs.getString("person_name"));
-				p.setPerson_role(rs.getInt("person_role"));
-			}
+			p = getPerson(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -37,13 +31,7 @@ public class AuthorizationManagement {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, username);
 			statement.setString(2, password);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				p.setId(rs.getInt("person_id"));
-				p.setPerson_picture(rs.getString("person_picture"));
-				p.setPerson_name(rs.getString("person_name"));
-				p.setPerson_role(rs.getInt("person_role"));
-			}
+			p = getPerson(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -58,13 +46,7 @@ public class AuthorizationManagement {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, username);
 			statement.setString(2, password);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				p.setId(rs.getInt("person_id"));
-				p.setPerson_picture(rs.getString("person_picture"));
-				p.setPerson_name(rs.getString("person_name"));
-				p.setPerson_role(rs.getInt("person_role"));
-			}
+			p = getPerson(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -79,16 +61,28 @@ public class AuthorizationManagement {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			statement.setString(1, username);
 			statement.setString(2, password);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				p.setId(rs.getInt("person_id"));
-				p.setPerson_picture(rs.getString("person_picture"));
-				p.setPerson_name(rs.getString("person_name"));
-				p.setPerson_role(rs.getInt("person_role"));
-			}
+			p = getPerson(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return p;
 	}
+
+	private Person getPerson(PreparedStatement statement) throws SQLException {
+		Person p = new Person();
+		ResultSet rs = statement.executeQuery();
+		if (rs.next()) {
+			p.setId(rs.getInt("person_id"));
+			p.setPerson_picture(rs.getString("person_picture"));
+			p.setPerson_name(rs.getString("person_name"));
+			p.setPerson_role(rs.getInt("person_role"));
+			p.setBirthdate(rs.getDate("birthdate"));
+			p.setGender(rs.getInt("gender"));
+			p.setPhone(rs.getString("phone_number"));
+			p.setAddress(rs.getString("_address"));
+			p.setEmail(rs.getString("email"));
+		}
+		return p;
+	}
+
 }

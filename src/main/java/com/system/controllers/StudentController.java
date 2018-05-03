@@ -1,15 +1,6 @@
 package com.system.controllers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,11 +31,13 @@ public class StudentController {
 	private PersonManagement pm;
 	private TagManagement tm;
 	private Helper helper;
+	private StudentManagement sm;
 
 	public StudentController() {
 		pm = new PersonManagement();
 		tm = new TagManagement();
 		helper = new Helper();
+		sm = new StudentManagement();
 	}
 
 	// http://localhost:8080/student/login
@@ -85,7 +76,7 @@ public class StudentController {
 	@PostMapping("/login")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> check_login(@RequestParam("user_name") String user_name,
-			@RequestParam("password") String password,ModelAndView model) {
+			@RequestParam("password") String password, ModelAndView model) {
 		StudentManagement sm = new StudentManagement();
 		Student s = new Student();
 		s.setUsername(user_name);
@@ -94,6 +85,9 @@ public class StudentController {
 		if (user_name.isEmpty() && password.isEmpty()) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "You have to input data");
 		} else if (p.getId() != 0) {
+			if (p.getStatus() == 1) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Your account is not active yet!");
+			}
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 					.getRequest();
 			HttpSession session = request.getSession(true);
@@ -116,6 +110,9 @@ public class StudentController {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
 						"Your account doesn't exist, contact administrator for more technical supports");
 			} else {
+				if (p.getStatus() == 1) {
+					return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Your account is not active yet!");
+				}
 				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 						.getRequest();
 				HttpSession session = request.getSession(true);
@@ -147,49 +144,68 @@ public class StudentController {
 	public ModelAndView activities(@PathVariable(value = "person_id") String person_id,
 			@PathVariable("numberOfPage") String page) {
 		ModelAndView model = new ModelAndView("student_wall");
-		int user_id = helper.decodeID(person_id);
 		try {
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
-			HttpSession session = request.getSession(false);
-			if (session.getAttribute("user") != null) {
-				Person p = (Person) session.getAttribute("user");
-				IdeaManagement im = new IdeaManagement();
-				int currentPage = Integer.parseInt(page);
-				int recordsPerPage = 5;
-				int noOfRecords = im.noOfRecords(user_id);
-				int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-				model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage, user_id));
-				model.addObject("noOfPages", noOfPages);
-				model.addObject("currentPage", currentPage);
-				model.addObject("welcom", p);
-			} else {
-				model = new ModelAndView("redirect:/student/login");
-			}
+			int user_id = helper.decodeID(person_id);
+			Person p = pm.getUserSession();
+			IdeaManagement im = new IdeaManagement();
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.noOfRecords(user_id);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			model.addObject("ideas", im.getIdeasPerPageByPersonal(currentPage, recordsPerPage, user_id));
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
+			model.addObject("welcome", p);
+
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/student/login");
+		} catch (Exception e) {
+			model = new ModelAndView("redirect:/student/login");
 		}
-
 		return model;
 	}
 
 	@PostMapping("/edit")
 	public ModelAndView edit_idea(@RequestParam("idea_id") int idea_id, @RequestParam("person_id") int person_id,
-			@RequestParam("title") String title, @RequestParam("content") String content) {
-		ModelAndView model = new ModelAndView("redirect:/student/activities/" + person_id + "/1");
-		IdeaManagement im = new IdeaManagement();
-		Idea idea = new Idea(idea_id, title, content);
-		im.eidt_idea(idea);
-		return model;
+			@RequestParam("title") String title, @RequestParam("content") String content,
+			@RequestParam("current_page") int currentPage, @RequestParam("action") int action) {
+		try {
+			ModelAndView model = null;
+			if (action == 0) {
+				model = new ModelAndView(
+						"redirect:/student/activities/" + helper.encryptID(person_id + "") + "/" + currentPage);
+			} else {
+				model = new ModelAndView("redirect:/idea/page/" + currentPage);
+			}
+			IdeaManagement im = new IdeaManagement();
+			Idea idea = new Idea(idea_id, title, content);
+			im.eidt_idea(idea);
+			return model;
+		} catch (Exception e) {
+			return new ModelAndView("redirect:/student/login");
+		}
+
 	}
 
-	@RequestMapping("/delete/{person_id}/{idea_id}")
-	public ModelAndView delete_idea(@PathVariable(value = "idea_id") int id,
-			@PathVariable(value = "person_id") int person_id) {
-		ModelAndView model = new ModelAndView("redirect:/student/activities/" + person_id + "/1");
-		IdeaManagement im = new IdeaManagement();
-		im.delete_idea(id);
-		return model;
+	@RequestMapping("/delete/{action}/{person_id}/{idea_id}/{currentPage}")
+	public ModelAndView delete_idea(@PathVariable(value = "action") int action,
+			@PathVariable(value = "idea_id") String id, @PathVariable(value = "person_id") String person_id,
+			@PathVariable(value = "currentPage") int currentPage) {
+		try {
+			ModelAndView model = new ModelAndView();
+			if (action == 0) {
+				model = new ModelAndView(
+						"redirect:/student/activities/" + helper.encryptID(person_id + "") + "/" + currentPage);
+			} else {
+				model = new ModelAndView("redirect:/idea/page/" + currentPage);
+			}
+			IdeaManagement im = new IdeaManagement();
+			im.delete_idea(helper.decodeID(id));
+			return model;
+		} catch (Exception e) {
+			return new ModelAndView("redirect:/student/login");
+		}
+
 	}
 
 	// http://localhost:8080/student/edit_account
@@ -224,15 +240,51 @@ public class StudentController {
 				model.addObject("months", months);
 				model.addObject("years", years);
 				model.addObject("user_id", helper.encryptID(p.getId() + ""));
-				model.addObject("welcom", p2);
+				model.addObject("navbar", "student_navbar.jsp");
+				model.addObject("welcome", p2);
 			} else {
 				model = new ModelAndView("redirect:/student/login");
-			} 
+			}
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/student/login");
 		}
 		return model;
 	}
 
-	
+	@RequestMapping("/change_password")
+	public ModelAndView changePassword() {
+		ModelAndView model = new ModelAndView("edit_password");
+		try {
+			Person student = pm.getUserSession();
+			model.addObject("role", "student");
+			model.addObject("displayName", "student");
+			model.addObject("user", student);
+			model.addObject("welcome", student);
+			model.addObject("navbar", "student_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/staff/login");
+		}
+	}
+
+	@PostMapping("/change_password")
+	public ResponseEntity<ApiResponse> get_contributions(@RequestParam("old_password") String old_password,
+			@RequestParam("new_password") String new_password,
+			@RequestParam("confirm_password") String confirm_password, @RequestParam("id") String id) {
+		try {
+			if (old_password.equals(new_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"old password and new password can't be the same");
+			} else if (!new_password.equals(confirm_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"new password and confirm password don't match");
+			} else {
+				return new ApiResponse().send(HttpStatus.ACCEPTED,
+						sm.change_password(helper.decodeID(id), old_password, new_password));
+			}
+		} catch (Exception e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+
 }

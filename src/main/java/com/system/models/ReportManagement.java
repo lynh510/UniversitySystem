@@ -15,9 +15,9 @@ public class ReportManagement {
 
 	}
 
-	public String NummberOfIdeas() {
+	public String NummberOfIdeas(int academic_year) {
 		String value = "[";
-		for (Entry<Department, Integer> entry : NumberOfIdeas().entrySet()) {
+		for (Entry<Department, Integer> entry : NumberOfIdeas(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
 			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
@@ -26,9 +26,9 @@ public class ReportManagement {
 		return value + "]";
 	}
 
-	public String NummberOfContributor() {
+	public String NummberOfContributor(int academic_year) {
 		String value = "[";
-		for (Entry<Department, Integer> entry : numberOfContributor().entrySet()) {
+		for (Entry<Department, Integer> entry : numberOfContributor(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
 			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
@@ -37,9 +37,9 @@ public class ReportManagement {
 		return value + "]";
 	}
 
-	public String PercentageOfIdeas() {
+	public String PercentageOfIdeas(int academic_year) {
 		String value = "[";
-		for (Entry<Department, Float> entry : percentageOfIdeas().entrySet()) {
+		for (Entry<Department, Float> entry : percentageOfIdeas(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Float i = entry.getValue();
 			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
@@ -48,9 +48,9 @@ public class ReportManagement {
 		return value + "]";
 	}
 
-	public String IdeasWithoutComment() {
+	public String IdeasWithoutComment(int academic_year) {
 		String value = "[";
-		for (Entry<Department, Integer> entry : ideaWithoutComment().entrySet()) {
+		for (Entry<Department, Integer> entry : ideaWithoutComment(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
 			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
@@ -59,9 +59,9 @@ public class ReportManagement {
 		return value + "]";
 	}
 
-	public String anonymousIdeaAndComment() {
+	public String anonymousIdeaAndComment(int academic_year) {
 		String value = "[";
-		for (Entry<Department, Integer[]> entry : numberOfAnonymousIdeaAndComment().entrySet()) {
+		for (Entry<Department, Integer[]> entry : numberOfAnonymousIdeaAndComment(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer ideas = entry.getValue()[0];
 			Integer comments = entry.getValue()[1];
@@ -70,9 +70,15 @@ public class ReportManagement {
 		return value + "]";
 	}
 
-	public HashMap<Department, Integer> NumberOfIdeas() {
+	public HashMap<Department, Integer> NumberOfIdeas(int academic_id) {
 		HashMap<Department, Integer> numberOfIdea = new HashMap<>();
-		String sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea_tag i join Tag t on i.tag_id = t.tag_id where t.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+		String sqlQuery = "";
+		if (academic_id == 0) {
+			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+		} else {
+			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d where academic_year_id = "
+					+ academic_id;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -88,12 +94,17 @@ public class ReportManagement {
 		return numberOfIdea;
 	}
 
-	public HashMap<Department, Float> percentageOfIdeas() {
+	public HashMap<Department, Float> percentageOfIdeas(int academic_year) {
 		HashMap<Department, Float> percentageOfIdeas = new HashMap<>();
-		int totalOfIdea = countIdeas();
-		String sqlQuery = "select d.dept_name, "
-				+ "(select count(*) from (select distinct i.idea_id, d.dept_id from Idea_tag i join Tag t on i.tag_id = t.tag_id where t.dept_id = d.dept_id) as _counter) as _counter  "
-				+ "from Department d ";
+		int totalOfIdea = countIdeas(academic_year);
+		String sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+		if (academic_year == 0) {
+			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+
+		} else {
+			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d where academic_year_id = "
+					+ academic_year;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -110,9 +121,15 @@ public class ReportManagement {
 		return percentageOfIdeas;
 	}
 
-	private int countIdeas() {
+	private int countIdeas(int academic_year) {
 		int count = 0;
-		String sqlQuery = "select count(*) from Idea where _status = 1";
+		String sqlQuery = "";
+		if (academic_year == 0) {
+			sqlQuery = "select count(*) from Idea where _status = 1";
+		} else {
+			sqlQuery = "select count(*) from Idea i join Person p on p.person_id = i.person_id join Department d on d.dept_id = p.dept_id join AcademicYear ay on ay.academic_year_id = d.academic_year_id where ay.academic_year_id = "
+					+ academic_year;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -126,9 +143,15 @@ public class ReportManagement {
 		return count;
 	}
 
-	public HashMap<Department, Integer> ideaWithoutComment() {
+	public HashMap<Department, Integer> ideaWithoutComment(int academic_year) {
 		HashMap<Department, Integer> ideaWithoutComment = new HashMap<>();
-		String sqlQuery = "select d.dept_name,  (select count(*) from (select distinct i.idea_id,d.dept_id,(select count(*) from Comment where idea_id = i.idea_id) as CommentCount from Idea_tag i join Tag t on i.tag_id = t.tag_id  where  t.dept_id = d.dept_id) as _counter) as _counter from Department d";
+		String sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d";
+		if (academic_year == 0) {
+			sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d";
+		} else {
+			sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d where academic_year_id = "
+					+ academic_year;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -144,9 +167,15 @@ public class ReportManagement {
 		return ideaWithoutComment;
 	}
 
-	public HashMap<Department, Integer> numberOfContributor() {
+	public HashMap<Department, Integer> numberOfContributor(int academic_year) {
 		HashMap<Department, Integer> NumberOfContributer = new HashMap<>();
 		String sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d";
+		if (academic_year == 0) {
+			sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d";
+		} else {
+			sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d where academic_year_id = "
+					+ academic_year;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -162,9 +191,15 @@ public class ReportManagement {
 		return NumberOfContributer;
 	}
 
-	public HashMap<Department, Integer[]> numberOfAnonymousIdeaAndComment() {
+	public HashMap<Department, Integer[]> numberOfAnonymousIdeaAndComment(int academic_year) {
 		HashMap<Department, Integer[]> NumberOfAnonymousIdeaAndComment = new HashMap<>();
-		String sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 0 and p.dept_id = d.dept_id) as comment_counter from Department d";
+		String sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d";
+		if (academic_year == 0) {
+			sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d";
+		} else {
+			sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d where academic_year_id = "
+					+ academic_year;
+		}
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

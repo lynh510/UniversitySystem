@@ -3,6 +3,7 @@ package com.system.models;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.system.entity.ExternalUser;
 import com.system.entity.Person;
@@ -10,12 +11,11 @@ import com.system.entity.Staff;
 
 public class StaffManagement {
 	private ExternalLoginManagement elm;
-	
 
 	public StaffManagement() {
 		elm = new ExternalLoginManagement();
 	}
-	
+
 	// returns string message from database,
 	public String staffRegistration(Staff s) {
 		String insertSQuery = "DECLARE @responseMessage NVARCHAR(250);\r\n"
@@ -25,15 +25,15 @@ public class StaffManagement {
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(insertSQuery);
-			int person_id = insert_person(s.getStaff_id());
-			statement.setInt(1, person_id);
+			// int person_id = insert_person(s.getStaff_id());
+			statement.setInt(1, s.getStaff_id().getId());
 			statement.setString(2, s.getUsername());
 			statement.setString(3, s.getStaff_password());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				message = resultSet.getString(1);
 			}
-			ExternalUser eu = new ExternalUser(person_id, s.getStaff_id().getEmail());
+			ExternalUser eu = new ExternalUser(s.getStaff_id().getId(), s.getStaff_id().getEmail());
 			elm.insert_external_user(eu);
 			return message;
 		} catch (Exception e) {
@@ -41,9 +41,10 @@ public class StaffManagement {
 			return message;
 		}
 	}
-	
+
 	public int insert_person(Person p) {
-		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,null);" + " SELECT SCOPE_IDENTITY()";
+		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,null);"
+				+ " SELECT SCOPE_IDENTITY()";
 		int pid = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -76,7 +77,7 @@ public class StaffManagement {
 	public boolean isEmailExist(String email) {
 		return checkExisten(email, "Person", "email");
 	}
-	
+
 	private boolean checkExisten(String param, String entity, String condition) {
 		boolean flag = false;
 		try {
@@ -92,5 +93,26 @@ public class StaffManagement {
 			e.printStackTrace();
 		}
 		return flag;
+	}
+
+	public String change_password(int qa_id, String old_password, String new_password) {
+		String message = "";
+		String sqlQuery = "DECLARE @responseMessage NVARCHAR(250);\r\n"
+				+ "exec change_password_staff ?,?,?, @responseMessage output;\r\n"
+				+ "select @responseMessage as N'@responseMessage'";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, qa_id);
+			statement.setString(2, old_password);
+			statement.setString(3, new_password);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				message = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return message;
 	}
 }

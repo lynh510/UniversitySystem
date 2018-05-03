@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +34,7 @@ import com.system.Helper;
 import com.system.MailApi;
 import com.system.entity.*;
 import com.system.models.AcademicYearManagement;
+import com.system.models.AdminManagement;
 import com.system.models.AuthorizationManagement;
 import com.system.models.DepartmentManagement;
 import com.system.models.PersonManagement;
@@ -51,6 +51,7 @@ public class AdminController {
 	private PersonManagement pm;
 	private Helper helper;
 	private ReportManagement rm;
+	private AdminManagement adminmanager;
 
 	public AdminController() {
 		am = new AuthorizationManagement();
@@ -59,6 +60,7 @@ public class AdminController {
 		pm = new PersonManagement();
 		helper = new Helper();
 		rm = new ReportManagement();
+		adminmanager = new AdminManagement();
 	}
 
 	@GetMapping("/view_department/{academic_year}")
@@ -195,10 +197,11 @@ public class AdminController {
 
 	@GetMapping("/edit_academic_year/{academic_year}")
 	public ModelAndView edit_academic_year(@PathVariable("academic_year") String academicYear) {
-		getAdminSession();
 		try {
+			Person admin = getAdminSession();
 			AcademicYear ay = aym.get(helper.decodeID(academicYear));
 			ModelAndView model = new ModelAndView("add_academicYear");
+			model.addObject("admin", admin);
 			model.addObject("academicYear", ay);
 			model.addObject("action", "edit");
 			return model;
@@ -250,6 +253,43 @@ public class AdminController {
 
 	}
 
+	@RequestMapping("/change_password")
+	public ModelAndView changePassword() {
+		ModelAndView model = new ModelAndView("edit_password");
+		try {
+			Person admin = getAdminSession();
+			model.addObject("role", "admin");
+			model.addObject("displayName", "admin");
+			model.addObject("user", admin);
+			model.addObject("welcome", admin);
+			model.addObject("admin", admin);
+			model.addObject("navbar", "admin_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+	}
+
+	@PostMapping("/change_password")
+	public ResponseEntity<ApiResponse> get_contributions(@RequestParam("old_password") String old_password,
+			@RequestParam("new_password") String new_password,
+			@RequestParam("confirm_password") String confirm_password, @RequestParam("id") String id) {
+		try {
+			if (old_password.equals(new_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"old password and new password can't be the same");
+			} else if (!new_password.equals(confirm_password)) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"new password and confirm password don't match");
+			} else {
+				return new ApiResponse().send(HttpStatus.ACCEPTED,
+						adminmanager.change_password(helper.decodeID(id), old_password, new_password));
+			}
+		} catch (Exception e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+
 	@GetMapping("/logout")
 	public ModelAndView logout() {
 		ModelAndView model = new ModelAndView("redirect:/admin/login");
@@ -270,11 +310,34 @@ public class AdminController {
 			Person admin = getAdminSession();
 			ModelAndView model = new ModelAndView("statistic");
 			model.addObject("admin", admin);
-			model.addObject("numberOfIdeas", rm.NummberOfIdeas());
-			model.addObject("numberOfContributor", rm.NummberOfContributor());
-			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas());
-			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment());
-			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment());
+			model.addObject("message", "Statistical report of the whole system");
+			model.addObject("academicYear", aym.getAcademicYear());
+			model.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
+			model.addObject("numberOfContributor", rm.NummberOfContributor(0));
+			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
+			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
+			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+	}
+
+	@GetMapping("/statistic/{year_id}")
+	public ModelAndView statistic_by_academicYear(@PathVariable("year_id") String year_id) {
+		try {
+			Person admin = getAdminSession();
+			ModelAndView model = new ModelAndView("statistic");
+			int academic_year = helper.decodeID(year_id);
+			AcademicYear ay = aym.get(academic_year);
+			model.addObject("admin", admin);
+			model.addObject("message", "Academic year: " + ay.getSeason() + " - " + ay.getYear());
+			model.addObject("academicYear", aym.getAcademicYear());
+			model.addObject("numberOfIdeas", rm.NummberOfIdeas(academic_year));
+			model.addObject("numberOfContributor", rm.NummberOfContributor(academic_year));
+			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas(academic_year));
+			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment(academic_year));
+			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(academic_year));
 			return model;
 		} catch (NullPointerException e) {
 			return new ModelAndView("redirect:/admin/login");
@@ -292,7 +355,88 @@ public class AdminController {
 		} catch (NullPointerException e) {
 			return new ModelAndView("redirect:/admin/login");
 		}
+	}
 
+	@GetMapping("/delete/{role}/{person_id}")
+	public ModelAndView delete(@PathVariable("role") int role, @PathVariable("person_id") String person_id) {
+		try {
+			Person admin = getAdminSession();
+			ModelAndView model = new ModelAndView("redirect:/admin/manage_user");
+			int p_id = helper.decodeID(person_id);
+			pm.delete_external_login(p_id);
+			pm.delete_user(role, p_id);
+			pm.delete_person(p_id);
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+	}
+
+	@GetMapping("/active/{role}/{person_id}")
+	public ModelAndView active(@PathVariable("role") int role, @PathVariable("person_id") String person_id) {
+		try {
+			Person admin = getAdminSession();
+			ModelAndView model = new ModelAndView("redirect:/admin/manage_user");
+			int p_id = helper.decodeID(person_id);
+			pm.manageUser(0, p_id);
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+	}
+
+	@GetMapping("/resend_active/{role}/{person_id}")
+	public ModelAndView resendActivationMail(@PathVariable("role") int role,
+			@PathVariable("person_id") String person_id, HttpServletRequest request) {
+		try {
+			Person admin = getAdminSession();
+			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+					request.getServerPort());
+			ModelAndView model = new ModelAndView("redirect:/admin/manage_user");
+			int p_id = helper.decodeID(person_id);
+			Person p = pm.getPerson(p_id);
+			MailApi mail = new MailApi();
+			mail.sendHtmlEmail(p.getEmail(), "University Activation", "Please <a href=\"" + baseUrl + "account/active/"
+					+ role + "/" + person_id + "\">click here</a> to active your account ");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
+	}
+
+	@GetMapping("/edit_account")
+	public ModelAndView edit_profile() {
+		try {
+			Person admin = getAdminSession();
+			Person p = pm.getPerson(admin.getId());
+			ModelAndView model = new ModelAndView("edit_account");
+			List<Integer> months = new ArrayList<Integer>();
+			List<Integer> days = new ArrayList<Integer>();
+			List<Integer> years = new ArrayList<Integer>();
+			for (int month = 1; month < 13; month++) {
+				months.add(month);
+			}
+			for (int day = 1; day < 32; day++) {
+				days.add(day);
+			}
+			for (int year = 1990; year < 2007; year++) {
+				years.add(year);
+			}
+			String[] str = String.valueOf(p.getBirthdate().toString()).split("-");
+			model.addObject("year_of_user", str[0]);
+			model.addObject("month_of_user", str[1]);
+			model.addObject("day_of_user", str[2]);
+			model.addObject("days", days);
+			model.addObject("months", months);
+			model.addObject("years", years);
+			model.addObject("user_id", helper.encryptID(p.getId() + ""));
+			model.addObject("admin", admin);
+			model.addObject("welcome", p);
+			model.addObject("navbar", "admin_navbar.jsp");
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/admin/login");
+		}
 	}
 
 	@GetMapping("/addAccounts")
@@ -304,7 +448,7 @@ public class AdminController {
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();
 			List<Integer> years = new ArrayList<Integer>();
-			List<Department> listDeparment = dm.getDepartments();
+			List<Department> listDeparment = dm.getDepartments(0);
 			for (int month = 1; month < 13; month++) {
 				months.add(month);
 			}
@@ -318,7 +462,7 @@ public class AdminController {
 			model.addObject("months", months);
 			model.addObject("years", years);
 			model.addObject("deparments", listDeparment);
-			//model.addObject("admin", admin);
+			// model.addObject("admin", admin);
 			return model;
 		} catch (NullPointerException e) {
 			return new ModelAndView("redirect:/admin/login");
@@ -334,8 +478,11 @@ public class AdminController {
 			@RequestParam("day") String day, @RequestParam("month") String month, @RequestParam("year") String year,
 			@RequestParam("gender") int gender, @RequestParam("profilepic") MultipartFile profilepic,
 			@RequestParam("phone") String phone, @RequestParam("userrole") int userrole,
-			@RequestParam("address") String address, @RequestParam("deparment") int deparment_id, Model model) {
+			@RequestParam("address") String address, @RequestParam("deparment") int deparment_id,
+			HttpServletRequest request) {
 		try {
+			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
+					request.getServerPort());
 			StudentManagement sm = new StudentManagement();
 			StaffManagement staff_m = new StaffManagement();
 			if (userrole == 0) {
@@ -355,12 +502,14 @@ public class AdminController {
 					java.sql.Date birthday = new java.sql.Date(date.getTime());
 					Person p = null;
 					Department dp = new Department(deparment_id);
-					p = new Person("", full_name, userrole, birthday, gender, 0, phone, address, email, "", dp);
+					p = new Person("", full_name, userrole, birthday, gender, 1, phone, address, email, "", dp);
 					if (profilepic.isEmpty()) {
 						p.setPerson_picture("default_avatar.png");
 					} else {
 						p.setPerson_picture(c.getTimeInMillis() + ".png");
 					}
+					int person_id = sm.insert_person(p);
+					p.setId(person_id);
 					Student s = new Student(p, user_name, password);
 					if (sm.studentRegistration(s).equalsIgnoreCase("Success")) {
 						if (!profilepic.isEmpty()) {
@@ -368,9 +517,11 @@ public class AdminController {
 						}
 						MailApi m = new MailApi();
 						m.sendHtmlEmail(email, "Your account",
-								"Your account to use the system: \n Username:" + "<b>" + user_name + "</b>"
-										+ "\n Password: " + "<b>" + password + "</b>"
-										+ "\n This is an automatic email, Please do not reply");
+								"Your account to use the system: <br/> Username:" + "<b>" + user_name + "</b>"
+										+ "<br/> Password: " + "<b>" + password + "</b>" + "<br/> Please <a href=\""
+										+ baseUrl + "account/active/" + userrole + "/"
+										+ helper.encryptID(person_id + "") + "\">click here</a> to active your account "
+										+ "<br/> This is an automatic email, Please do not reply");
 						return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
 					} else {
 						return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Error in system");
@@ -392,12 +543,14 @@ public class AdminController {
 					java.util.Date date = simple_date.parse(format_date);
 					java.sql.Date birthday = new java.sql.Date(date.getTime());
 					Person p = null;
-					p = new Person("", full_name, userrole, birthday, gender, 0, phone, address, email, "", null);
+					p = new Person("", full_name, userrole, birthday, gender, 1, phone, address, email, "", null);
 					if (profilepic.isEmpty()) {
 						p.setPerson_picture("default_avatar.png");
 					} else {
 						p.setPerson_picture(c.getTimeInMillis() + ".png");
 					}
+					int person_id = staff_m.insert_person(p);
+					p.setId(person_id);
 					Staff s = new Staff(p, user_name, password);
 					if (staff_m.staffRegistration(s).equalsIgnoreCase("Success")) {
 						if (!profilepic.isEmpty()) {
@@ -406,7 +559,9 @@ public class AdminController {
 						MailApi m = new MailApi();
 						m.sendHtmlEmail(email, "Your account",
 								"Your account to use the system: \n Username:" + "<b>" + user_name + "</b>"
-										+ "\n Password: " + "<b>" + password + "</b>"
+										+ "\n Password: " + "<b>" + password + "</b>" + "\n Please <a href=\"" + baseUrl
+										+ "account/active/" + userrole + "/" + helper.encryptID(person_id + "")
+										+ "\">click here</a> to active your account "
 										+ "\n This is an automatic email, Please do not reply");
 						return new ApiResponse().send(HttpStatus.ACCEPTED, "Registration successfully");
 					} else {
@@ -427,7 +582,7 @@ public class AdminController {
 		OutputStream outputStream = null;
 		try {
 			inputStream = profilepic.getInputStream();
-			File newFile = new File("file/" + filename);
+			File newFile = new File("/file/" + filename);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}

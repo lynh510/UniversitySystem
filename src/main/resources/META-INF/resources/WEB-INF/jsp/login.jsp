@@ -17,7 +17,7 @@
 <meta name="google-signin-client_id"
 	content="273733011923-n5lqfqjb265s8s8k5mka9drdkr2t78e8.apps.googleusercontent.com">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${displayName} Login</title>
+<title>${displayName}Login</title>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#login-form").submit(function(e) {
@@ -42,9 +42,9 @@
 	});
 </script>
 <style type="text/css">
-	.abcRioButtonLightBlue {
-	    width: -webkit-fill-available !important;
-	}
+.abcRioButtonLightBlue {
+	width: -webkit-fill-available !important;
+}
 </style>
 </head>
 <body>
@@ -100,7 +100,7 @@
 											class="form-control" placeholder="Password" required
 											maxlength="20">
 									</div>
-									<h5 style="color: red" id="errors"></h5>
+									<h5 style="color: red" id="errors">${message}</h5>
 									<div class="form-group">
 										<div class="g-signin2" data-onsuccess="onSignIn" id="myP">
 										</div>

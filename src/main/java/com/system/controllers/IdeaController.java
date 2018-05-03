@@ -49,12 +49,20 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.getIdeasPerPage(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcome", pm.getUserSession());
+				Person p = pm.getUserSession();
+				model.addObject("welcome", p);
+				if (p.getPerson_role() == 1) {
+					model.addObject("navbar", "staff_navbar.jsp");
+				} else {
+					model.addObject("navbar", "student_navbar.jsp");
+				}
+
 			} catch (NullPointerException e) {
-//				Person p = new Person();
-//				p.setPerson_picture("/uploads/default_avatar.png");
-//				p.setPerson_name("");
-//				model.addObject("welcom", p);
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				p.setPerson_name("Guest");
+				model.addObject("welcome", p);
+				model.addObject("navbar", "navbar.jsp");
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);
@@ -76,11 +84,60 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.MostViewedIdeas(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcome", pm.getUserSession());
+				Person p = pm.getUserSession();
+				model.addObject("welcome", p);
+				if (p.getPerson_role() == 1) {
+					model.addObject("navbar", "staff_navbar.jsp");
+				} else {
+					model.addObject("navbar", "student_navbar.jsp");
+				}
 			} catch (NullPointerException e) {
-//				Person p = new Person();
-//				p.setPerson_picture("/uploads/default_avatar.png");
-//				model.addObject("welcom", p);
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				p.setPerson_name("Guest");
+				model.addObject("welcome", p);
+				model.addObject("navbar", "navbar.jsp");
+			}
+			model.addObject("ideas", listIdea);
+			model.addObject("noOfPages", noOfPages);
+			model.addObject("currentPage", currentPage);
+			return model;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("redirect:/idea/page/1");
+		}
+
+	}
+
+	@PostMapping("search")
+	public ModelAndView post_search(@RequestParam("search") String search) {
+		ModelAndView model = new ModelAndView("redirect:/idea/search/page/1/" + search + "/keywords_search");
+		return model;
+	}
+
+	@GetMapping("search/page/{numberOfPage}/{keywords}/keywords_search")
+	public ModelAndView search_idea(@PathVariable("numberOfPage") String page,
+			@PathVariable("keywords") String keywords) {
+		try {
+			ModelAndView model = new ModelAndView("display_idea");
+			int currentPage = Integer.parseInt(page);
+			int recordsPerPage = 5;
+			int noOfRecords = im.countSearch(keywords);
+			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+			List<Idea> listIdea = im.searchIdea(keywords, currentPage, recordsPerPage);
+			try {
+				Person p = pm.getUserSession();
+				model.addObject("welcome", p);
+				if (p.getPerson_role() == 1) {
+					model.addObject("navbar", "staff_navbar.jsp");
+				} else {
+					model.addObject("navbar", "student_navbar.jsp");
+				}
+			} catch (NullPointerException e) {
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				p.setPerson_name("Guest");
+				model.addObject("welcome", p);
+				model.addObject("navbar", "navbar.jsp");
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);
@@ -102,11 +159,19 @@ public class IdeaController {
 			int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 			List<Idea> listIdea = im.MostLikedIdeas(currentPage, recordsPerPage);
 			try {
-				model.addObject("welcome", pm.getUserSession());
+				Person p = pm.getUserSession();
+				model.addObject("welcome", p);
+				if (p.getPerson_role() == 1) {
+					model.addObject("navbar", "staff_navbar.jsp");
+				} else {
+					model.addObject("navbar", "student_navbar.jsp");
+				}
 			} catch (NullPointerException e) {
-//				Person p = new Person();
-//				p.setPerson_picture("/uploads/default_avatar.png");
-//				model.addObject("welcom", p);
+				Person p = new Person();
+				p.setPerson_picture("/uploads/default_avatar.png");
+				p.setPerson_name("Guest");
+				model.addObject("welcome", p);
+				model.addObject("navbar", "navbar.jsp");
 			}
 			model.addObject("ideas", listIdea);
 			model.addObject("noOfPages", noOfPages);
@@ -146,21 +211,32 @@ public class IdeaController {
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
 			Person p = pm.getUserSession();
-			Idea idea = new Idea(0, title, content, p, null, mode, 0, 0);
-			int idea_id = im.insert_idea(idea);
-			idea.setId(idea_id);
-			insert_tags(tags, idea);
-			MailApi m = new MailApi();
+			if (p.getDepartment().getStatus() == 0) {
+				Idea idea = new Idea(0, title, content, p, null, mode, 0, 0);
+				int idea_id = im.insert_idea(idea);
+				idea.setId(idea_id);
+				insert_tags(tags, idea);
+				MailApi m = new MailApi();
 
-			if (files.get(0).isEmpty()) {
-				System.out.println("no file is selected");
+				if (files.get(0).isEmpty()) {
+					System.out.println("no file is selected");
+				} else {
+					insert_attachfiles(files, idea);
+				}
+				m.sendHtmlEmail("universityofu23.coordinator@gmail.com",
+						"New Idea submission from " + p.getPerson_name(),
+						"A new idea is submitted" + "<br/><a href=\"" + baseUrl + "/idea/" + idea_id
+								+ "\">Click here to see</a>\""
+								+ "<br/> This is an automatic email, Please do not reply");
+				return new ApiResponse().send(HttpStatus.ACCEPTED,
+						"Well done!! Your idea is posted successfully. Please wait util your idea get approve ");
+			} else if (p.getDepartment().getStatus() == 1) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"The Academic is closing, you cannot submit more ideas");
 			} else {
-				insert_attachfiles(files, idea);
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Academic year has been closed");
 			}
-			m.sendHtmlEmail("universityofu23.coordinator@gmail.com", "New Idea submission from " + p.getPerson_name(),
-					"A new idea is submitted" + "\n<a href=\"" + baseUrl + "/idea/" + idea_id
-							+ "\">Click here to see</a>\"" + "\n This is an automatic email, Please do not reply");
-			return new ApiResponse().send(HttpStatus.ACCEPTED, "Well done!! Your idea is posted successfully");
+
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -200,7 +276,7 @@ public class IdeaController {
 		try {
 			inputStream = file.getInputStream();
 			// edit path when use
-			File newFile = new File("file/" + name);
+			File newFile = new File("/file/" + name);
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
@@ -218,8 +294,12 @@ public class IdeaController {
 	}
 
 	private String getExtension(String filename) {
-		String[] parts = filename.split("\\.");
-		return parts[1];
+		String extension = "";
+		int i = filename.lastIndexOf('.');
+		if (i > 0) {
+			extension = filename.substring(i + 1);
+		}
+		return extension;
 	}
 
 	@PostMapping("/edit")

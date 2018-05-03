@@ -20,6 +20,7 @@
 <script
 	src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>Manage User</title>
 <style type="text/css">
 .container {
@@ -51,7 +52,7 @@ body {
 		</div>
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 			style="overflow-x: auto;">
-			<a href="/admin/addStudents">Add more users</a> | <a
+			<a href="/admin/addAccounts">Add more users</a> | <a
 				href="/admin/academic_year">Academic Management</a> | <a></a>
 			<table class="table table-responsive table-hover table-bordered ">
 				<thead>
@@ -77,10 +78,10 @@ body {
 									<td class="success">Active</td>
 								</c:when>
 								<c:when test="${p.status == 1}">
-									<td class="error">Block</td>
+									<td class="default">Inactive</td>
 								</c:when>
 								<c:when test="${p.status == 2}">
-									<td class="default">Inactive</td>
+									<td class="error">Deleted</td>
 								</c:when>
 							</c:choose>
 							<td>
@@ -91,10 +92,19 @@ body {
 										Options <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Delete</a></li>
-										<li><a href="#">Activate</a></li>
-										<li><a href="#">Block</a></li>
-										<li><a href="#">Re-send Activation Mail</a></li>
+										<c:choose>
+											<c:when test="${p.status == 0}">
+												<li><a
+													href="/admin/delete/${p.person_role}/${helper.encryptID(p.id)}">Delete</a></li>
+											</c:when>
+											<c:when test="${p.status == 1}">
+												<li><a
+													href="/admin/active/${p.person_role}/${helper.encryptID(p.id)}">Activate</a></li>
+												<li><a
+													href="/admin/resend_active/${p.person_role}/${helper.encryptID(p.id)}">Re-send
+														Activation Mail</a></li>
+											</c:when>
+										</c:choose>
 									</ul>
 								</div>
 							</td>
@@ -116,7 +126,9 @@ body {
 							<td>${p.birthdate}</td>
 							<td>${p.address }</td>
 							<td>${p.phone}</td>
-							<td>${p.department.dept_name}</td>
+							<td>${p.department.dept_name}
+								(${p.department.academic_year.year} -
+								${p.department.academic_year.season})</td>
 						</tr>
 					</c:forEach>
 

@@ -27,7 +27,7 @@ $(document).ready(function() {
 				url : "/student/login",
 				data : $("#login_form").serialize(),
 				success : function(response) {
-					window.location.href = "/idea/page/1";
+					window.location.href = "/home";
 				},
 				error : function(xhr, response, error) {
 					$('#myModal h4').text('Message');
@@ -83,7 +83,7 @@ $(document).ready(function() {
 							class="form-control blur" placeholder="Password" tabindex="2"
 							required maxlength="20">
 					</div>
-					<h6 style="color: red" id="errors"></h6>
+					<h6 style="color: red" id="errors">${message}</h6>
 					<button type="submit" class="btn btn-reg">Login</button>
 					<p style="margin-top: 5%;">
 						<a href="#" class="forgot login-link">Forgotten your username

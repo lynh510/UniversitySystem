@@ -23,34 +23,34 @@
 }
 </style>
 <script type="text/javascript">
-$(document).ready(function() {
-	$("#edit_account").submit(function(e) {
-		e.preventDefault();
-		$.ajax({
-			type : "Post",
-			url : "/account/perform_edit_account",
-			enctype : 'multipart/form-data',
-			processData : false,
-			contentType : false,
-			cache : false,
-			data : new FormData($("#edit_account")[0]),
-			success : function(response) {
-				$('#myModal h4').text('Message');
-				$('#myModal #message').css('color', 'green');
-				$('#myModal #message').text('Edit account successfully');
-				$('#myModal').modal('show');
-			},
-			error : function(xhr, response, error) {
-				var err = JSON.parse(xhr.responseText);
-				$('#myModal h4').text('Message');
-				$('#myModal #message').css('color', 'red');
-				$('#myModal #message').text(err.message);
-				$('#myModal').modal('show');
-			}
+	$(document).ready(function() {
+		$("#edit_account").submit(function(e) {
+			e.preventDefault();
+			$.ajax({
+				type : "Post",
+				url : "/account/perform_edit_account",
+				enctype : 'multipart/form-data',
+				processData : false,
+				contentType : false,
+				cache : false,
+				data : new FormData($("#edit_account")[0]),
+				success : function(response) {
+					$('#myModal h4').text('Message');
+					$('#myModal #message').css('color', 'green');
+					$('#myModal #message').text('Edit account successfully');
+					$('#myModal').modal('show');
+				},
+				error : function(xhr, response, error) {
+					var err = JSON.parse(xhr.responseText);
+					$('#myModal h4').text('Message');
+					$('#myModal #message').css('color', 'red');
+					$('#myModal #message').text(err.message);
+					$('#myModal').modal('show');
+				}
+			});
+			return false;
 		});
-		return false;
 	});
-});
 </script>
 </head>
 
@@ -59,27 +59,7 @@ $(document).ready(function() {
 		<div class="navbar navbar-default navbar-fixed-top">
 			<header id="header-site">
 				<!--Begin::Header right-->
-				<ul class="nav navbar-right pull-right top-nav">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" src="${welcom.person_picture}" width="30"
-							height="30"> <span class="hidden-xs"><b>${welcom.person_name}
-							</b></span>
-					</a>
-						<ul class="dropdown-menu">
-							<li><a href="/student/activities/${user_id}/1"><i
-									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
-							<li><a href="/student/submit_idea"><i
-									class="fa fa-fw fa-plus"></i> Add idea</a></li>
-							<li><a href="/${role_user}/edit_account"><i
-									class="fa fa-fw fa-user"></i> Edit Profile</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-									Password</a></li>
-							<li class="divider"></li>
-							<li><a href="/student/logout"><i
-									class="fa fa-fw fa-power-off"></i> Logout</a></li>
-						</ul></li>
-				</ul>
+				<jsp:include page="${navbar}"></jsp:include>
 				<!--End::Header Right-->
 
 
@@ -99,7 +79,7 @@ $(document).ready(function() {
 		<!-- CONTENT -->
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="col-xs-12 col-sm-12 col-md-12">
 					<div class="panel-group" id="accordion">
 						<div class="panel panel-primary">
 							<div class="panel-heading">
@@ -110,17 +90,19 @@ $(document).ready(function() {
 								</h4>
 							</div>
 							<div id="collapseOne" class="panel-collapse collapse in">
-								<form role="form" id="edit_account" action=""
-									method="post" enctype="multipart/form-data">
-									<input type="text" hidden="true" value="${welcom.id}" name="person_id"/>
+								<form role="form" id="edit_account" action="" method="post"
+									enctype="multipart/form-data">
+									<input type="text" hidden="true" value="${welcome.id}"
+										name="person_id" />
 									<div class="panel-body">
 										<div class="row">
 											<div class="col-xs-12 col-sm-12 col-md-6">
 												<div class="form-group">
 													<label class="required" for="form-firstname">Full
 														Name</label> <input type="text" name="full_name" id="full_name"
-														class="form-control blur" placeholder="Full Name" value="${welcom.person_name}"
-														tabindex="1" required maxlength="20">
+														class="form-control blur" placeholder="Full Name"
+														value="${welcome.person_name}" tabindex="1" required
+														maxlength="20">
 												</div>
 											</div>
 										</div>
@@ -171,15 +153,17 @@ $(document).ready(function() {
 											</div>
 										</div>
 										<script type="text/javascript">
-										var gender = ${welcom.gender};
+											var gender = '${welcome.gender}';
 											if (gender == 1) {
 												document.getElementById("male").checked = true;
 											}
 											if (gender == 2) {
-												document.getElementById("female").checked = true;
+												document
+														.getElementById("female").checked = true;
 											}
 											if (gender == 3) {
-												document.getElementById("unknown").checked = true;
+												document
+														.getElementById("unknown").checked = true;
 											}
 										</script>
 										<div class="form-group">
@@ -219,16 +203,17 @@ $(document).ready(function() {
 										</div>
 										<div class="form-group">
 											<label class="required" for="form-phone">Phone number</label>
-											<input value="${welcom.phone}" type="text" name="phone" required
-												placeholder="Phone number..." class="form-control blur"
-												id="form-phone" maxlength="12"
+											<input value="${welcome.phone}" type="text" name="phone"
+												required placeholder="Phone number..."
+												class="form-control blur" id="form-phone" maxlength="12"
 												onkeypress="phonenumber(this)">
 											<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 										</div>
 										<div class="form-group">
-											<label class="required" for="form-address">Address</label>
-											 <input value="${welcom.address}" type="text" name="address" required placeholder="Address..."
-												class="form-control blur" id="form-address" maxlength="200">
+											<label class="required" for="form-address">Address</label> <input
+												value="${welcome.address}" type="text" name="address"
+												required placeholder="Address..." class="form-control blur"
+												id="form-address" maxlength="200">
 										</div>
 										<button type="submit" class="btn btn-reg">Update</button>
 									</div>
@@ -238,6 +223,25 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p id="message"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
 		</div>
 	</div>
 </body>

@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="/css/regis_form.css">
 <link rel="stylesheet"
@@ -20,6 +21,7 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
+	document.getElementById("male").checked = true;
 	$("#registration_form").submit(function(e) {
 		e.preventDefault();
 		$.ajax({
@@ -295,8 +297,10 @@ $(document).ready(function() {
 							<select class="form-control blur" required name="deparment">
 								<option value="" selected="" disabled="disabled" hidden>--
 									Department --</option>
-									<c:forEach items="${deparments}" var="deparment">
-								<option value="${deparment.id}">${deparment.dept_name}</option>
+								<c:forEach items="${deparments}" var="deparment">
+									<option value="${deparment.id}">${deparment.dept_name}
+										(${deparment.academic_year.season} -
+										${deparment.academic_year.year} )</option>
 								</c:forEach>
 							</select>
 						</div>

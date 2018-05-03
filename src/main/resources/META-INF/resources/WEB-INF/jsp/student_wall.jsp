@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link
 	href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
 	rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="/css/list_idea.css">
-
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
@@ -26,68 +25,39 @@
 	scope="page" />
 <jsp:useBean id="tags" class="com.system.models.IdeaTagManagement"
 	scope="page" />
-<title>Activity Log</title>
+<jsp:useBean id="ideaManager" class="com.system.models.IdeaManagement"
+	scope="page" />
+<jsp:useBean id="helper" class="com.system.Helper" scope="page" />
+
+<title>Main Page</title>
 </head>
 <body>
-	<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#navbar-ex-collapse">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-			</div>
-			<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" aria-expanded="true"> <img alt=""
-							class="img-circle" id="userpicture"
-							src="${welcom.person_picture}" width="30" height="30"> <span
-							class="hidden-xs"><b id="username">${welcom.person_name}
-							</b></span>
-					</a>
-						<ul class="dropdown-menu">
-							<li><a href="/student/activities/${welcom.id}/1"><i
-									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
-							<li><a href="/student/submit_idea"><i
-									class="fa fa-fw fa-plus"></i> Add idea</a></li>
-							<li><a href="/student/edit_account"><i class="fa fa-fw fa-user"></i> Edit
-									Profile</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-									Password</a></li>
-							<li class="divider"></li>
-							<li><a href="/student/logout"><i
-									class="fa fa-fw fa-power-off"></i> Logout</a></li>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-	<form action="/comment/submit" id="comment_form" method="post">
-		<input type="hidden" name="idea_id" id="idea_id" value=""> <input
-			type="hidden" name="text" id="commentText" value="">
-	</form>
+	<jsp:include page="student_navbar.jsp"></jsp:include>
 	<div class="section container">
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
-					<div class="[ panel panel-default ] panel-google-plus">
+					<div class="[ panel panel-default ] panel-google-plus"
+						id="scroll-to-${idea.id}">
 						<div class="dropdown">
-							<span class="dropdown-toggle" type="button"
-								data-toggle="dropdown"> <span
-								class="[ glyphicon glyphicon-chevron-down ]"></span>
-							</span>
-							<ul class="dropdown-menu" role="menu">
-								<li role="presentation"><a role="menuitem" tabindex="-1"
-									class="editIdea" onclick="return editIdea();">Edit</a></li>
-								<li role="presentation"><a role="menuitem" tabindex="-1"
-									href="/student/delete/${welcom.id}/${idea.id}">Delete</a></li>
-								<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+							<c:choose>
+								<c:when
+									test="${ideaManager.check_idea_belong(idea.person.id) == true}">
+									<span class="dropdown-toggle" type="button"
+										data-toggle="dropdown"> <span
+										class="[ glyphicon glyphicon-chevron-down ]"></span>
+									</span>
+									<ul class="dropdown-menu" role="menu">
+										<li role="presentation"><a role="menuitem" tabindex="-1"
+											class="editIdea" onclick="return editIdea();">Edit</a></li>
+										<li role="presentation"><a role="menuitem" tabindex="-1"
+											href="/student/delete/0/${helper.encryptID(welcome.id)}/${helper.encryptID(idea.id)}/${currentPage}">Delete</a></li>
+										<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
-							</ul>
+									</ul>
+								</c:when>
+							</c:choose>
 						</div>
 						<div class="panel-google-plus-tags">
 							<ul>
@@ -101,20 +71,28 @@
 								src="${idea.person.person_picture}" alt="Mouse0270" />
 							<h3>${idea.person.person_name }</h3>
 							<h5>
-								<span>Shared publicly</span> - <span>${idea.post_date }</span>
+								<span>Shared<c:choose>
+										<c:when test="${idea.mode == 0}"> privately</c:when>
+										<c:otherwise> publicly</c:otherwise>
+									</c:choose></span> - <span>${idea.post_date }</span> <input type="hidden"
+									value="unseen" id="seen-${idea.id}" />
 							</h5>
+							<h6>${idea.views}&ensp;view(s)</h6>
 						</div>
 						<div class="panel-body">
 							<div class="ideaInfo">
 								<p>
 									<b>${idea.title}</b>
 								</p>
-								<p>${idea.content}</p>
+								<p
+									style="min-height: 10%; word-wrap: break-word; white-space: pre-line;">${idea.content}</p>
 							</div>
 							<form id="edit_idea_form" method="post" action="/student/edit">
 								<div class="editIdeaInfo">
 									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
-										type="hidden" name="person_id" value="${welcom.id}" /> <input
+										type="hidden" name="person_id" value="${welcome.id}" /> <input
+										type="hidden" name="current_page" value="${currentPage}">
+									<input type="hidden" name="action" value="0"> <input
 										class="form-control" name="title" required
 										value="${idea.title}" />
 									<textarea name="content" rows="4" required>${idea.content}</textarea>
@@ -143,8 +121,10 @@
 								<input type="hidden" name="like" id="like${idea.id}" value="">
 							</form>
 							<div id="like-box${idea.id}">
+								<c:set var="checklike" value="${likes.check_like(idea.id)}"
+									scope="page" />
 								<c:choose>
-									<c:when test="${likes.check_like(idea.id)  == 1}">
+									<c:when test="${checklike  == 1}">
 										<button type="button" class="[ btn btn-default ]"
 											id="btnthumbUp${idea.id}" style="background: blue;"
 											onclick="onThumbUp(${idea.id},1)">
@@ -157,7 +137,7 @@
 												style="color: red;"></span>
 										</button>
 									</c:when>
-									<c:when test="${likes.check_like(idea.id) == 2}">
+									<c:when test="${checklike == 2}">
 										<button type="button" class="[ btn btn-default ]"
 											id="btnthumbUp${idea.id}" onclick="onThumbUp(${idea.id},1)">
 											<span class="[ glyphicon glyphicon-thumbs-up ]"
@@ -185,27 +165,37 @@
 								</c:choose>
 							</div>
 							<div id="more-comment-box-${idea.id}" class="box-click">
-								<button id="btnViewComments${idea.id}" onclick="onViewComments(${idea.id})">Comments</button>
+								<button id="btnViewComments${idea.id}"
+									onclick="onViewComments(${idea.id})">Comments</button>
 								<input type="hidden" id="noOfComments${idea.id}"
 									value="${comments.noOfComments(idea.id)}"> <span>
 									<a id="moreComments${idea.id}" style="display: none"
-									onclick="onLoadMoreComments(${idea.id})">View more comment(s)</a>
+									onclick="onLoadMoreComments(${idea.id})">View more
+										comment(s)</a>
 								</span>
 							</div>
 							<div id="box_comments${idea.id }" class="box-comments"></div>
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle" src="${idea.person.person_picture}"
-								width="50" height="50" alt="User Image" />
+							<img class="img-circle" src="${welcome.person_picture}" width="50"
+								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
-								<textarea id="commentText${idea.id}" rows="4"></textarea>
-								<button type="submit" onclick="onComment(${idea.id})"
-									class="[ btn btn-success disabled ]">Post comment</button>
-								<button type="reset" class="[ btn btn-default ]">Cancel</button>
+								<form id="comment_form_${idea.id}" action="#" method="post">
+									<input type="hidden" name="idea_id" id="idea_id"
+										value="${idea.id}">
+									<textarea style="width: 100%" name="text" id="commentText"
+										rows="4"></textarea>
+									<input type="checkbox" name="mode" value="anonymous" /><span
+										style="font-style: italic;">Comment as an Anonymous
+										user</span> <a onclick="onComment(${idea.id})"
+										class="btn btn-success">Post comment</a>
+									<button type="reset" class="[ btn btn-default ]">Cancel</button>
+								</form>
 							</div>
 							<div class="clearfix"></div>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -215,7 +205,8 @@
 	<div style="width: 70%; margin: auto; text-align: center;">
 		<%--For displaying Previous link except for the 1st page --%>
 		<c:if test="${currentPage != 1}">
-			<td><a href="${currentPage - 1}">Previous</a></td>
+			<td><a
+				href="/student/activities/${helper.encryptID(welcome.id)}/${currentPage - 1}">Previous</a></td>
 		</c:if>
 
 		<%--For displaying Page numbers. 
@@ -228,7 +219,8 @@
 							<td>${i}</td>
 						</c:when>
 						<c:otherwise>
-							<td><a href="${i}">${i}</a></td>
+							<td><a
+								href="/student/activities/${helper.encryptID(welcome.id)}/${i}">${i}</a></td>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
@@ -237,7 +229,8 @@
 
 		<%--For displaying Next link --%>
 		<c:if test="${currentPage lt noOfPages}">
-			<td><a href="${currentPage + 1}">Next</a></td>
+			<td><a
+				href="/student/activities/${helper.encryptID(welcome.id)}/${currentPage + 1}">Next</a></td>
 		</c:if>
 	</div>
 

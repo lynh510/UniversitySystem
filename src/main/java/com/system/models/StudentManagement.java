@@ -9,9 +9,11 @@ import com.system.entity.*;
 
 public class StudentManagement {
 	private ExternalLoginManagement elm;
+	private DepartmentManagement dm;
 
 	public StudentManagement() {
 		elm = new ExternalLoginManagement();
+		dm = new DepartmentManagement();
 	}
 
 	// returns string message from database,
@@ -23,15 +25,15 @@ public class StudentManagement {
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(insertSQuery);
-			int person_id = insert_person(s.getStudent_id());
-			statement.setInt(1, person_id);
+			// int person_id = insert_person(s.getStudent_id());
+			statement.setInt(1, s.getStudent_id().getId());
 			statement.setString(2, s.getUsername());
 			statement.setString(3, s.getStudent_password());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				message = resultSet.getString(1);
 			}
-			ExternalUser eu = new ExternalUser(person_id, s.getStudent_id().getEmail());
+			ExternalUser eu = new ExternalUser(s.getStudent_id().getId(), s.getStudent_id().getEmail());
 			elm.insert_external_user(eu);
 			return message;
 		} catch (Exception e) {
@@ -41,7 +43,8 @@ public class StudentManagement {
 	}
 
 	public int insert_person(Person p) {
-		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,?);" + " SELECT SCOPE_IDENTITY()";
+		String insertQuery = "insert into Person values (?,?,?,?,?,?,?,getDate(),?,?,?,?);"
+				+ " SELECT SCOPE_IDENTITY()";
 		int pid = 0;
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -107,12 +110,34 @@ public class StudentManagement {
 				p.setPerson_picture(rs.getString("person_picture"));
 				p.setPerson_name(rs.getString("person_name"));
 				p.setPerson_role(rs.getInt("person_role"));
-				p.setDepartment(new Department(rs.getInt("dept_id"), ""));
+				p.setStatus(rs.getInt("_status"));
+				p.setDepartment(dm.getDepartment(rs.getInt("dept_id")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return p;
 	}
-	
+
+	public String change_password(int qa_id, String old_password, String new_password) {
+		String message = "";
+		String sqlQuery = "DECLARE @responseMessage NVARCHAR(250);\r\n"
+				+ "exec change_password_student ?,?,?, @responseMessage output;\r\n"
+				+ "select @responseMessage as N'@responseMessage'";
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			statement.setInt(1, qa_id);
+			statement.setString(2, old_password);
+			statement.setString(3, new_password);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				message = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return message;
+	}
+
 }

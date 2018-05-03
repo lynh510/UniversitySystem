@@ -102,39 +102,7 @@ table {
 </script>
 </head>
 <body>
-	<div id="navbar"
-		class="navbar navbar-default navbar-fixed-top navbar-inverse">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#navbar-ex-collapse">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
-					data-toggle="dropdown" aria-expanded="true"> <img alt=""
-						class="img-circle" id="userpicture"
-						src="${qaCoordinator.person_picture}" width="30" height="30">
-						<span class="hidden-xs"></span><b id="username">${qaCoordinator.person_name}>
-					</b>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="/qacoordinator/dashboard"><i
-								class="fa fa-fw fa-plus"></i> Dash board</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
-						<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-								Password</a></li>
-						<li class="divider"></li>
-						<li><a href="/qacoordinator/logout"><i
-								class="fa fa-fw fa-power-off"></i> Logout</a></li>
-					</ul></li>
-			</ul>
-		</div>
-	</div>
+	<jsp:include page="qacoordinator_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -185,7 +153,7 @@ table {
 					<form id="acceptform" action="" method="post">
 						<input type="hidden" id="idea_id" name="idea_id" value="" /> <input
 							type="hidden" id="action" name="action" value=""> <input
-							type="submit" value="Yes" />
+							type="submit" class="btn" value="Yes" />
 					</form>
 				</div>
 				<div class="modal-footer">

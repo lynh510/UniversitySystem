@@ -30,7 +30,7 @@ public class TagController {
 	public ModelAndView listTag() {
 		ModelAndView model = new ModelAndView("list_category");
 		try {
-			Person qamanager =  qmm.getQAManagerSession();
+			Person qamanager = qmm.getQAManagerSession();
 			model.addObject("tags", tm.getTags());
 			model.addObject("qaManager", qamanager);
 		} catch (NullPointerException e) {
@@ -43,8 +43,8 @@ public class TagController {
 	public ModelAndView addCategory() {
 		ModelAndView model = new ModelAndView("add_category");
 		try {
-			Person qamanager =  qmm.getQAManagerSession();
-			model.addObject("departments", dm.getDepartments());
+			Person qamanager = qmm.getQAManagerSession();
+			model.addObject("departments", dm.getDepartments(0));
 			model.addObject("qaManager", qamanager);
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/qamanager/login");
@@ -56,7 +56,7 @@ public class TagController {
 	public ModelAndView add_tag(@RequestParam("tag_name") String tag_name, @RequestParam("dept_id") int dept_id) {
 		ModelAndView model = new ModelAndView("redirect:/tag/listCategory");
 		if (!tm.chec_exist(tag_name)) {
-			Tag t = new Tag(tag_name,new Department(dept_id, null),0);
+			Tag t = new Tag(tag_name, new Department(dept_id), 0);
 			tm.insert_tag(t);
 		} else {
 			model.addObject("error", "Tag is existed");

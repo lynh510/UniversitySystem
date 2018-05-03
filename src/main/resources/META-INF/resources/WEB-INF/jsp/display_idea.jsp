@@ -31,9 +31,10 @@
 <title>Main Page</title>
 </head>
 <body>
-	<jsp:include page="student_navbar.jsp"></jsp:include>
+	<jsp:include page="${navbar}"></jsp:include>
 	<div style="margin: auto; margin-top: 10%; width: 70%">
-		<select class="form-control" name="forma" onchange="location = this.value;">
+		<select class="form-control" name="forma"
+			onchange="location = this.value;">
 			<option selected="selected" disabled="disabled">Select an
 				option</option>
 			<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
@@ -59,7 +60,7 @@
 										<li role="presentation"><a role="menuitem" tabindex="-1"
 											class="editIdea" onclick="return editIdea();">Edit</a></li>
 										<li role="presentation"><a role="menuitem" tabindex="-1"
-											href="/student/delete/${welcom.id}/${idea.id}">Delete</a></li>
+											href="/student/delete/1/${helper.encryptID(welcome.id)}/${helper.encryptID(idea.id)}/${currentPage}">Delete</a></li>
 										<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
 		                        <li role="presentation" class="divider"></li>
 		                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
@@ -98,9 +99,11 @@
 							<form id="edit_idea_form" method="post" action="/student/edit">
 								<div class="editIdeaInfo">
 									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
-										type="hidden" name="person_id" value="${welcom.id}" /> <input
-										class="form-control" name="title" required
-										value="${idea.title}" />
+										type="hidden" name="person_id" value="${welcome.id}" /><input
+										type="hidden" name="current_page" value="${currentPage}">
+									<input class="form-control" name="title" required
+										value="${idea.title}" /> <input type="hidden" name="action"
+										value="1">
 									<textarea name="content" rows="4" required>${idea.content}</textarea>
 									<button type="submit" class="[ btn btn-success disabled ]">Edit
 										post</button>
@@ -184,7 +187,7 @@
 							<div class="input-placeholder">Add a comment...</div>
 						</div>
 						<div class="panel-google-plus-comment">
-							<img class="img-circle" src="${welcom.person_picture}" width="50"
+							<img class="img-circle" src="${welcome.person_picture}" width="50"
 								height="50" alt="User Image" />
 							<div class="panel-google-plus-textarea">
 								<form id="comment_form_${idea.id}" action="#" method="post">
@@ -192,11 +195,15 @@
 										value="${idea.id}">
 									<textarea style="width: 100%" name="text" id="commentText"
 										rows="4"></textarea>
-									<input type="checkbox" name="mode" value="anonymous" /><span
+									<input type="hidden" id="hidden_comment_${idea.id}"
+										name="comment_id" value="0"> <input type="checkbox"
+										name="mode" value="anonymous" /><span
 										style="font-style: italic;">Comment as an Anonymous
 										user</span> <a onclick="onComment(${idea.id})"
-										class="btn btn-success">Post comment</a>
-									<button type="reset" class="[ btn btn-default ]">Cancel</button>
+										class="btn btn-success" id="post_comment_btn_${idea.id}">Post
+										comment</a>
+									<button type="reset" onclick="cancel(${idea.id})"
+										class="[ btn btn-default ]">Cancel</button>
 								</form>
 							</div>
 							<div class="clearfix"></div>
@@ -228,7 +235,7 @@
 	<div style="width: 70%; margin: auto; text-align: center;">
 		<%--For displaying Previous link except for the 1st page --%>
 		<c:if test="${currentPage != 1}">
-			<td><a href="${currentPage - 1}">Previous</a></td>
+			<td><a href="/idea/page/${currentPage - 1}">Previous</a></td>
 		</c:if>
 
 		<%--For displaying Page numbers. 
@@ -241,7 +248,7 @@
 							<td>${i}</td>
 						</c:when>
 						<c:otherwise>
-							<td><a href="${i}">${i}</a></td>
+							<td><a href="/idea/page/${i}">${i}</a></td>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
@@ -250,7 +257,7 @@
 
 		<%--For displaying Next link --%>
 		<c:if test="${currentPage lt noOfPages}">
-			<td><a href="${currentPage + 1}">Next</a></td>
+			<td><a href="/idea/page/${currentPage + 1}">Next</a></td>
 		</c:if>
 	</div>
 

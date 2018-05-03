@@ -5,7 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Student - Submit Your Idea</title>
-<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+	id="bootstrap-css">
 <!------ Include the above in your HEAD tag ---------->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link
@@ -25,25 +26,25 @@
 <script type="text/javascript" src="/javascript/stu_sub_idea.js"></script>
 </head>
 <body class="main">
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"></h4>
-      </div>
-      <div class="modal-body">
-        <p id="message"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<p id="message"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
 
-  </div>
-</div>
+		</div>
+	</div>
 	<div class="screen">
 		<!-- HEADER -->
 		<div class="navbar navbar-default navbar-fixed-top">
@@ -120,8 +121,8 @@
 									class="fa fa-fw fa-history"></i> View Activity Log</a></li>
 							<li><a href="/student/submit_idea"><i
 									class="fa fa-fw fa-plus"></i> Add idea</a></li>
-							<li><a href="/student/edit_account"><i class="fa fa-fw fa-user"></i> Edit
-									Profile</a></li>
+							<li><a href="/student/edit_account"><i
+									class="fa fa-fw fa-user"></i> Edit Profile</a></li>
 							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
 									Password</a></li>
 							<li class="divider"></li>
@@ -230,11 +231,11 @@
 												</div>
 												<div class="form-group">
 													<div>
-														<input type="radio" required><a href="/student/terms">Before
-															submitting please carefully read these terms and
-															conditions</a>
+														<input id="agree" value="0" type="radio" required><a
+															href="/student/terms">Before submitting please
+															carefully read these terms and conditions</a>
 													</div>
-													<button type="submit" class="btn">
+													<button id="submit" type="submit" class="btn">
 														<span class="glyphicon glyphicon-floppy-disk"></span>Submit
 													</button>
 												</div>

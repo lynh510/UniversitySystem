@@ -8,6 +8,12 @@ $(document).on('click', '#close-preview', function() {
 	});
 });
 $(document).ready(function() {
+	$(':input[type="submit"]').prop('disabled', true);
+	$('#agree').click(function() {
+		if ($(this).is(':checked')) {
+			$(':input[type="submit"]').prop('disabled', false);
+		}
+	});
 	$("#submit_idea_form").submit(function(e) {
 		e.preventDefault();
 		var message = document.getElementById("message");
@@ -22,7 +28,7 @@ $(document).ready(function() {
 			success : function(response) {
 				$('#myModal h4').text('Message');
 				$('#myModal #message').css('color', 'green');
-				$('#myModal #message').text('Your idea is successfully posted');
+				$('#myModal #message').text(response.message);
 				$('#myModal').modal('show');
 			},
 			error : function(xhr, response, error) {

@@ -65,17 +65,12 @@
 						</b></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a
-							href="/student/activities/${helper.encryptID(welcome.id)}/1"><i
-								class="fa fa-fw fa-history"></i> View Activity Log</a></li>
-						<li><a href="/student/submit_idea"><i
-								class="fa fa-fw fa-plus"></i> Add new idea</a></li>
-						<li><a href="/student/edit_account"><i
-								class="fa fa-fw fa-user"></i> Edit Profile</a></li>
-						<li><a href="/student/change_password"><i
+						<li><a href="/staff/edit_account"><i class="fa fa-fw fa-user"></i> Edit
+								Profile</a></li>
+						<li><a href="/staff/change_password"><i
 								class="fa fa-fw fa-cog"></i> Change Password</a></li>
 						<li class="divider"></li>
-						<li><a href="/student/logout"><i
+						<li><a href="/staff/logout"><i
 								class="fa fa-fw fa-power-off"></i> Logout</a></li>
 					</ul></li>
 			</ul>

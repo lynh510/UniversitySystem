@@ -79,38 +79,42 @@ body {
 	<div class="container">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<a href="/admin/academic_year">Back to Academic Year</a>
-			<form id="add_department_form" class="form-horizontal"
-				action="/admin/addDepartment" method="post">
-				<!-- Form Name -->
-				<h3>Add new department for ${academicYear.season}
-					${academicYear.year}</h3>
-				<hr />
-				<!-- Text input-->
-				<div class="form-group">
-					<label class="col-md-4 control-label" for="title">Department
-						Name</label>
+			<c:choose>
+				<c:when test="${academicYear.status == 0}">
+					<form id="add_department_form" class="form-horizontal"
+						action="/admin/addDepartment" method="post">
+						<!-- Form Name -->
+						<h3>Add new department for ${academicYear.season}
+							${academicYear.year}</h3>
+						<hr />
+						<!-- Text input-->
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="title">Department
+								Name</label>
 
-					<div class="col-md-5">
-						<input id="title" name="dept_name" type="text"
-							placeholder="Department name" class="form-control input-md"
-							required> <input type="hidden" name="academic_year_id"
-							value="${academicYear.id}">
-					</div>
-				</div>
+							<div class="col-md-5">
+								<input id="title" name="dept_name" type="text"
+									placeholder="Department name" class="form-control input-md"
+									required> <input type="hidden" name="academic_year_id"
+									value="${academicYear.id}">
+							</div>
+						</div>
 
-				<!-- Button (Double) -->
-				<div class="form-group">
-					<label class="col-md-4 control-label" for="saveBtn"></label>
+						<!-- Button (Double) -->
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="saveBtn"></label>
 
-					<div class="col-md-8">
-						<h6 style="color: red" id="errors">${error}</h6>
-						<button id="saveBtn" type="submit" name="saveBtn"
-							class="btn btn-primary">Save</button>
-						<button id="cancelBtn" type="reset" name="cancelBtn"
-							class="btn btn-inverse">Cancel</button>
-					</div>
-				</div>
-			</form>
+							<div class="col-md-8">
+								<h6 style="color: red" id="errors">${error}</h6>
+								<button id="saveBtn" type="submit" name="saveBtn"
+									class="btn btn-primary">Save</button>
+								<button id="cancelBtn" type="reset" name="cancelBtn"
+									class="btn btn-inverse">Cancel</button>
+							</div>
+						</div>
+					</form>
+				</c:when>
+			</c:choose>
 		</div>
 	</div>
 	<div class="container">
@@ -137,11 +141,15 @@ body {
 								<td>${d.dept_name}</td>
 								<td>${d.academic_year.year}</td>
 								<td>${d.academic_year.season}</td>
-								<td><form id="delete_dept_form_${d.id}" method="post"
-										action="">
-										<input type="hidden" name="dept_id"
-											value="${helper.encryptID(d.id)}">
-									</form> <a onclick="onDelete(${d.id})">Remove</a></td>
+								<td><c:choose>
+										<c:when test="${academicYear.status == 0}">
+											<form id="delete_dept_form_${d.id}" method="post" action="">
+												<input type="hidden" name="dept_id"
+													value="${helper.encryptID(d.id)}">
+											</form>
+											<a onclick="onDelete(${d.id})">Remove</a>
+										</c:when>
+									</c:choose></td>
 							</tr>
 						</tbody>
 					</c:forEach>

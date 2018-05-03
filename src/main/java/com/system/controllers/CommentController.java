@@ -36,7 +36,8 @@ public class CommentController {
 			@RequestParam("text") String comment_text, @RequestParam(value = "mode", required = false) String mode,
 			HttpServletRequest request) {
 		try {
-			if (im.get_Idea(idea_id).getStatus() == 3) {
+			Idea idea = im.get_Idea(idea_id);
+			if (idea.getStatus() == 2) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "The idea has been closed");
 			} else if (comment_text.equals("")) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Please fill-in something");
@@ -44,7 +45,6 @@ public class CommentController {
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
 			Comment comment = new Comment();
-
 			if (mode == null) {
 				comment = new Comment(
 						cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text, 0)), null,
@@ -54,16 +54,54 @@ public class CommentController {
 						cm.insertComment(new Comment(new Idea(idea_id), pm.getUserSession(), comment_text, 1)), null,
 						pm.getUserSession(), null, comment_text, 1);
 			}
-			Idea idea = im.get_Idea(idea_id);
 			MailApi mail = new MailApi();
-			if (pm.getUserSession().getId() != idea.getPerson().getId() && pm.getUserSession().getPerson_role() == 0) {
-				mail.sendHtmlEmail(idea.getPerson().getEmail(),
-						pm.getUserSession().getPerson_name() + " commented on your idea",
+			if (mode == null) {
+				if (pm.getUserSession().getId() != idea.getPerson().getId()
+						&& pm.getUserSession().getPerson_role() == 0) {
+					mail.sendHtmlEmail(idea.getPerson().getEmail(),
+							pm.getUserSession().getPerson_name() + " commented on your idea",
+							"<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
+									+ "<br/> This is an automatic mail, Please do not reply");
+				}
+			} else {
+				mail.sendHtmlEmail(idea.getPerson().getEmail(), "An anonymous user just commented on your idea",
 						"<a href=\"" + baseUrl + "/idea/" + idea_id + "\">Click here to see</a>\""
-								+ "\n This is an automatic mail, Please do not reply");
+								+ "<br/> This is an automatic mail, Please do not reply");
 			}
+
 			return new ApiResponse().sendData(comment, HttpStatus.ACCEPTED,
 					"Well done!! Commnet is successfully posted");
+		} catch (NullPointerException e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+
+	@PostMapping("/edit")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> edit_comment(@RequestParam("idea_id") int idea_id,
+			@RequestParam("text") String comment_text, @RequestParam(value = "mode", required = false) String mode,
+			@RequestParam("comment_id") int comment_id, HttpServletRequest request) {
+		try {
+			cm.edit_commnent(comment_id, comment_text);
+			return new ApiResponse().sendData("", HttpStatus.ACCEPTED, "Well done!! Commnet is successfully edited");
+		} catch (NullPointerException e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+		}
+	}
+
+	@GetMapping("/delete/{comment_id}")
+	@ResponseBody
+	public ResponseEntity<ApiResponse> delete_comment(@PathVariable("comment_id") int comment_id) {
+		try {
+			Person person = pm.getUserSession();
+			Comment comment = cm.getComment(comment_id);
+			if (person.getId() == comment.getPerson().getId()) {
+				cm.delete_comment(comment_id);
+				return new ApiResponse().sendData("", HttpStatus.ACCEPTED,
+						"Well done!! Commnet is successfully deleted");
+			} else {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "You are the owner of the comment");
+			}
 		} catch (NullPointerException e) {
 			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 		}
@@ -74,10 +112,11 @@ public class CommentController {
 	public ResponseEntity<ApiResponse> get_more_comments(@PathVariable("idea_id") int idea_id,
 			@PathVariable("no_comment") int no_comment) {
 		try {
-			int user_role = pm.getUserSession().getPerson_role();
-			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, user_role), HttpStatus.ACCEPTED, "");
+			Person p = pm.getUserSession();
+			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, p.getPerson_role()),
+					HttpStatus.ACCEPTED, "" + p.getId());
 		} catch (NullPointerException e) {
-			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, 0), HttpStatus.ACCEPTED, "");
+			return new ApiResponse().sendData(cm.getComments(idea_id, no_comment, 0), HttpStatus.ACCEPTED, "0");
 		}
 	}
 
