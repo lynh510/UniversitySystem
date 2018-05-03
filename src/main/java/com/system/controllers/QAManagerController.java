@@ -296,7 +296,7 @@ public class QAManagerController {
 			FileOutputStream fos = new FileOutputStream(file_name);
 			ZipOutputStream zipOut = new ZipOutputStream(fos);
 			for (Idea_attachfiles srcFile : listFile) {
-				File fileToZip = new File(srcFile.getLink().substring(1) + srcFile.getNew_name());
+				File fileToZip = new File(srcFile.getLink() + srcFile.getNew_name());
 				FileInputStream fis = new FileInputStream(fileToZip);
 				ZipEntry zipEntry = new ZipEntry(srcFile.getOld_name());
 				zipOut.putNextEntry(zipEntry);
