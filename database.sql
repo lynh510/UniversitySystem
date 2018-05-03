@@ -7,7 +7,8 @@ academic_year_id int identity(1,1) primary key,
 academic_year_start_date date,
 academic_year_end_date date,
 academic_year_final_date date,
-academic_year int
+academic_year int,
+_status int
 )
 create table Person(
 person_id int identity(1,1) primary key,

@@ -32,10 +32,12 @@ import com.system.models.*;;
 public class IdeaController {
 	private IdeaManagement im;
 	private PersonManagement pm;
+	MailApi m;
 
 	public IdeaController() {
 		im = new IdeaManagement();
 		pm = new PersonManagement();
+		m = new MailApi();
 	}
 
 	// http://localhost:8080/idea/page/1
@@ -216,8 +218,6 @@ public class IdeaController {
 				int idea_id = im.insert_idea(idea);
 				idea.setId(idea_id);
 				insert_tags(tags, idea);
-				MailApi m = new MailApi();
-
 				if (files.get(0).isEmpty()) {
 					System.out.println("no file is selected");
 				} else {

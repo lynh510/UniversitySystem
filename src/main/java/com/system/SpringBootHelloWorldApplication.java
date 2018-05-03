@@ -24,6 +24,6 @@ public class SpringBootHelloWorldApplication {
 				aym.check_final_close_date();
 			}
 		};
-		timer.schedule(hourlyTask, 24, 1000 * 60 * 60);
+		timer.schedule(hourlyTask, 24, 24 * 1000 * 60 * 60);
 	}
 }
