@@ -42,18 +42,21 @@
 			<option value="/idea/page/1">Latest ideas</option>
 		</select>
 	</div> -->
-	<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]"
-		style="margin-top: 10%; margin-bottom: 10%;">
-		<select class="form-control" name="forma"
-			onchange="location = this.value;">
-			<option selected="selected" disabled="disabled">Select an
-				option</option>
-			<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
-			<option value="/idea/mostliked/page/1">Most Popular ideas</option>
-			<option value="/idea/page/1">Latest ideas</option>
-		</select>
-	</div>
+	
 	<div class="section container">
+		<div class="row">
+			<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]"
+				style="margin-top: 5%; margin-bottom: 5%;">
+				<select class="form-control" name="forma"
+					onchange="location = this.value;">
+					<option selected="selected" disabled="disabled">Select an
+						option</option>
+					<option value="/idea/mostviewed/page/1">Most Viewed Ideas</option>
+					<option value="/idea/mostliked/page/1">Most Popular ideas</option>
+					<option value="/idea/page/1">Latest ideas</option>
+				</select>
+			</div>
+		</div>
 		<c:forEach items="${ideas}" var="idea">
 			<div class="row">
 				<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]">
