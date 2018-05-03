@@ -16,10 +16,12 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" href="/css/stu_submit_idea.css">
-<script type="text/javascript" src="/javascript/stu_sub_idea.js"></script>
 <style type="text/css">
 .form-control {
 	border: 1px solid black;
+}
+.navbar>.container {
+	margin-top: 0 !important;
 }
 </style>
 <script type="text/javascript">
@@ -77,7 +79,7 @@
 			</header>
 		</div>
 		<!-- CONTENT -->
-		<div class="container">
+		<div class="container" style="float: initial;">
 			<div class="row">
 				<div class="col-xs-12 col-sm-12 col-md-12">
 					<div class="panel-group" id="accordion">
@@ -207,6 +209,28 @@
 												required placeholder="Phone number..."
 												class="form-control blur" id="form-phone" maxlength="12"
 												onkeypress="phonenumber(this)">
+												<script type="text/javascript">
+													function phonenumber(inputtxt) {
+														var phoneno = /^[0-9]+/;
+														if(!inputtxt.value.match(phoneno)) {
+															document.getElementById('msgPhone').innerHTML = "Phone number is invalid!";
+															return false;
+														}
+														if(inputtxt.value == "") {
+															document.getElementById('msgPhone').innerHTML = "";
+															return false;
+														}
+														if(inputtxt.value.length < 10) {
+															document.getElementById('msgPhone').innerHTML = "Phone number must be at least 10 character!";
+															return false;
+														}
+														else {
+															document.getElementById('msgPhone').innerHTML = "";
+														    return true;
+														}
+														
+													}
+												</script>
 											<h6 style="color: red; margin-left: 5%;" id="msgPhone"></h6>
 										</div>
 										<div class="form-group">

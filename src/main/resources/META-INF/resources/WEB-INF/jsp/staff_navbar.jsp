@@ -19,11 +19,14 @@
 				</a>
 					<ul class="dropdown-menu">
 						<li class="external">
-							<h3>
+							<!-- <h3>
 								<span class="bold">12 pending</span> notifications
-							</h3> <a href="page_user_profile_1.html">view all</a>
+							</h3>  -->
+							<a href="page_user_profile_1.html"> 
+								<span class="label label-sm label-icon label-info"> <i class="fa fa-bullhorn"></i></span>     view all
+							</a>
 						</li>
-						<li>
+						<!-- <li>
 							<ul class="dropdown-menu-list">
 								<li><a href="javascript:;"> <span class="time">just
 											now</span> <span class="details"> <span
@@ -54,7 +57,7 @@
 									</span>
 								</a></li>
 							</ul>
-						</li>
+						</li> -->
 					</ul></li>
 
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

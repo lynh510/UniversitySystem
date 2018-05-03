@@ -10,11 +10,16 @@
 			</button>
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
-
-			<form method="post" action="/idea/search">
+			<div class="col-lg-6 col-md-6 col-sm-10 col-xs-12" style="display: inline-block;margin: 0;padding: 1%;"> 
+				<form method="post" action="/idea/search">
+					<input type="search" name="search" class="form-control" style="display: inline-block;width: 60%;margin-right: 2%;">
+					<input type="button" value="Search" class="form-control" style="display: inline-block;width: 20%;">
+				</form>
+			</div>
+			<!-- <form method="post" action="/idea/search">
 				<input type="search" name="search"><input type="button"
 					value="Search">
-			</form>
+			</form> -->
 
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"

@@ -23,7 +23,7 @@
 	src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <jsp:useBean id="helper" class="com.system.Helper" scope="page" />
-<title>${action}Academic Year</title>
+<title>${action} Academic Year</title>
 <style type="text/css">
 .container {
 	margin-top: 10%;
@@ -69,7 +69,7 @@ body {
 			<form id="${action}_academicYear_form" class="form-horizontal"
 				action="admin/${action}AcademicYear" method="post">
 				<!-- Form Name -->
-				<h3>${action}Academic Year</h3>
+				<h3>${action} Academic Year</h3>
 				<hr />
 				<!-- Text input-->
 				<div class="form-group">

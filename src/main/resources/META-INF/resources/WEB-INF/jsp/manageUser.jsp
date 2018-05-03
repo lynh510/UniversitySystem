@@ -24,7 +24,7 @@
 <title>Manage User</title>
 <style type="text/css">
 .container {
-	margin-top: 15%;
+	margin-top: 5%;
 }
 
 .form-group {
