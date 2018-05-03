@@ -21,6 +21,10 @@
 <jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>${action}AcademicYear</title>
 <style type="text/css">
+.navbar>.container {
+	margin-top: 0 !important;
+}
+
 .form-group {
 	margin-top: 3%;
 }
