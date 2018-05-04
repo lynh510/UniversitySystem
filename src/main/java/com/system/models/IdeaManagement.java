@@ -19,8 +19,8 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 1 or _status = 2 or _status = 4  ORDER BY post_date DESC OFFSET " + offset
-				+ " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
+		String sqlQuery = "SELECT * FROM Idea Where _status = 1 or _status = 2 or _status = 4  ORDER BY post_date DESC OFFSET "
+				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -119,7 +119,8 @@ public class IdeaManagement {
 		int result = 0;
 		String sqlQuery = "select count(*) from Idea where _status = 1";
 		if (user_id != 0) {
-			sqlQuery = "select count(*) from Idea _status = 1 or _status = 2 or _status = 4  and person_id = " + user_id;
+			sqlQuery = "select count(*) from Idea where _status = 1 or _status = 2 or _status = 4  and person_id = "
+					+ user_id;
 		}
 		try {
 			Connection connection = DataProcess.getConnection();
