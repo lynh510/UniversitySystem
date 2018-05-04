@@ -102,12 +102,14 @@
 							</h5>
 							<h6>${idea.views}&ensp;view(s)</h6>
 							<h6>
-								Status: 
+								Status:
 								<c:choose>
-									<c:when test="${idea.status == 0}">Opening</c:when>
-									<c:when test="${idea.status == 1}">Closing</c:when>
-									<c:when test="${idea.status == 2}">Closed</c:when>
-									<c:when test="${idea.status == 0}">Deleted</c:when>
+									<c:when test="${idea.status == 0}">Pending</c:when>
+									<c:when test="${idea.status == 1}">Opening</c:when>
+									<c:when test="${idea.status == 2}">Closing</c:when>
+									<c:when test="${idea.status == 3}">Denied</c:when>
+									<c:when test="${idea.status == 4}">Closed</c:when>
+									<c:when test="${idea.status == 5}">Deleted</c:when>
 								</c:choose>
 							</h6>
 						</div>

@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.system.entity.*;
 
@@ -117,6 +115,7 @@ public class AcademicYearManagement {
 					int academic_year = rs.getInt("academic_year_id");
 					close_academic_year(1, academic_year);
 					close_department(1, academic_year);
+					close_idea_by_academicyear(2, academic_year);
 					System.out.println("Closing academic year: " + rs.getInt("academic_year_id"));
 				}
 			}
@@ -137,7 +136,7 @@ public class AcademicYearManagement {
 					int academic_year = rs.getInt("academic_year_id");
 					close_academic_year(2, academic_year);
 					close_department(2, academic_year);
-					close_idea_by_academicyear(2, academic_year);
+					close_idea_by_academicyear(4, academic_year);
 					System.out.println("Closed academic year: " + rs.getInt("academic_year_id"));
 				}
 			}

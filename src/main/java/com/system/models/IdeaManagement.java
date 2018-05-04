@@ -19,7 +19,7 @@ public class IdeaManagement {
 	public List<Idea> getIdeasPerPage(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 1 ORDER BY post_date DESC OFFSET " + offset
+		String sqlQuery = "SELECT * FROM Idea Where _status = 1 or _status = 2 or _status = 4  ORDER BY post_date DESC OFFSET " + offset
 				+ " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -54,7 +54,7 @@ public class IdeaManagement {
 	public List<Idea> searchIdea(String search, int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 1 and idea_title like ? or idea_content like ?  ORDER BY post_date DESC OFFSET "
+		String sqlQuery = "SELECT * FROM Idea Where _status = 1 or _status = 2 or _status = 4  and idea_title like ? or idea_content like ?  ORDER BY post_date DESC OFFSET "
 				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -119,7 +119,7 @@ public class IdeaManagement {
 		int result = 0;
 		String sqlQuery = "select count(*) from Idea where _status = 1";
 		if (user_id != 0) {
-			sqlQuery = "select count(*) from Idea where _status = 1 and person_id = " + user_id;
+			sqlQuery = "select count(*) from Idea _status = 1 or _status = 2 or _status = 4  and person_id = " + user_id;
 		}
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -137,7 +137,7 @@ public class IdeaManagement {
 
 	public int countSearch(String keywords) {
 		int result = 0;
-		String sqlQuery = "SELECT count(*) FROM Idea Where _status = 1 and idea_title like ? or idea_content like ? ";
+		String sqlQuery = "SELECT count(*) FROM Idea Where _status = 1 or _status = 2 or _status = 4 and idea_title like ? or idea_content like ? ";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
@@ -258,7 +258,7 @@ public class IdeaManagement {
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
-			statement.setInt(1, 3);
+			statement.setInt(1, 5);
 			statement.setInt(2, idea_id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -360,7 +360,7 @@ public class IdeaManagement {
 	public List<Idea> MostLikedIdeas(int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "select *, (select count(*) from Idea_emoji where idea_id = i.idea_id and emo_id = 1) as likecount from Idea i ORDER BY likecount DESC OFFSET "
+		String sqlQuery = "select *, (select count(*) from Idea_emoji where idea_id = i.idea_id and emo_id = 1) as likecount from Idea i where _status = 1 or _status = 2 or _status = 4 ORDER BY likecount DESC OFFSET "
 				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();

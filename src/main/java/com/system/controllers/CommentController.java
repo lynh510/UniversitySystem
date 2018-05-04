@@ -37,7 +37,7 @@ public class CommentController {
 			HttpServletRequest request) {
 		try {
 			Idea idea = im.get_Idea(idea_id);
-			if (idea.getStatus() == 2) {
+			if (idea.getStatus() == 4) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "The idea has been closed");
 			} else if (comment_text.equals("")) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Please fill-in something");

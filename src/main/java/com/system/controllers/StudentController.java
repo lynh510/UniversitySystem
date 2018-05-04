@@ -67,6 +67,25 @@ public class StudentController {
 		return mnv;
 	}
 
+	@GetMapping("/submit_idea2")
+	public ModelAndView submit_idea2(RedirectAttributes redirectAttributes) {
+		ModelAndView mnv = new ModelAndView();
+		try {
+			Person p = (Person) pm.getUserSession();
+			if (p.getPerson_role() != 0) {
+				mnv = new ModelAndView("redirect:/idea/page/1");
+			} else {
+				mnv = new ModelAndView("student_submit_idea2");
+				mnv.addObject("tags", tm.getTagsByDepartment(p.getDepartment().getId()));
+				mnv.addObject("user_id", helper.encryptID(p.getId() + ""));
+				mnv.addObject("welcom", p);
+			}
+		} catch (Exception e) {
+			mnv = new ModelAndView("redirect:/student/login");
+		}
+		return mnv;
+	}
+
 	// http://localhost:8080/student/terms
 	@GetMapping("/terms")
 	public ModelAndView terms() {
