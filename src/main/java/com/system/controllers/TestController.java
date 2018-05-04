@@ -25,7 +25,7 @@ public class TestController {
 
 	@RequestMapping("/")
 	public ModelAndView firstPage() {
-		return new ModelAndView("redirect:/student/login");
+		return new ModelAndView("redirect:/home");
 	}
 
 	@RequestMapping("/home")

@@ -89,6 +89,35 @@ public class PersonManagement {
 		return users;
 	}
 
+	public List<Person> getStudent() {
+		List<Person> users = new ArrayList<>();
+		try {
+			String sqlQuery = "select * from Person where person_role = 0  order by person_name";
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Person p = new Person();
+				p.setId(rs.getInt("person_id"));
+				p.setPerson_picture("/image/" + rs.getString(2));
+				p.setPerson_name(rs.getString("person_name"));
+				p.setPerson_role(rs.getInt("person_role"));
+				p.setBirthdate(rs.getDate("birthdate"));
+				p.setGender(rs.getInt("gender"));
+				p.setStatus(rs.getInt("_status"));
+				p.setPhone(rs.getString("phone_number"));
+				p.setEnroll_date(rs.getDate("enroll_date"));
+				p.setAddress(rs.getString("_address"));
+				p.setEmail(rs.getString("email"));
+				p.setDepartment(dm.getDepartment(rs.getInt("dept_id")));
+				users.add(p);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return users;
+	}
+
 	public void manageUser(int status, int user_id) {
 		String sql = "update Person set _status = ? where person_id = ?";
 		try {

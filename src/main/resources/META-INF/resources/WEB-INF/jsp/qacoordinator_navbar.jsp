@@ -19,6 +19,8 @@
 				<ul class="dropdown-menu">
 					<li><a href="/qacoordinator/dashboard"><i
 							class="fa fa-fw fa-plus"></i> Dash board</a></li>
+					<li><a href="/qacoordinator/send_email"><i
+							class="fa fa-fw fa-send"></i> Send email</a></li>
 					<li><a href="/qacoordinator/edit_account"><i
 							class="fa fa-fw fa-user"></i> Edit Profile</a></li>
 					<li><a href="/qacoordinator/change_password"><i

@@ -243,4 +243,33 @@ public class QACoordinatorController {
 		}
 		return model;
 	}
+
+	@RequestMapping("/send_email")
+	public ModelAndView send_email() {
+		ModelAndView model = new ModelAndView("sendEmail");
+		try {
+			Person qa_coordinator = getQACoordinatorSession();
+			model.addObject("qaCoordinator", qa_coordinator);
+			model.addObject("students", pm.getStudent());
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qacoordinator/login");
+		}
+	}
+
+	@PostMapping("/send_email")
+	public ResponseEntity<ApiResponse> send_email_post(
+			@RequestParam(value = "emails", required = false) List<String> emails, @RequestParam("title") String title,
+			@RequestParam("content") String content) {
+		try {
+			for (String string : emails) {
+				mail.sendHtmlEmail(string, title, content);
+			}
+			return new ApiResponse().send(HttpStatus.ACCEPTED, "Send mail succesfully");
+
+		} catch (NullPointerException e) {
+			return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Please select a student");
+		}
+
+	}
 }
