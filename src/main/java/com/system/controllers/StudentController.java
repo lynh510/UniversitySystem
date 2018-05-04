@@ -200,6 +200,9 @@ public class StudentController {
 				model = new ModelAndView("redirect:/idea/page/" + currentPage);
 			}
 			IdeaManagement im = new IdeaManagement();
+			if (pm.getUserSession().getId() != helper.decodeID(person_id)) {
+				return new ModelAndView("redirect:/student/login");
+			}
 			im.delete_idea(helper.decodeID(id));
 			return model;
 		} catch (Exception e) {

@@ -258,7 +258,7 @@ public class IdeaManagement {
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
-			statement.setInt(1, 2);
+			statement.setInt(1, 3);
 			statement.setInt(2, idea_id);
 			statement.executeUpdate();
 		} catch (SQLException e) {

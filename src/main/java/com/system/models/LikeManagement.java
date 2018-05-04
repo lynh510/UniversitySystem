@@ -109,7 +109,7 @@ public class LikeManagement {
 				flag = result.getInt(2);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		return flag;

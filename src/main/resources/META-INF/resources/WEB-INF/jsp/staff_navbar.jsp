@@ -10,6 +10,15 @@
 			</button>
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
+			<div class="col-lg-6 col-md-6 col-sm-10 col-xs-12"
+				style="display: inline-block; margin: 0; padding: 1%;">
+				<form method="post" action="/idea/search">
+					<input type="search" name="search" class="form-control"
+						style="display: inline-block; width: 60%; margin-right: 2%;">
+					<input type="button" value="Search" class="form-control"
+						style="display: inline-block; width: 20%;">
+				</form>
+			</div>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown dropdown-notification open"><a
 					class="dropdown-toggle" href="javascript:;" data-toggle="dropdown"
@@ -21,10 +30,10 @@
 						<li class="external">
 							<!-- <h3>
 								<span class="bold">12 pending</span> notifications
-							</h3>  -->
-							<a href="page_user_profile_1.html"> 
-								<span class="label label-sm label-icon label-info"> <i class="fa fa-bullhorn"></i></span>     view all
-							</a>
+							</h3>  --> <a href="page_user_profile_1.html"> <span
+								class="label label-sm label-icon label-info"> <i
+									class="fa fa-bullhorn"></i></span> view all
+						</a>
 						</li>
 						<!-- <li>
 							<ul class="dropdown-menu-list">
@@ -68,8 +77,8 @@
 						</b></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/staff/edit_account"><i class="fa fa-fw fa-user"></i> Edit
-								Profile</a></li>
+						<li><a href="/staff/edit_account"><i
+								class="fa fa-fw fa-user"></i> Edit Profile</a></li>
 						<li><a href="/staff/change_password"><i
 								class="fa fa-fw fa-cog"></i> Change Password</a></li>
 						<li class="divider"></li>
