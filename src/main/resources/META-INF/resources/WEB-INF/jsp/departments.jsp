@@ -18,6 +18,10 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link type="text/css" rel="stylesheet" href="/css/jquery-te-1.4.0.css">
+
+<script type="text/javascript" src="/javascript/jquery-te-1.4.0.min.js"
+	charset="utf-8"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <jsp:useBean id="helper" class="com.system.Helper" scope="page" />
 <title>Idea Management</title>
@@ -79,8 +83,8 @@ table {
 				data : $("#acceptform").serialize(),
 				success : function(response) {
 					alert(response.message);
-					$('#acceptModal').modal('hide');
-					jQuery('#ideas' ).load(' #ideas');				
+					jQuery('#ideas' ).load(' #ideas');
+					$('#acceptModal').modal('hide');							
 				},
 				error : function(xhr, response, error) {
 
@@ -151,9 +155,13 @@ table {
 				<div class="modal-body">
 					<p id="message">Are you sure?</p>
 					<form id="acceptform" action="" method="post">
+						<textarea name="content" required="required" class="jqte-test">Write reasons below</textarea>
 						<input type="hidden" id="idea_id" name="idea_id" value="" /> <input
 							type="hidden" id="action" name="action" value=""> <input
 							type="submit" class="btn" value="Yes" />
+						<script>
+				$('.jqte-test').jqte();
+			</script>
 					</form>
 				</div>
 				<div class="modal-footer">

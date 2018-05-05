@@ -232,7 +232,7 @@ public class IdeaController {
 								+ helper.encryptID(idea_id + "") + "\">Click here to see</a>\""
 								+ "<br/> This is an automatic email, Please do not reply");
 				return new ApiResponse().send(HttpStatus.ACCEPTED,
-						"Well done!! Your idea is posted successfully. Please wait util your idea get approve ");
+						"Well done!! Your idea is posted successfully. Please wait util your idea get approved");
 			} else if (p.getDepartment().getStatus() == 1) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
 						"The Academic is closing, you cannot submit more ideas");

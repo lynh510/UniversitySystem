@@ -146,7 +146,7 @@ public class QACoordinatorController {
 	@PostMapping("/approve")
 	@ResponseBody
 	public ResponseEntity<ApiResponse> approve_idea(@RequestParam("idea_id") int idea_id,
-			@RequestParam("action") int action, HttpServletRequest request) {
+			@RequestParam("action") int action, @RequestParam("content") String content, HttpServletRequest request) {
 		try {
 			if (action == 1) {
 				im.approve_idea(idea_id);
@@ -154,9 +154,9 @@ public class QACoordinatorController {
 						request.getServerPort());
 				Idea i = im.get_Idea(idea_id);
 				mail.sendHtmlEmail(i.getPerson().getEmail(), "Idea approval",
-						"Your idea has been approved. Please enjoy your time." + "\n<a href=\"" + baseUrl + "/idea/"
-								+ idea_id + "\">Click here to see your idea</a>\""
-								+ "\n This is an automatic email, Please do not reply");
+						content + "" + "<br/><a href=\"" + baseUrl + "/idea/" + helper.encryptID(idea_id + "")
+								+ "\">Click here to see your idea</a>\""
+								+ "<br/> This is an automatic email, Please do not reply");
 				return new ApiResponse().send(HttpStatus.ACCEPTED, "The idea has been approved");
 			} else {
 				im.denied_idea(idea_id);
@@ -164,10 +164,9 @@ public class QACoordinatorController {
 				String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 						request.getServerPort());
 				mail.sendHtmlEmail(i.getPerson().getEmail(), "Idea denial",
-						"Your idea has been denied for some reasons below.\n"
-								+ " - Inappropriate content.\n - Unrelarted to the topic\n" + "\n<a href=\"" + baseUrl
-								+ "/idea/" + idea_id + "\">Click here to see your idea</a>\""
-								+ "\n This is an automatic email, Please do not reply");
+						content + "<br/><a href=\"" + baseUrl + "/idea/" + helper.encryptID(idea_id + "")
+								+ "\">Click here to see your idea</a>\""
+								+ "<br/> This is an automatic email, Please do not reply");
 				return new ApiResponse().send(HttpStatus.ACCEPTED, "The idea has been denided");
 			}
 
