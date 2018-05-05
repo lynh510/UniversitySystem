@@ -54,7 +54,7 @@ public class IdeaManagement {
 	public List<Idea> searchIdea(String search, int currentPage, int itemPerPage) {
 		List<Idea> ideaList = new ArrayList<>();
 		int offset = itemPerPage * (currentPage - 1);
-		String sqlQuery = "SELECT * FROM Idea Where _status = 1 or _status = 2 or _status = 4  and idea_title like ? or idea_content like ?  ORDER BY post_date DESC OFFSET "
+		String sqlQuery = "SELECT * FROM Idea Where (_status = 1 or _status = 2 or _status = 4)  and (idea_title like ? or idea_content like ?)  ORDER BY post_date DESC OFFSET "
 				+ offset + " ROWS FETCH NEXT " + itemPerPage + " ROWS ONLY";
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -137,7 +137,7 @@ public class IdeaManagement {
 
 	public int countSearch(String keywords) {
 		int result = 0;
-		String sqlQuery = "SELECT count(*) FROM Idea Where _status = 1 or _status = 2 or _status = 4 and idea_title like ? or idea_content like ? ";
+		String sqlQuery = "SELECT count(*) FROM Idea Where (_status = 1 or _status = 2 or _status = 4) and (idea_title like ? or idea_content like ?) ";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

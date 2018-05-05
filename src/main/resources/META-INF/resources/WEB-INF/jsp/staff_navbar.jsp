@@ -15,7 +15,7 @@
 				<form method="post" action="/idea/search">
 					<input type="search" name="search" class="form-control"
 						style="display: inline-block; width: 60%; margin-right: 2%;">
-					<input type="button" value="Search" class="form-control"
+					<input type="submit" value="Search" class="form-control"
 						style="display: inline-block; width: 20%;">
 				</form>
 			</div>

@@ -123,8 +123,8 @@
 									class="fa fa-fw fa-plus"></i> Add idea</a></li>
 							<li><a href="/student/edit_account"><i
 									class="fa fa-fw fa-user"></i> Edit Profile</a></li>
-							<li><a href="#"><i class="fa fa-fw fa-cog"></i> Change
-									Password</a></li>
+							<li><a href="/student/change_password"><i
+									class="fa fa-fw fa-cog"></i> Change Password</a></li>
 							<li class="divider"></li>
 							<li><a href="/student/logout"><i
 									class="fa fa-fw fa-power-off"></i> Logout</a></li>
