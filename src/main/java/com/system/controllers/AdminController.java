@@ -450,7 +450,7 @@ public class AdminController {
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();
 			List<Integer> years = new ArrayList<Integer>();
-			List<Department> listDeparment = dm.getDepartments(0);
+			List<Department> listDeparment = dm.getDepartmentByStatus(0);
 			for (int month = 1; month < 13; month++) {
 				months.add(month);
 			}

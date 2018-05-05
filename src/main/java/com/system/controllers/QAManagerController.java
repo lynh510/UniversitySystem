@@ -143,7 +143,21 @@ public class QAManagerController {
 		try {
 			Person qamanager = qm.getQAManagerSession();
 			ModelAndView model = new ModelAndView("list_files");
-			model.addObject("departments", dm.getDepartments(2));
+			model.addObject("departments", dm.getAllDepartments());
+			model.addObject("qaManager", qamanager);
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qamanager/login");
+		}
+
+	}
+
+	@RequestMapping("/contributions/{status}")
+	public ModelAndView get_contributions_by_status(@PathVariable("status") int status) {
+		try {
+			Person qamanager = qm.getQAManagerSession();
+			ModelAndView model = new ModelAndView("list_files");
+			model.addObject("departments", dm.getDepartmentByStatus(status));
 			model.addObject("qaManager", qamanager);
 			return model;
 		} catch (NullPointerException e) {

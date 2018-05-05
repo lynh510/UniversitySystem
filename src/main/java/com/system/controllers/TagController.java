@@ -44,7 +44,7 @@ public class TagController {
 		ModelAndView model = new ModelAndView("add_category");
 		try {
 			Person qamanager = qmm.getQAManagerSession();
-			model.addObject("departments", dm.getDepartments(0));
+			model.addObject("departments", dm.getDepartmentByStatus(0));
 			model.addObject("qaManager", qamanager);
 		} catch (NullPointerException e) {
 			model = new ModelAndView("redirect:/qamanager/login");
@@ -55,7 +55,7 @@ public class TagController {
 	@PostMapping("/add")
 	public ModelAndView add_tag(@RequestParam("tag_name") String tag_name, @RequestParam("dept_id") int dept_id) {
 		ModelAndView model = new ModelAndView("add_category");
-		model.addObject("departments", dm.getDepartments(0));
+		model.addObject("departments", dm.getDepartmentByStatus(0));
 		if (!tm.chec_exist(tag_name)) {
 			Tag t = new Tag(tag_name, new Department(dept_id), 0);
 			tm.insert_tag(t);

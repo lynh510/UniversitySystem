@@ -76,8 +76,16 @@ table {
 	<jsp:include page="qamanager_navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
+			<select class="form-control" name="forma"
+				onchange="location = this.value;">
+				<option selected="selected" disabled="disabled">Select a
+					status</option>
+				<option value="/qamanager/contributions/0">Opening</option>
+				<option value="/qamanager/contributions/1">Closing</option>
+				<option value="/qamanager/contributions/2">Closed</option>
+			</select>
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<h3 style="color: red">${message}</h3>
+				<h3 style="color: red">${message}</h3>
 				<c:forEach items="${departments}" var="dept">
 					<form id="download_form_${dept.id}" action="/qamanager/zip"
 						method="post">
