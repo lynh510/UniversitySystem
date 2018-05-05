@@ -1,11 +1,13 @@
-<div class="col-xs-12 col-sm-12 col-md-12" id="highchart1" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
-	<script type="text/javascript">
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart1"
+	style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<script type="text/javascript">
 	Highcharts.chart('highchart1', {
 	    chart: {
 	        type: 'column'
 	    },
 	    title: {
-	        text: 'Number of ideas by each Department statistics. April, 2018'
+	        text: 'Number of ideas by each Department statistics ${message}'
 	    },
 	    subtitle: {
 	        text: 'Click the columns to view versions.'
@@ -47,9 +49,10 @@
 	    ]
 	});
 	</script>
-	
-	<div class="col-xs-12 col-sm-12 col-md-12" id="piechart" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
-	<script type="text/javascript">
+
+<div class="col-xs-12 col-sm-12 col-md-12" id="piechart"
+	style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<script type="text/javascript">
 	Highcharts.chart('piechart', {
 	    chart: {
 	        plotBackgroundColor: null,
@@ -58,7 +61,7 @@
 	        type: 'pie'
 	    },
 	    title: {
-	        text: 'Percentage of ideas by each Department statistics. April, 2018'
+	        text: 'Percentage of ideas by each Department statistics ${message}'
 	    },
 	    tooltip: {
 	        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -80,15 +83,16 @@
 	    }]
 	});
 	</script>
-	
-	<div class="col-xs-12 col-sm-12 col-md-12" id="highchart2" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
-	<script type="text/javascript">
+
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart2"
+	style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<script type="text/javascript">
 	Highcharts.chart('highchart2', {
 	    chart: {
 	        type: 'column'
 	    },
 	    title: {
-	        text: 'Number of contributors within each Department statistics. April, 2018'
+	        text: 'Number of contributors within each Department statistics ${message}'
 	    },
 	    subtitle: {
 	        text: 'Click the columns to view versions.'
@@ -130,14 +134,15 @@
 	});
 	</script>
 
-<div class="col-xs-12 col-sm-12 col-md-12" id="highchart3" style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
-	<script type="text/javascript">
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart3"
+	style="min-width: 310px; height: 400px; margin: 0 auto 5% auto;"></div>
+<script type="text/javascript">
 	Highcharts.chart('highchart3', {
 	    chart: {
 	        type: 'column'
 	    },
 	    title: {
-	        text: 'Ideas without a comment statistics. April, 2018'
+	        text: 'Ideas without a comment statistics ${message}'
 	    },
 	    subtitle: {
 	        text: 'Click the columns to view versions.'
@@ -178,15 +183,16 @@
 	    ]
 	});
 	</script>
-	
-	<div class="col-xs-12 col-sm-12 col-md-12" id="highchart4" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-	<script type="text/javascript">
+
+<div class="col-xs-12 col-sm-12 col-md-12" id="highchart4"
+	style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<script type="text/javascript">
 	Highcharts.chart('highchart4', {
 	    chart: {
 	        type: 'column'
 	    },
 	    title: {
-	        text: 'Anonymous ideas and comments'
+	        text: 'Anonymous ideas and comments ${message}'
 	    },
 	    xAxis: {
 	        categories: ['Ideas', 'Comments']

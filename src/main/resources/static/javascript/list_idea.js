@@ -15,17 +15,26 @@ function onThumbUp(idea_id, like) {
 				url : "/like/like",
 				data : $("#like_form" + idea_id).serialize(),
 				success : function(response) {
-					jQuery('#like_view_' + idea_id).load(
-							' #like_view_' + idea_id);
+					// jQuery('#like_view_' + idea_id).load(
+					// ' #like_view_' + idea_id);
 					// jQuery('#like-box' + idea_id).load(' #like-box' +
 					// idea_id);
+					var like_count = $('#like_count_' + idea_id).text();
+					var dislike_count = $('#dislike_count_' + idea_id).text();
 					if (like == 1) {
 						if ($('#btnthumbUp' + idea_id).css('background-color') == 'rgb(0, 0, 255)') {
 							$('#btnthumbUp' + idea_id).css('background-color',
 									'white');
 							$('#btnthumbUp' + idea_id + ' span').css('color',
 									'blue');
+							$('#like_count_' + idea_id).text(
+									parseInt(like_count) - 1);
 						} else {
+							if ($('#btnthumbDown' + idea_id).css(
+									'background-color') == 'rgb(255, 0, 0)') {
+								$('#dislike_count_' + idea_id).text(
+										parseInt(like_count) - 1);
+							}
 							$('#btnthumbUp' + idea_id).css('background-color',
 									'blue');
 							$('#btnthumbUp' + idea_id + ' span').css('color',
@@ -34,6 +43,8 @@ function onThumbUp(idea_id, like) {
 									'background-color', 'white');
 							$('#btnthumbDown' + idea_id + ' span').css('color',
 									'red');
+							$('#like_count_' + idea_id).text(
+									parseInt(like_count) + 1);
 						}
 					}
 					if (like == 2) {
@@ -43,7 +54,14 @@ function onThumbUp(idea_id, like) {
 									'background-color', 'white');
 							$('#btnthumbDown' + idea_id + ' span').css('color',
 									'red');
+							$('#dislike_count_' + idea_id).text(
+									parseInt(dislike_count) - 1);
 						} else {
+							if ($('#btnthumbUp' + idea_id).css(
+									'background-color') == 'rgb(0, 0, 255)') {
+								$('#like_count_' + idea_id).text(
+										parseInt(like_count) - 1);
+							}
 							$('#btnthumbDown' + idea_id).css(
 									'background-color', 'red');
 							$('#btnthumbDown' + idea_id + ' span').css('color',
@@ -52,6 +70,8 @@ function onThumbUp(idea_id, like) {
 									'white');
 							$('#btnthumbUp' + idea_id + ' span').css('color',
 									'blue');
+							$('#dislike_count_' + idea_id).text(
+									parseInt(dislike_count) + 1);
 						}
 					}
 				},

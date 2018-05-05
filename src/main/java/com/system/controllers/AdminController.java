@@ -310,7 +310,8 @@ public class AdminController {
 			Person admin = getAdminSession();
 			ModelAndView model = new ModelAndView("statistic");
 			model.addObject("admin", admin);
-			model.addObject("message", "Statistical report of the whole system");
+			model.addObject("message", "of the whole system");
+			model.addObject("navbar", "admin_navbar.jsp");
 			model.addObject("academicYear", aym.getAcademicYear());
 			model.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
 			model.addObject("numberOfContributor", rm.NummberOfContributor(0));
@@ -331,6 +332,7 @@ public class AdminController {
 			int academic_year = helper.decodeID(year_id);
 			AcademicYear ay = aym.get(academic_year);
 			model.addObject("admin", admin);
+			model.addObject("navbar", "admin_navbar.jsp");
 			model.addObject("message", "Academic year: " + ay.getSeason() + " - " + ay.getYear());
 			model.addObject("academicYear", aym.getAcademicYear());
 			model.addObject("numberOfIdeas", rm.NummberOfIdeas(academic_year));

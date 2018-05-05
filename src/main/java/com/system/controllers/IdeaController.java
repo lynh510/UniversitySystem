@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.system.ApiResponse;
+import com.system.Helper;
 import com.system.MailApi;
 import com.system.entity.*;
 import com.system.models.*;;
@@ -32,12 +33,14 @@ import com.system.models.*;;
 public class IdeaController {
 	private IdeaManagement im;
 	private PersonManagement pm;
-	MailApi m;
+	private MailApi m;
+	private Helper helper;
 
 	public IdeaController() {
 		im = new IdeaManagement();
 		pm = new PersonManagement();
 		m = new MailApi();
+		helper = new Helper();
 	}
 
 	// http://localhost:8080/idea/page/1
@@ -192,11 +195,11 @@ public class IdeaController {
 	}
 
 	@GetMapping("/{idea_id}")
-	public ModelAndView getIdea(@PathVariable("idea_id") Integer idea_id) {
+	public ModelAndView getIdea(@PathVariable("idea_id") String idea_id) {
 		im = new IdeaManagement();
 		ModelAndView model = new ModelAndView("display_idea");
 		List<Idea> listIdea = new ArrayList<Idea>();
-		listIdea.add(im.get_Idea(idea_id));
+		listIdea.add(im.get_Idea(helper.decodeID(idea_id)));
 		model.addObject("ideas", listIdea);
 		model.addObject("noOfPages", 1);
 		model.addObject("currentPage", 1);
@@ -225,8 +228,8 @@ public class IdeaController {
 				}
 				m.sendHtmlEmail("universityofu23.coordinator@gmail.com",
 						"New Idea submission from " + p.getPerson_name(),
-						"A new idea is submitted" + "<br/><a href=\"" + baseUrl + "/idea/" + idea_id
-								+ "\">Click here to see</a>\""
+						"A new idea is submitted" + "<br/><a href=\"" + baseUrl + "/idea/"
+								+ helper.encryptID(idea_id + "") + "\">Click here to see</a>\""
 								+ "<br/> This is an automatic email, Please do not reply");
 				return new ApiResponse().send(HttpStatus.ACCEPTED,
 						"Well done!! Your idea is posted successfully. Please wait util your idea get approve ");

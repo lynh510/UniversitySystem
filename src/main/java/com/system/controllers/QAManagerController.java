@@ -44,6 +44,7 @@ public class QAManagerController {
 	private IdeaAttachFileManagement iafm;
 	private Helper helper;
 	private PersonManagement pm;
+	private AcademicYearManagement aym;
 
 	public QAManagerController() {
 		elm = new ExternalLoginManagement();
@@ -54,6 +55,7 @@ public class QAManagerController {
 		iafm = new IdeaAttachFileManagement();
 		pm = new PersonManagement();
 		helper = new Helper();
+		aym = new AcademicYearManagement();
 	}
 
 	@RequestMapping("/login")
@@ -170,16 +172,36 @@ public class QAManagerController {
 		}
 	}
 
-	@RequestMapping("/chart")
-	public ModelAndView chartPage() {
-		ModelAndView mv = new ModelAndView("chart");
-		mv.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
-		mv.addObject("numberOfContributor", rm.NummberOfContributor(0));
-		mv.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
-		mv.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
-		mv.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
-		return mv;
+	@GetMapping("/statistic")
+	public ModelAndView statistic() {
+		try {
+			Person qa = qm.getQAManagerSession();
+			ModelAndView model = new ModelAndView("statistic");
+			model.addObject("qaManager", qa);
+			model.addObject("message", "of the whole system");
+			model.addObject("navbar", "qamanager_navbar.jsp");
+			model.addObject("academicYear", aym.getAcademicYear());
+			model.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
+			model.addObject("numberOfContributor", rm.NummberOfContributor(0));
+			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
+			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
+			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qamanager/login");
+		}
 	}
+
+	// @RequestMapping("/chart")
+	// public ModelAndView chartPage() {
+	// ModelAndView mv = new ModelAndView("chart");
+	// mv.addObject("numberOfIdeas", rm.NummberOfIdeas(0));
+	// mv.addObject("numberOfContributor", rm.NummberOfContributor(0));
+	// mv.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
+	// mv.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
+	// mv.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
+	// return mv;
+	// }
 
 	@PostMapping("/external_login")
 	@ResponseBody

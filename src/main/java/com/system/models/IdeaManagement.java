@@ -117,10 +117,9 @@ public class IdeaManagement {
 
 	public int noOfRecords(int user_id) {
 		int result = 0;
-		String sqlQuery = "select count(*) from Idea where _status = 1";
+		String sqlQuery = "select count(*) from Idea where _status = 1 or _status = 2 or _status = 4";
 		if (user_id != 0) {
-			sqlQuery = "select count(*) from Idea where _status = 1 or _status = 2 or _status = 4  and person_id = "
-					+ user_id;
+			sqlQuery = "select count(*) from Idea where person_id = " + user_id;
 		}
 		try {
 			Connection connection = DataProcess.getConnection();
@@ -317,7 +316,7 @@ public class IdeaManagement {
 	}
 
 	public void denied_idea(int idea_id) {
-		String sqlQuery = "Update Idea set _status = 2 where idea_id = ?";
+		String sqlQuery = "Update Idea set _status = 3 where idea_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

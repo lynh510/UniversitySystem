@@ -121,10 +121,5 @@
 			</div>
 		</div>
 	</div>
-
-	<div id="chart"></div>
-	<script type="text/javascript">
-		$("#chart").load("/qamanager/chart");
-	</script>
 </body>
 </html>

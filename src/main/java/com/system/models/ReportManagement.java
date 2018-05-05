@@ -20,7 +20,8 @@ public class ReportManagement {
 		for (Entry<Department, Integer> entry : NumberOfIdeas(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
+			value += "{\"name\": \"" + d.getDept_name() + " (" + d.getAcademic_year().getSeason() + " - "
+					+ d.getAcademic_year().getYear() + ")" + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
 					+ "\"},";
 		}
 		return value + "]";
@@ -31,7 +32,8 @@ public class ReportManagement {
 		for (Entry<Department, Integer> entry : numberOfContributor(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
+			value += "{\"name\": \"" + d.getDept_name() + " (" + d.getAcademic_year().getSeason() + " - "
+					+ d.getAcademic_year().getYear() + ")" + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
 					+ "\"},";
 		}
 		return value + "]";
@@ -42,7 +44,8 @@ public class ReportManagement {
 		for (Entry<Department, Float> entry : percentageOfIdeas(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Float i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
+			value += "{\"name\": \"" + d.getDept_name() + " (" + d.getAcademic_year().getSeason() + " - "
+					+ d.getAcademic_year().getYear() + ")" + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
 					+ "\"},";
 		}
 		return value + "]";
@@ -53,7 +56,8 @@ public class ReportManagement {
 		for (Entry<Department, Integer> entry : ideaWithoutComment(academic_year).entrySet()) {
 			Department d = entry.getKey();
 			Integer i = entry.getValue();
-			value += "{\"name\": \"" + d.getDept_name() + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
+			value += "{\"name\": \"" + d.getDept_name() + " (" + d.getAcademic_year().getSeason() + " - "
+					+ d.getAcademic_year().getYear() + ")" + "\",\"y\":" + i + ",\"drilldown\":\"" + d.getDept_name()
 					+ "\"},";
 		}
 		return value + "]";
@@ -65,7 +69,8 @@ public class ReportManagement {
 			Department d = entry.getKey();
 			Integer ideas = entry.getValue()[0];
 			Integer comments = entry.getValue()[1];
-			value += "{name: '" + d.getDept_name() + "',data: [" + ideas + ", " + comments + "]},";
+			value += "{name: '" + d.getDept_name() + " (" + d.getAcademic_year().getSeason() + " - "
+					+ d.getAcademic_year().getYear() + ")" + "',data: [" + ideas + ", " + comments + "]},";
 		}
 		return value + "]";
 	}
@@ -74,9 +79,9 @@ public class ReportManagement {
 		HashMap<Department, Integer> numberOfIdea = new HashMap<>();
 		String sqlQuery = "";
 		if (academic_id == 0) {
-			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter) as _counter  from Department d join AcademicYear ay on ay.academic_year_id = d.academic_year_id";
 		} else {
-			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d where academic_year_id = "
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter) as _counter  from Department d join AcademicYear ay on ay.academic_year_id = d.academic_year_id where d.academic_year_id = "
 					+ academic_id;
 		}
 		try {
@@ -86,6 +91,10 @@ public class ReportManagement {
 			while (rs.next()) {
 				Department d = new Department();
 				d.setDept_name(rs.getString("dept_name"));
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
 				numberOfIdea.put(d, rs.getInt("_counter"));
 			}
 		} catch (SQLException e) {
@@ -97,12 +106,11 @@ public class ReportManagement {
 	public HashMap<Department, Float> percentageOfIdeas(int academic_year) {
 		HashMap<Department, Float> percentageOfIdeas = new HashMap<>();
 		int totalOfIdea = countIdeas(academic_year);
-		String sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
+		String sqlQuery = "";
 		if (academic_year == 0) {
-			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d ";
-
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter) as _counter  from Department d join AcademicYear ay on ay.academic_year_id = d.academic_year_id";
 		} else {
-			sqlQuery = "select d.dept_name, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where p.dept_id = d.dept_id) as _counter) as _counter  from Department d where academic_year_id = "
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year, (select count(*) from (select distinct i.idea_id, d.dept_id from Idea i join Person p on i.person_id = p.person_id  where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter) as _counter  from Department d join AcademicYear ay on ay.academic_year_id = d.academic_year_id where d.academic_year_id = "
 					+ academic_year;
 		}
 		try {
@@ -112,6 +120,10 @@ public class ReportManagement {
 			while (rs.next()) {
 				Department d = new Department();
 				d.setDept_name(rs.getString("dept_name"));
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
 				float percent = rs.getInt("_counter") * 100f / totalOfIdea;
 				percentageOfIdeas.put(d, percent);
 			}
@@ -125,9 +137,9 @@ public class ReportManagement {
 		int count = 0;
 		String sqlQuery = "";
 		if (academic_year == 0) {
-			sqlQuery = "select count(*) from Idea where _status = 1";
+			sqlQuery = "select count(*) from Idea where _status = 1 or _status = 2 or _status = 4";
 		} else {
-			sqlQuery = "select count(*) from Idea i join Person p on p.person_id = i.person_id join Department d on d.dept_id = p.dept_id join AcademicYear ay on ay.academic_year_id = d.academic_year_id where ay.academic_year_id = "
+			sqlQuery = "select count(*) from Idea i join Person p on p.person_id = i.person_id join Department d on d.dept_id = p.dept_id join AcademicYear ay on ay.academic_year_id = d.academic_year_id where  (i._status = 1 or i._status = 2 or i._status = 4) and ay.academic_year_id = "
 					+ academic_year;
 		}
 		try {
@@ -145,11 +157,11 @@ public class ReportManagement {
 
 	public HashMap<Department, Integer> ideaWithoutComment(int academic_year) {
 		HashMap<Department, Integer> ideaWithoutComment = new HashMap<>();
-		String sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d";
+		String sqlQuery = "";
 		if (academic_year == 0) {
-			sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d";
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id  where (i._status = 1 or i._status = 2 or i._status = 4) and d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id";
 		} else {
-			sqlQuery = "select d.dept_name,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d where academic_year_id = "
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,(select count(*) from (select i.idea_id, (select count(*) from Comment where idea_id = i.idea_id) as _counter from Idea i join Person p on p.person_id = i.person_id where  (i._status = 1 or i._status = 2 or i._status = 4) and d.dept_id = p.dept_id GROUP BY i.idea_id having (select count(*) from Comment where idea_id = i.idea_id) = 0) as _counter)as _counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id where d.academic_year_id = "
 					+ academic_year;
 		}
 		try {
@@ -158,6 +170,10 @@ public class ReportManagement {
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				Department d = new Department();
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
 				d.setDept_name(rs.getString("dept_name"));
 				ideaWithoutComment.put(d, rs.getInt("_counter"));
 			}
@@ -169,11 +185,11 @@ public class ReportManagement {
 
 	public HashMap<Department, Integer> numberOfContributor(int academic_year) {
 		HashMap<Department, Integer> NumberOfContributer = new HashMap<>();
-		String sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d";
+		String sqlQuery = "";
 		if (academic_year == 0) {
-			sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d";
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,( select count(distinct p.person_id) from Idea_attachfile ia join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id";
 		} else {
-			sqlQuery = "select d.dept_name,( select count(distinct p.person_id) from Idea_tag it join Tag t on it.tag_id = t.tag_id  join Idea_attachfile ia on it.idea_id = ia.idea_id join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where t.dept_id = d.dept_id) as _counter from Department d where academic_year_id = "
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,( select count(distinct p.person_id) from Idea_attachfile ia join Idea i on i.idea_id = ia.idea_id join Person p on p.person_id = i.person_id where (i._status = 1 or i._status = 2 or i._status = 4) and p.dept_id = d.dept_id) as _counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id where ay.academic_year_id = "
 					+ academic_year;
 		}
 		try {
@@ -182,6 +198,10 @@ public class ReportManagement {
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				Department d = new Department();
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
 				d.setDept_name(rs.getString("dept_name"));
 				NumberOfContributer.put(d, rs.getInt("_counter"));
 			}
@@ -193,11 +213,11 @@ public class ReportManagement {
 
 	public HashMap<Department, Integer[]> numberOfAnonymousIdeaAndComment(int academic_year) {
 		HashMap<Department, Integer[]> NumberOfAnonymousIdeaAndComment = new HashMap<>();
-		String sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d";
+		String sqlQuery = "";
 		if (academic_year == 0) {
-			sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d";
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id";
 		} else {
-			sqlQuery = "select d.dept_name,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d where academic_year_id = "
+			sqlQuery = "select d.dept_name,ay.season, ay.academic_year,(select count(*) from Idea i join Person p on p.person_id = i.person_id where mode = 0 and p.dept_id = d.dept_id) as idea_counter, (select count(*) from Comment c join Person p on p.person_id = c.person_id where mode = 1 and p.dept_id = d.dept_id) as comment_counter from Department d join AcademicYear ay on d.academic_year_id = ay.academic_year_id where ay.academic_year_id = "
 					+ academic_year;
 		}
 		try {
@@ -206,6 +226,10 @@ public class ReportManagement {
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				Department d = new Department();
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
 				d.setDept_name(rs.getString("dept_name"));
 				NumberOfAnonymousIdeaAndComment.put(d,
 						new Integer[] { rs.getInt("idea_counter"), rs.getInt("comment_counter") });

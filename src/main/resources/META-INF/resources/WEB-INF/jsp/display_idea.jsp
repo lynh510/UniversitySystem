@@ -42,7 +42,7 @@
 			<option value="/idea/page/1">Latest ideas</option>
 		</select>
 	</div> -->
-	
+
 	<div class="section container">
 		<div class="row">
 			<div class="[ col-xs-12 col-sm-offset-1 col-sm-10 col-md-10 ]"
@@ -101,6 +101,17 @@
 									value="unseen" id="seen-${idea.id}" />
 							</h5>
 							<h6>${idea.views}&ensp;view(s)</h6>
+							<h6>
+								Status:
+								<c:choose>
+									<c:when test="${idea.status == 0}">Pending</c:when>
+									<c:when test="${idea.status == 1}">Opening</c:when>
+									<c:when test="${idea.status == 2}">Closing</c:when>
+									<c:when test="${idea.status == 3}">Denied</c:when>
+									<c:when test="${idea.status == 4}">Closed</c:when>
+									<c:when test="${idea.status == 5}">Deleted</c:when>
+								</c:choose>
+							</h6>
 						</div>
 						<div class="panel-body">
 							<div class="ideaInfo${idea.id}">
@@ -159,8 +170,8 @@
 											});
 								});
 							</script>
-							<form id="edit_idea_form${idea.id}" method="post" style="display: none;"
-								action="/student/edit">
+							<form id="edit_idea_form${idea.id}" method="post"
+								style="display: none;" action="/student/edit">
 								<div class="editIdeaInfo${idea.id}">
 									<input type="hidden" name="idea_id" value="${idea.id}" /> <input
 										type="hidden" name="person_id" value="${welcome.id}" /><input
@@ -177,9 +188,10 @@
 							<div class="clearfix"></div>
 							<div class="box-likes">
 								<div class="row" id="like_view_${idea.id}">
-									<span><a href="#">${likes.count_like(1,idea.id)}</a></span> <span>Like
-										this</span> <span><a href="#">${likes.count_like(2,idea.id)}</a></span>
-									<span>Dislike this</span>
+									<span id="like_count_${idea.id}"><a href="#">${likes.count_like(1,idea.id)}</a></span>
+									<span>Like this</span> <span id="dislike_count_${idea.id}"><a
+										href="#">${likes.count_like(2,idea.id)}</a></span> <span>Dislike
+										this</span>
 								</div>
 								<div id="comment-count-${idea.id}" class="row">
 									<span>${comments.countCommentsPerIdea(idea.id) }

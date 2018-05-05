@@ -22,6 +22,8 @@
 							class="fa fa-fw fa-suitcase"></i> Tag management</a></li>
 					<li><a href="/qamanager/contributions"><i
 							class="fa fa-fw fa-download"></i> Download contributions</a></li>
+					<li><a href="/qamanager/statistic"><i
+							class="fa fa-fw fa-bar-chart-o"></i> System Statistics</a></li>
 					<li><a href="/qamanager/edit_account"><i
 							class="fa fa-fw fa-user"></i> Edit Profile</a></li>
 					<li><a href="/qamanager/change_password"><i

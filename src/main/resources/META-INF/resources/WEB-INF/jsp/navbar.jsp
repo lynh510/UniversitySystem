@@ -32,7 +32,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="/student/login"><i class="fa fa-fw fa-user"></i>
 								Student login</a></li>
-						<li><a href="/stafft/login"><i class="fa fa-fw fa-user"></i>
+						<li><a href="/staff/login"><i class="fa fa-fw fa-user"></i>
 								Staff login</a></li>
 					</ul></li>
 			</ul>

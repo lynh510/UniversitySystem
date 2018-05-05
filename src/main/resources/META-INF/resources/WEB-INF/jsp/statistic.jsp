@@ -55,9 +55,10 @@ body {
 </style>
 </head>
 <body>
-	<jsp:include page="admin_navbar.jsp"></jsp:include>
-	<div style="margin: auto; margin-top: 10%; margin-bottom: 5%; width: 70%">
-		<h2>${message}</h2>
+	<jsp:include page="${navbar}"></jsp:include>
+	<div
+		style="margin: auto; margin-top: 10%; margin-bottom: 5%; width: 70%">
+		<h2>Statistical reports ${message}</h2>
 		<select class="form-control" name="forma"
 			onchange="location = this.value;">
 			<option selected="selected" disabled="disabled">Select an
