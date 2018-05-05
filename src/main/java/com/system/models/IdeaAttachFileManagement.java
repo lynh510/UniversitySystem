@@ -44,7 +44,7 @@ public class IdeaAttachFileManagement {
 		String sqlQuery = "select ia.attachfile_id,ia.idea_id,ia.old_name,ia.file_type from "
 				+ "Idea_attachfile ia join Idea i on ia.idea_id = i.idea_id join "
 				+ "Person p on p.person_id = i.person_id join "
-				+ "Department d on d.dept_id = p.dept_id where d.dept_status = 2 and d.dept_id = ?";
+				+ "Department d on d.dept_id = p.dept_id where d.dept_id = ?";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
