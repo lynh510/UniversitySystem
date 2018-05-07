@@ -310,6 +310,7 @@ public class AdminController {
 			Person admin = getAdminSession();
 			ModelAndView model = new ModelAndView("statistic");
 			model.addObject("admin", admin);
+			model.addObject("role", "admin");
 			model.addObject("message", "of the whole system");
 			model.addObject("navbar", "admin_navbar.jsp");
 			model.addObject("academicYear", aym.getAcademicYear());
@@ -410,7 +411,7 @@ public class AdminController {
 	public ModelAndView edit_profile() {
 		try {
 			Person admin = getAdminSession();
-			Person p = pm.getPerson(admin.getId());
+			Person p = pm.getPerson2(admin.getId());
 			ModelAndView model = new ModelAndView("edit_account");
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();
@@ -645,7 +646,7 @@ public class AdminController {
 			model.addObject("welcome", p2);
 
 		} catch (NullPointerException e) {
-			model = new ModelAndView("redirect:/student/login");
+			model = new ModelAndView("redirect:/admin/login");
 		}
 		return model;
 	}

@@ -86,7 +86,7 @@ public class QAManagerController {
 	public ModelAndView edit_profile() {
 		try {
 			Person qaManager = qm.getQAManagerSession();
-			Person p = pm.getPerson(qaManager.getId());
+			Person p = pm.getPerson2(qaManager.getId());
 			ModelAndView model = new ModelAndView("edit_account");
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();
@@ -192,6 +192,7 @@ public class QAManagerController {
 			Person qa = qm.getQAManagerSession();
 			ModelAndView model = new ModelAndView("statistic");
 			model.addObject("qaManager", qa);
+			model.addObject("role", "qamanager");
 			model.addObject("message", "of the whole system");
 			model.addObject("navbar", "qamanager_navbar.jsp");
 			model.addObject("academicYear", aym.getAcademicYear());
@@ -200,6 +201,30 @@ public class QAManagerController {
 			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas(0));
 			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment(0));
 			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(0));
+			return model;
+		} catch (NullPointerException e) {
+			return new ModelAndView("redirect:/qamanager/login");
+		}
+	}
+
+	@GetMapping("/statistic/{year_id}")
+	public ModelAndView statistic_by_academicYear(@PathVariable("year_id") String year_id) {
+		try {
+			Person qa = qm.getQAManagerSession();
+			ModelAndView model = new ModelAndView("statistic");
+			int academic_year = helper.decodeID(year_id);
+			AcademicYear ay = aym.get(academic_year);
+			model.addObject("message", "Academic year: " + ay.getSeason() + " - " + ay.getYear());
+			model.addObject("qaManager", qa);
+			model.addObject("role", "qamanager");
+			model.addObject("message", "of the whole system");
+			model.addObject("navbar", "qamanager_navbar.jsp");
+			model.addObject("academicYear", aym.getAcademicYear());
+			model.addObject("numberOfIdeas", rm.NummberOfIdeas(academic_year));
+			model.addObject("numberOfContributor", rm.NummberOfContributor(academic_year));
+			model.addObject("percentageOfIdeas", rm.PercentageOfIdeas(academic_year));
+			model.addObject("ideasWithoutComment", rm.IdeasWithoutComment(academic_year));
+			model.addObject("anonymousIdeaAndComment", rm.anonymousIdeaAndComment(academic_year));
 			return model;
 		} catch (NullPointerException e) {
 			return new ModelAndView("redirect:/qamanager/login");

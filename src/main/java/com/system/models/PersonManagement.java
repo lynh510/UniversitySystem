@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.system.entity.Person;
+import com.system.entity.*;
 
 public class PersonManagement {
 	private DepartmentManagement dm;
@@ -22,6 +22,40 @@ public class PersonManagement {
 	}
 
 	public Person getPerson(int id) {
+		String sqlQuery = "select * from Person p join Department d on d.dept_id = p.dept_id join AcademicYear ay on ay.academic_year_id = d.academic_year_id  where p.person_id = "
+				+ id;
+		Person p = new Person();
+		try {
+			Connection connection = DataProcess.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				p.setId(id);
+				p.setPerson_picture("/image/" + rs.getString(2));
+				p.setPerson_name(rs.getString("person_name"));
+				p.setPerson_role(rs.getInt("person_role"));
+				p.setBirthdate(rs.getDate("birthdate"));
+				p.setGender(rs.getInt("gender"));
+				p.setStatus(rs.getInt("_status"));
+				p.setPhone(rs.getString("phone_number"));
+				p.setEnroll_date(rs.getDate("enroll_date"));
+				p.setEmail(rs.getString("email"));
+				p.setAddress(rs.getString("_address"));
+				Department d = new Department(rs.getInt("dept_id"), rs.getString("dept_name"));
+				AcademicYear ay = new AcademicYear();
+				ay.setSeason(rs.getString("season"));
+				ay.setYear(rs.getInt("academic_year"));
+				d.setAcademic_year(ay);
+				p.setDepartment(d);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return p;
+	}
+
+	public Person getPerson2(int id) {
 		String sqlQuery = "select * from Person where person_id = " + id;
 		Person p = new Person();
 		try {

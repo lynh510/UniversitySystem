@@ -100,7 +100,7 @@ public class StaffController {
 	public ModelAndView edit_profile() {
 		try {
 			Person staff = pm.getUserSession();
-			Person p = pm.getPerson(staff.getId());
+			Person p = pm.getPerson2(staff.getId());
 			ModelAndView model = new ModelAndView("edit_account");
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();

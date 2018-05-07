@@ -213,6 +213,15 @@ public class IdeaController {
 			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode,
 			HttpServletRequest request) {
 		try {
+			boolean flag = true;
+			for (MultipartFile multipartFile : files) {
+				if (multipartFile.getSize() > 20000000) {
+					flag = false;
+				}
+			}
+			if (flag == false) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Maximum file size is 20MB");
+			}
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
 			Person p = pm.getUserSession();

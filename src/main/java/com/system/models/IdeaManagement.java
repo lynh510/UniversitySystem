@@ -33,7 +33,7 @@ public class IdeaManagement {
 				idea.setStatus(rs.getInt("_status"));
 				idea.setMode(rs.getInt("mode"));
 				if (rs.getInt("mode") == 0) {
-					Person p = new Person();
+					Person p = pm.getPerson(rs.getInt("person_id"));
 					p.setPerson_name("Anonymous");
 					p.setPerson_picture("/uploads/default_avatar.png");
 					idea.setPerson(p);
@@ -42,7 +42,6 @@ public class IdeaManagement {
 				}
 				idea.setPost_date(rs.getDate("post_date"));
 				idea.setViews(rs.getInt("idea_views"));
-
 				ideaList.add(idea);
 			}
 		} catch (Exception e) {
@@ -70,7 +69,7 @@ public class IdeaManagement {
 				idea.setStatus(rs.getInt("_status"));
 				idea.setMode(rs.getInt("mode"));
 				if (rs.getInt("mode") == 0) {
-					Person p = new Person();
+					Person p = pm.getPerson(rs.getInt("person_id"));
 					p.setPerson_name("Anonymous");
 					p.setPerson_picture("/uploads/default_avatar.png");
 					idea.setPerson(p);
@@ -374,7 +373,7 @@ public class IdeaManagement {
 				idea.setStatus(rs.getInt("_status"));
 				idea.setMode(rs.getInt("mode"));
 				if (rs.getInt("mode") == 0) {
-					Person p = new Person();
+					Person p = pm.getPerson(rs.getInt("person_id"));
 					p.setPerson_name("Anonymous");
 					p.setPerson_picture("/uploads/default_avatar.png");
 					idea.setPerson(p);
@@ -408,7 +407,7 @@ public class IdeaManagement {
 				idea.setStatus(rs.getInt("_status"));
 				idea.setMode(rs.getInt("mode"));
 				if (rs.getInt("mode") == 0) {
-					Person p = new Person();
+					Person p = pm.getPerson(rs.getInt("person_id"));
 					p.setPerson_name("Anonymous");
 					p.setPerson_picture("/uploads/default_avatar.png");
 					idea.setPerson(p);

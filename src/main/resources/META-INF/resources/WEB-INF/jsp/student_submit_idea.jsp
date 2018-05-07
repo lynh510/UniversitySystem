@@ -195,7 +195,8 @@
 												</div>
 											</div>
 											<div class="col-md-12">
-												<label for="attachment">Attachment</label>
+												<label for="attachment">Attachment (Maximum 20 MB of
+													each)</label>
 												<div class="input-group image-preview">
 													<input type="text"
 														class="form-control image-preview-filename blur"
@@ -210,7 +211,7 @@
 														<div class="btn btn-default image-preview-input">
 															<span class="glyphicon glyphicon-folder-open"></span> <span
 																class="image-preview-input-title">Browse</span> <input
-																type="file" multiple="multiple"
+																type="file" id="file" multiple="multiple"
 																accept="image/png, image/jpeg, image/gif, .doc, .pdf, .xls"
 																name="input-file-preview" />
 															<!-- rename it -->

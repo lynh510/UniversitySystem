@@ -92,7 +92,10 @@
 						<div class="panel-heading">
 							<img class="[ img-circle pull-left ]"
 								src="${idea.person.person_picture}" alt="Mouse0270" />
-							<h3>${idea.person.person_name }</h3>
+							<h3>${idea.person.person_name } -
+								${idea.person.department.dept_name}
+								(${idea.person.department.academic_year.season} -
+								${idea.person.department.academic_year.year})</h3>
 							<h5>
 								<span>Shared<c:choose>
 										<c:when test="${idea.mode == 0}"> privately</c:when>

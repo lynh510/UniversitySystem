@@ -77,7 +77,7 @@
 						<tr>
 							<td><img alt="${p.person_name}" width="50px" height="50px"
 								src="${p.person_picture}"></td>
-							<td><input type="radio" name="emails" value="${p.email}" /></td>
+							<td><input type="checkbox" name="emails" value="${p.email}" /></td>
 							<c:choose>
 								<c:when test="${p.status == 0}">
 									<td class="success">Active</td>

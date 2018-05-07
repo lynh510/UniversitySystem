@@ -76,7 +76,7 @@ public class QACoordinatorController {
 	public ModelAndView edit_profile() {
 		try {
 			Person qaCoor = getQACoordinatorSession();
-			Person p = pm.getPerson(qaCoor.getId());
+			Person p = pm.getPerson2(qaCoor.getId());
 			ModelAndView model = new ModelAndView("edit_account");
 			List<Integer> months = new ArrayList<Integer>();
 			List<Integer> days = new ArrayList<Integer>();

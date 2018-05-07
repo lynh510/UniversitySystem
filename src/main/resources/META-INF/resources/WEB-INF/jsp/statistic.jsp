@@ -64,7 +64,7 @@ body {
 			<option selected="selected" disabled="disabled">Select an
 				academic year</option>
 			<c:forEach items="${academicYear}" var="a">
-				<option value="/admin/statistic/${helper.encryptID(a.id)}">${a.year}-
+				<option value="/${role}/statistic/${helper.encryptID(a.id)}">${a.year}-
 					${a.season}</option>
 			</c:forEach>
 		</select>
