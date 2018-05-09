@@ -113,7 +113,7 @@ table {
 									var="attach">
 									<tbody>
 										<tr>
-											<td><a href="/idea/${attach.idea.id}">View Idea</a></td>
+											<td><a href="/idea/${helper.encryptID(attach.idea.id)}">View Idea</a></td>
 											<td>${attach.old_name}</td>
 											<td>${attach.file_type}</td>
 											<td><a
