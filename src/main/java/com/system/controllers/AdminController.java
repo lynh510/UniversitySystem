@@ -146,6 +146,9 @@ public class AdminController {
 			} else if (finalDate.before(endDate)) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
 						"Error: final date need to be after end date");
+			} else if(startDate.before(new Date())) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR,
+						"Error: start date is in the past");
 			} else {
 				AcademicYear ay = new AcademicYear(0, startDate, endDate, finalDate, year, season);
 				aym.addAcademicYear(ay);
