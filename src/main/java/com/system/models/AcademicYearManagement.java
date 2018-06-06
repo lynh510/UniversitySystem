@@ -36,7 +36,7 @@ public class AcademicYearManagement {
 	}
 
 	public void addAcademicYear(AcademicYear ay) {
-		String sqlQuery = "insert into AcademicYear values (?,?,?,?,?,0)";
+		String sqlQuery = "insert into AcademicYear (academic_year_start_date,academic_year_end_date,academic_year_final_date,academic_year,season,_status) values (?,?,?,?,?,0)";
 		try {
 			Connection connection = DataProcess.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);

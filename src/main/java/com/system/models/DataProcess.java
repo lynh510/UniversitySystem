@@ -2,13 +2,10 @@ package com.system.models;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.system.entity.Person;
-import com.system.entity.Student;
 
 public class DataProcess {
 	
@@ -16,9 +13,9 @@ public class DataProcess {
 		Connection con = null;
 		try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String user = "universitysystem";
+            String user = "ideasystem";
             String pass = "universitysystem23!";
-            String url = "jdbc:sqlserver://den1.mssql6.gear.host;database=UniversitySystem";
+            String url = "jdbc:sqlserver://den1.mssql3.gear.host;database=IdeaSystem";
             try {
                 con = DriverManager.getConnection(url, user, pass);
             } catch (SQLException ex) {

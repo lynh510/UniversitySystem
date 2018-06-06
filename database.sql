@@ -8,6 +8,7 @@ academic_year_start_date date,
 academic_year_end_date date,
 academic_year_final_date date,
 academic_year int,
+season varchar(50),
 _status int
 )
 create table Person(
@@ -73,7 +74,8 @@ go
 create table Tag(
 tag_id int primary key identity,
 tag_des varchar(50), --services, courses
-dept_id int foreign key references Department(dept_id)
+dept_id int foreign key references Department(dept_id),
+tag_status int
 );
 go
 create table Idea(
@@ -129,7 +131,7 @@ email varchar(50),
 );
 
 
-SELECT * FROM Student
+SELECT * FROM Tag
 insert into Emoji values ('Thumb Up'),('Thumb Down')
 insert into Tag values ('Course'),('Service')
 -- stored procdure for adding new student
