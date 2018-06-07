@@ -41,6 +41,8 @@ public class CommentController {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "The idea has been closed");
 			} else if (comment_text.equals("")) {
 				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Please fill-in something");
+			} else if (comment_text.length() > 500) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Maximum length is 500 words");
 			}
 			String baseUrl = String.format("%s://%s:%d/", request.getScheme(), request.getServerName(),
 					request.getServerPort());
