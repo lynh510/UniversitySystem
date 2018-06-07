@@ -213,6 +213,12 @@ public class IdeaController {
 			@RequestParam("input-file-preview") List<MultipartFile> files, @RequestParam("mode") int mode,
 			HttpServletRequest request) {
 		try {
+			if(content.length() > 4000) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Maximum content is 4000 words");
+			}
+			if(title.length() > 500) {
+				return new ApiResponse().send(HttpStatus.INTERNAL_SERVER_ERROR, "Maximum tile is 500 words");
+			}
 			boolean flag = true;
 			for (MultipartFile multipartFile : files) {
 				if (multipartFile.getSize() > 20000000) {
