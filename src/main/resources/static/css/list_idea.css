@@ -275,7 +275,7 @@ body {
 }
 
 .panel-google-plus>.panel-footer>.input-placeholder {
-	display: block;
+	display: none;
 	clear: both;
 	margin-top: 5%;
 	color: rgb(153, 153, 153);
@@ -293,7 +293,7 @@ body {
 }
 
 .panel-google-plus>.panel-google-plus-comment {
-	display: none;
+	
 	padding: 10px 20px 15px;
 	border-top: 1px solid rgb(229, 229, 229);
 	background-color: rgb(245, 245, 245);
